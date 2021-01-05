@@ -5,11 +5,11 @@ from selenium import webdriver
 from pyvirtualdisplay import Display
 from selenium.webdriver.chrome.options import Options
 import os
-import time
+from time import sleep
 import datetime
 
-display = Display(visible=0, size=(1920, 1200))
-display.start()
+#display = Display(visible=0, size=(1920, 1200))
+#display.start()
 
 args = []
 
@@ -32,11 +32,13 @@ def def_environment():
 def czujnikiSnapshot():
     logging.debug("czujnikiSnapshot!")
     options = webdriver.ChromeOptions()
+    options.headless = False
     driver = webdriver.Chrome(options=options)
     url='http://czujnikimiejskie.pl/public/kozienice/'
     driver.get(url)
-    screenshot = driver.save_screenshot('kolno_map.png')
-    driver.quit()
+    sleep(30)
+    screenshot = driver.save_screenshot('mapa.png')
+    #driver.quit()
 
 def main():
     args=def_params()
