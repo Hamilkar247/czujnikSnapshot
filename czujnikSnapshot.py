@@ -8,6 +8,9 @@ import os
 import json
 from time import sleep
 import datetime
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel
+from PyQt5.QtGui import QIcon, QPixmap
 
 #display = Display(visible=0, size=(1920, 1200))
 #display.start()
@@ -64,5 +67,31 @@ def main():
     czujnikiSnapshot(args)
 
 
+class App(QWidget):
+
+    def __init__(self):
+        super().__init__()
+        self.title = "CzujnikImage"
+        self.left = 10
+        self.top = 10
+        self.width = 10
+        self.height = 400
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle(self.title)
+        self.setGeometry(self.left, self.top, self.width, self.height)
+
+        #Create widget
+        label = QLabel(self)
+        pixmap = QPixmap('mapa.png')
+        label.setPixmap(pixmap)
+        self.resize(pixmap.width(), pixmap.height())
+
+        self.show()
+
 if __name__ == "__main__":
     main()
+    app = QApplication(sys.argv)
+    ex = App()
+    sys.exit(app.exec_())
