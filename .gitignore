@@ -4,4 +4,6 @@
 venv/
 .flagkusy
 chromedriver
+geckodriver.log
 *.png
+
