@@ -12,13 +12,6 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel
 from PyQt5.QtGui import QIcon, QPixmap
 
-#display = Display(visible=0, size=(1920, 1200))
-#display.start()
-
-args = []
-config = {}
-data = {}
-
 class CzujnikSnap():
    #loghami=False
 
@@ -66,20 +59,6 @@ def def_environment():
     path_to_dir = os.path.dirname(os.path.realpth(__file__))
     os.environ["PATH"] += os.pathsep + path_to_dir
 
-def czujnikiSnapshot(args):
-    logging.debug("czujnikiSnapshot!")
-    options = webdriver.ChromeOptions()
-    if args.loghami:
-        options.headless=False
-    else:
-        options.headless=True
-    driver = webdriver.Chrome(options=options)
-    url='http://czujnikimiejskie.pl/public/kozienice/'
-    driver.get(url)
-    sleep(5)
-    screenshot = driver.save_screenshot('mapa.png')
-    driver.close()
-
 def readConfig(args):
     with open('config.json') as f:
         data = json.load(f)
@@ -90,12 +69,8 @@ def readConfig(args):
 
 def main():
     args=def_params()
-    #config=readConfig(args)
-    readConfig(args)
     path_to_dir = os.path.dirname(os.path.realpath(__file__))
-    print("Ścieszka do folderu"+path_to_dir)
     os.environ["PATH"] += os.pathsep + path_to_dir
-    #czujnikiSnapshot(args)
     czuj = CzujnikSnap(args)
     czuj.start()
 
