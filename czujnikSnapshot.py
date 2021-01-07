@@ -19,6 +19,37 @@ args = []
 config = {}
 data = {}
 
+class CzujnikSnap():
+   #loghami=False
+
+   def readConfigFunction(self):
+       with open('config.json') as f:
+           data = json.load(f)
+       if self.loghami:
+           logging.debug("readConfig")
+           logging.debug(data)
+
+   def seleniumWork(self):
+       self.options = webdriver.ChromeOptions()
+       if self.loghami:
+           self.options.headless=False
+       else:
+           self.options.headless=True
+       driver = webdriver.Chrome(options=self.options)
+       url='http://czujnikimiejskie.pl/public/kozienice/'
+       driver.get(url)
+       sleep(5)
+       screenshot = driver.save_screenshot('mapa.png')
+       driver.close()
+
+   def start(self):
+       print("czujnikSnap")
+       self.readConfigFunction()
+       self.seleniumWork()
+
+   def __init__(self, args):
+      self.loghami = args.loghami
+
 def def_params():
     parser = argparse.ArgumentParser(
             description="Description to fill"
@@ -64,8 +95,9 @@ def main():
     path_to_dir = os.path.dirname(os.path.realpath(__file__))
     print("Ścieszka do folderu"+path_to_dir)
     os.environ["PATH"] += os.pathsep + path_to_dir
-    czujnikiSnapshot(args)
-
+    #czujnikiSnapshot(args)
+    czuj = CzujnikSnap(args)
+    czuj.start()
 
 class App(QWidget):
 
@@ -92,6 +124,7 @@ class App(QWidget):
 
 if __name__ == "__main__":
     main()
+    #czuj = CzujnikSnap(args)
     app = QApplication(sys.argv)
     ex = App()
     sys.exit(app.exec_())
