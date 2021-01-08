@@ -1,4 +1,5 @@
 #!/bin/python3
+import os
 import time
 import datetime
 from datetime import datetime
@@ -6,6 +7,11 @@ from requests import Session
 from selenium import webdriver
 from pyvirtualdisplay import Display
 from selenium.webdriver.chrome.options import Options
+
+def addCurrentFolderToPath():
+    path_to_dir = os.path.dirname(os.path.realpath(__file__))
+    os.environ["PATH"] += os.pathsep + path_to_dir
+
 display = Display(visible=0, size=(1920, 1200))
 display.start()
 #Driver = 'chromedriver'
@@ -15,7 +21,8 @@ chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--start-fullscreen")
 chrome_options.add_argument("--kiosk")
 chrome_options.add_argument("--disable-application-cache")
-driver = webdriver.Chrome('/usr/lib/chromium-browser/chromedriver',chrome_options=chrome_options)
+addCurrentFolderToPath()
+driver = webdriver.Chrome(chrome_options=chrome_options)
 driver.set_window_size(1920,1316)
 driver.set_script_timeout(30)
 driver.set_page_load_timeout(30) # seconds
