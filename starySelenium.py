@@ -64,13 +64,14 @@ while  True:
         time.sleep(20)
         screenshot = driver.save_screenshot('/home/devel/widget_piaseczno.png')
         print(t , " ScreenShoot: Widget Piaseczno")
-        session = Session()
-        response = session.post(
-                url='http://czujnikimiejskie.pl/apipost/add/measurement',
-                data={"sn":"3000","a":"1","w":"0","z":"0"},
-                headers={'Connection':'close'}
-        )
-        print("Wyslano")
+        #tymczasowe zakomentowanie postowania
+        #session = Session()
+        #response = session.post(
+        #        url='http://czujnikimiejskie.pl/apipost/add/measurement',
+        #        data={"sn":"3000","a":"1","w":"0","z":"0"},
+        #        headers={'Connection':'close'}
+        #)
+        #print("Wyslano")
         time.sleep(600)
 driver.quit()
 display.stop()
