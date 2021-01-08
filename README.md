@@ -12,3 +12,8 @@
 
 - najlepiej by screen skladal sie tak jak teraz
   * z zdjecia-snapa
+
+W parametrze np. a - w wysylaniu na adres url='http://czujnikimiejskie.pl/apipost/add/measurement' wysylac wartość jakości sieci/internetu/wifi
+
+uwaga 3004 to numer rasberki w cencnie
+
