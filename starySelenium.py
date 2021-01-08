@@ -22,7 +22,7 @@ chrome_options.add_argument("--start-fullscreen")
 chrome_options.add_argument("--kiosk")
 chrome_options.add_argument("--disable-application-cache")
 addCurrentFolderToPath()
-driver = webdriver.Chrome(chrome_options=chrome_options)
+driver = webdriver.Chrome(options=chrome_options)
 driver.set_window_size(1920,1316)
 driver.set_script_timeout(30)
 driver.set_page_load_timeout(30) # seconds
