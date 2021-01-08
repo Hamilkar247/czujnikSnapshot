@@ -87,10 +87,9 @@ def main():
     addCurrentFolderToPath()
     czuj = CzujnikSnap(args)
     czuj.start()
-
-if __name__ == "__main__":
-    main()
-    #czuj = CzujnikSnap(args)
     app = QApplication(sys.argv)
     ex = App()
     sys.exit(app.exec_())
+
+if __name__ == "__main__":
+    main()
