@@ -43,18 +43,6 @@ class CzujnikSnap():
    def __init__(self, args):
       self.loghami = args.loghami
 
-def def_params():
-    parser = argparse.ArgumentParser(
-            description="Description to fill"
-    )
-    parser.add_argument("-l", "--loghami", action='store_true', help="set debug")
-    args = parser.parse_args()
-    if args.loghami:
-        logging.basicConfig(level=logging.DEBUG)
-        logging.debug("Only shown in debug mode")
-        print("args:" + str(args))
-    return args
-
 class App(QWidget):
 
     def __init__(self):
@@ -77,6 +65,18 @@ class App(QWidget):
         self.resize(pixmap.width(), pixmap.height())
 
         self.show()
+
+def def_params():
+    parser = argparse.ArgumentParser(
+            description="Description to fill"
+    )
+    parser.add_argument("-l", "--loghami", action='store_true', help="set debug")
+    args = parser.parse_args()
+    if args.loghami:
+        logging.basicConfig(level=logging.DEBUG)
+        logging.debug("Only shown in debug mode")
+        print("args:" + str(args))
+    return args
 
 def addCurrentFolderToPath():
     path_to_dir = os.path.dirname(os.path.realpath(__file__))
