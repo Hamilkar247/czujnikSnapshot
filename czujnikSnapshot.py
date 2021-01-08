@@ -55,10 +55,13 @@ def def_params():
         print("args:" + str(args))
     return args
 
-def main():
-    args=def_params()
+def addCurrentFolderToPath():
     path_to_dir = os.path.dirname(os.path.realpath(__file__))
     os.environ["PATH"] += os.pathsep + path_to_dir
+
+def main():
+    args=def_params()
+    addCurrentFolderToPath()
     czuj = CzujnikSnap(args)
     czuj.start()
 
