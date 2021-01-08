@@ -1,3 +1,8 @@
+1. Po ściągnieciu repo 
+
+*Kopiowanie zawartości do pliku konfiguracyjnego*
+```cp config.json.example config.json```
+
 -plik konfiguracyjny w xml albo json 
   * co ile pobiera zdjecie
   * ??

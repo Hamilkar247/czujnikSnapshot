@@ -6,4 +6,5 @@ venv/
 chromedriver
 geckodriver.log
 *.png
+config.json
 
