@@ -32,6 +32,7 @@ if __name__ == "__main__":
     display.start()
     #Driver = 'chromedriver'
     #driver = webdriver.Chrome(Driver)
+    ### przejrzec dziialanie tych argumentów do chrumowych opcji
     chrome_options = Options()
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--start-fullscreen")
