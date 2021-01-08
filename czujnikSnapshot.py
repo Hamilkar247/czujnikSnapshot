@@ -55,16 +55,6 @@ def def_params():
         print("args:" + str(args))
     return args
 
-def addCurrentFolderToPath():
-    path_to_dir = os.path.dirname(os.path.realpath(__file__))
-    os.environ["PATH"] += os.pathsep + path_to_dir
-
-def main():
-    args=def_params()
-    addCurrentFolderToPath()
-    czuj = CzujnikSnap(args)
-    czuj.start()
-
 class App(QWidget):
 
     def __init__(self):
@@ -87,6 +77,16 @@ class App(QWidget):
         self.resize(pixmap.width(), pixmap.height())
 
         self.show()
+
+def addCurrentFolderToPath():
+    path_to_dir = os.path.dirname(os.path.realpath(__file__))
+    os.environ["PATH"] += os.pathsep + path_to_dir
+
+def main():
+    args=def_params()
+    addCurrentFolderToPath()
+    czuj = CzujnikSnap(args)
+    czuj.start()
 
 if __name__ == "__main__":
     main()
