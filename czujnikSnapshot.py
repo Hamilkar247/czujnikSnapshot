@@ -55,18 +55,6 @@ def def_params():
         print("args:" + str(args))
     return args
 
-def def_environment():
-    path_to_dir = os.path.dirname(os.path.realpth(__file__))
-    os.environ["PATH"] += os.pathsep + path_to_dir
-
-def readConfig(args):
-    with open('config.json') as f:
-        data = json.load(f)
-    if args.loghami:
-        logging.debug("readConfig")
-        logging.debug(data)
-    #return data
-
 def main():
     args=def_params()
     path_to_dir = os.path.dirname(os.path.realpath(__file__))
