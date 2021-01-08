@@ -2,16 +2,31 @@
 import os
 import time
 import datetime
+import logging
+import argparse
 from datetime import datetime
 from requests import Session
 from selenium import webdriver
 from pyvirtualdisplay import Display
 from selenium.webdriver.chrome.options import Options
 
+def def_params():
+    parser = argparse.ArgumentParser(
+            description="Description to fill"
+    )
+    parser.add_argument("-l", "--loghami", action='store_true', help="set debug")
+    args = parser.parse_args()
+    if args.loghami:
+        logging.basicConfig(level=logging.DEBUG)
+        logging.debug("Only shown in debug mode")
+        print("args:" + str(args))
+    return args
+
 def addCurrentFolderToPath():
     path_to_dir = os.path.dirname(os.path.realpath(__file__))
     os.environ["PATH"] += os.pathsep + path_to_dir
 
+args=def_params()
 display = Display(visible=0, size=(1920, 1200))
 display.start()
 #Driver = 'chromedriver'
@@ -38,6 +53,7 @@ while  True:
         t = now.strftime("[%Y/%m/%d-%H:%M:%S]")
         driver.get('https://czujnikimiejskie.pl/public/kozienice/?url_node_id=196&kml=false&a='+str(milli_sec))
         time.sleep(20)
+
         screenshot = driver.save_screenshot('kozienice_map.png') #'/home/devel/kozienice_map.png')
         print(t, " ScreenShoot: Mapa Kozienice")
         now = datetime.now()
