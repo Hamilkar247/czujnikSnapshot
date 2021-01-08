@@ -7,4 +7,5 @@ chromedriver
 geckodriver.log
 *.png
 config.json
+*.jpg
 
