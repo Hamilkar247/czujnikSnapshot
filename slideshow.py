@@ -36,7 +36,7 @@ class Ui_WizardPage(object):
         self.label_2 = QtWidgets.QLabel(WizardPage)
         self.label_2.setGeometry(QtCore.QRect(0, 20, 991, 801))
         self.label_2.setText("matko boska")
-        self.label_2.setPixmap(QtGui.QPixmap("widget_kolno.png"))
+        self.label_2.setPixmap(QtGui.QPixmap("kolno_map.png"))
         self.label_2.setScaledContents(True)
         self.label_2.setObjectName("label_2")
         self.timer = QtCore.QTimer()
@@ -51,9 +51,12 @@ class Ui_WizardPage(object):
         else:
             self.label_2.setPixmap(QtGui.QPixmap("widget_kolno.png"))
             self.flagaWidget = 0
-            self.movie.stop()
-            self.label.setMovie(self.movie)
-            self.movie.start()
+            self.restartGifa
+
+    def restartGifa(self):
+        self.movie.stop()
+        self.label.setMovie(self.movie)
+        self.movie.start()
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
