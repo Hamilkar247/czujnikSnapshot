@@ -11,6 +11,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QMovie
 import time
+import sys
 
 class Ui_WizardPage(object):
 
@@ -53,7 +54,6 @@ class Ui_WizardPage(object):
         self.changeMapPicture(WizardPage)
 
 if __name__ == "__main__":
-    import sys
     app = QtWidgets.QApplication(sys.argv)
     WizardPage = QtWidgets.QWizardPage()
     ui = Ui_WizardPage()
