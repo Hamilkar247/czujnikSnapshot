@@ -23,8 +23,6 @@ class Ui_WizardPage(object):
         self.label.setText("")
         self.label.setScaledContents(True)
         self.label.setObjectName("label")
-        #self.label.setPixmap(QtGui.QPixmap("mapa.png"))
-        #set qmovie as label
         self.movie = QMovie("10s.gif")
         self.label.setMovie(self.movie)
         self.movie.start()
@@ -34,45 +32,23 @@ class Ui_WizardPage(object):
         self.label_2.setPixmap(QtGui.QPixmap("widget_kolno.png"))
         self.label_2.setScaledContents(True)
         self.label_2.setObjectName("label_2")
-        self.b1 = QtWidgets.QPushButton(WizardPage)
-        self.b1.setText("click me")
-        self.b1.clicked.connect(self.button_clicked)
-        #self.retranslateUi(WizardPage)
-        #QtCore.QMetaObject.connectSlotsByName(WizardPage)
+        self.timer = QtCore.QTimer()
+        self.timer.timeout.connect(self.changeMapPicture)
+        self.timer.setInterval(5000)
+        self.timer.start()
 
-        #def button_clicked(self):
-        #    print("clicked")
-
-    def changeMapPicture(self, WizardPage):
+    def changeMapPicture(self):
         self.label_2.setPixmap(QtGui.QPixmap("kolno_map.png"))
 
-    def changeWidgetPicture(self, WizardPage):
+    def changeWidgetPicture(self):
         self.label_2.setPixmap(QtGui.QPixmap("widget_kolno.png"))
-
-    def button_clicked(self):
-        print("clicked")
-        self.changeMapPicture(WizardPage)
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     WizardPage = QtWidgets.QWizardPage()
     ui = Ui_WizardPage()
+
     ui.setupUi(WizardPage)
     start = time.time()
-    flagPicture = "map"
     WizardPage.show()
-    #while True:
-    #    if start + 5 < time.time():
-    #       break
-           # if flagPicture == "map":
-           #     ui.changeMapPicture(WizardPage)
-           #     start = time.time()
-           #     flagPicture = "widget"
-           #     WizardPage.show()
-           # else:
-           #     ui.changeWidgetPicture(WizardPage)
-           #     start = time.time()
-           #     flagPicture = "map"
-           #     WizardPage.show()
-
     sys.exit(app.exec_())
