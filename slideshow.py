@@ -20,6 +20,7 @@ class Ui_WizardPage(object):
         self.label_2 = None #label na widget/mape
         self.movie = None #movie do odpalenia gifa
         self.timer = None #timer do zamiany zdjęć
+        self.flagaWidget = 1 #flaga mowiaca czy jest teraz mapa czy widget
 
     def setupUi(self, WizardPage):
         WizardPage.setObjectName("WizardPage")
@@ -39,15 +40,20 @@ class Ui_WizardPage(object):
         self.label_2.setScaledContents(True)
         self.label_2.setObjectName("label_2")
         self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(self.changeMapPicture)
-        self.timer.setInterval(5000)
+        self.timer.timeout.connect(self.changePicture)
+        self.timer.setInterval(4980)
         self.timer.start()
 
-    def changeMapPicture(self):
-        self.label_2.setPixmap(QtGui.QPixmap("kolno_map.png"))
-
-    def changeWidgetPicture(self):
-        self.label_2.setPixmap(QtGui.QPixmap("widget_kolno.png"))
+    def changePicture(self):
+        if self.flagaWidget == 0:
+            self.label_2.setPixmap(QtGui.QPixmap("kolno_map.png"))
+            self.flagaWidget = 1
+        else:
+            self.label_2.setPixmap(QtGui.QPixmap("widget_kolno.png"))
+            self.flagaWidget = 0
+            self.movie.stop()
+            self.label.setMovie(self.movie)
+            self.movie.start()
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
