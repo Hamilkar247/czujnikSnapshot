@@ -9,4 +9,5 @@ geckodriver.log
 config.json
 *.jpg
 tomkowa_strona
+*.gif
 
