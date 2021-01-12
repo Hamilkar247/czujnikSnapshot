@@ -11,6 +11,7 @@ import datetime
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel
 from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtCore import QTimer
 
 class CzujnikSnap():
    #loghami=False
@@ -45,13 +46,15 @@ class CzujnikSnap():
 
 class App(QWidget):
 
-    def __init__(self):
+    def __init__(self, url_map, url_widget):
         super().__init__()
         self.title = "CzujnikImage"
         self.left = 10
         self.top = 10
         self.width = 10
         self.height = 400
+        self.url_map = url_map
+        self.url_widget = url_widget
         self.initUI()
 
     def initUI(self):
@@ -60,9 +63,13 @@ class App(QWidget):
 
         #Create widget
         label = QLabel(self)
-        pixmap = QPixmap('mapa.png')
+        pixmap = QPixmap(self.url_map)
         label.setPixmap(pixmap)
         self.resize(pixmap.width(), pixmap.height())
+        QTime
+        label = QLabel(self)
+        pixmap = QPixmap(self.url_widget)
+        label.setPixmap(pixmap)
 
         self.show()
 
@@ -85,10 +92,10 @@ def addCurrentFolderToPath():
 def main():
     args=def_params()
     addCurrentFolderToPath()
-    czuj = CzujnikSnap(args)
-    czuj.start()
+    #czuj = CzujnikSnap(args)
+    #czuj.start()
     app = QApplication(sys.argv)
-    ex = App()
+    ex = App('kolno_map.png', 'widget_kolno.png')
     sys.exit(app.exec_())
 
 if __name__ == "__main__":

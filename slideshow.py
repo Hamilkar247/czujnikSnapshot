@@ -10,8 +10,10 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QMovie
+import time
 
 class Ui_WizardPage(object):
+
     def setupUi(self, WizardPage):
         WizardPage.setObjectName("WizardPage")
         WizardPage.resize(925, 810)
@@ -31,11 +33,24 @@ class Ui_WizardPage(object):
         self.label_2.setPixmap(QtGui.QPixmap("widget_kolno.png"))
         self.label_2.setScaledContents(True)
         self.label_2.setObjectName("label_2")
+        self.b1 = QtWidgets.QPushButton(WizardPage)
+        self.b1.setText("click me")
+        self.b1.clicked.connect(self.button_clicked)
         #self.retranslateUi(WizardPage)
         #QtCore.QMetaObject.connectSlotsByName(WizardPage)
 
-    def changePicture(self,WizardPage):
+        #def button_clicked(self):
+        #    print("clicked")
+
+    def changeMapPicture(self, WizardPage):
         self.label_2.setPixmap(QtGui.QPixmap("kolno_map.png"))
+
+    def changeWidgetPicture(self, WizardPage):
+        self.label_2.setPixmap(QtGui.QPixmap("widget_kolno.png"))
+
+    def button_clicked(self):
+        print("clicked")
+        self.changeMapPicture(WizardPage)
 
 if __name__ == "__main__":
     import sys
@@ -43,6 +58,21 @@ if __name__ == "__main__":
     WizardPage = QtWidgets.QWizardPage()
     ui = Ui_WizardPage()
     ui.setupUi(WizardPage)
-    ui.changePicture(WizardPage)
+    start = time.time()
+    flagPicture = "map"
     WizardPage.show()
+    #while True:
+    #    if start + 5 < time.time():
+    #       break
+           # if flagPicture == "map":
+           #     ui.changeMapPicture(WizardPage)
+           #     start = time.time()
+           #     flagPicture = "widget"
+           #     WizardPage.show()
+           # else:
+           #     ui.changeWidgetPicture(WizardPage)
+           #     start = time.time()
+           #     flagPicture = "map"
+           #     WizardPage.show()
+
     sys.exit(app.exec_())
