@@ -15,6 +15,12 @@ import sys
 
 class Ui_WizardPage(object):
 
+    def __init__(self):
+        self.label = None #label na gifa
+        self.label_2 = None #label na widget/mape
+        self.movie = None #movie do odpalenia gifa
+        self.timer = None #timer do zamiany zdjęć
+
     def setupUi(self, WizardPage):
         WizardPage.setObjectName("WizardPage")
         WizardPage.resize(925, 810)
