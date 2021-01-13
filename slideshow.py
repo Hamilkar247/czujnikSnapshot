@@ -24,6 +24,7 @@ class Ui_MainWindow(object):
         self.centralWidget = None
         self.widthWindow = 925
         self.heightWindow = 810
+        self.gruboscGifa = 20
         self.MainWindow = None
 
     def setupUi(self, MainWindow):
@@ -32,7 +33,7 @@ class Ui_MainWindow(object):
         self.mainWindow.setWindowTitle("MainWindow")
         self.mainWindow.resize(self.widthWindow, self.heightWindow)
         self.lab_gif = QtWidgets.QLabel(self.mainWindow)
-        self.lab_gif.setGeometry(QtCore.QRect(0, 0, 931, 20))
+        self.lab_gif.setGeometry(QtCore.QRect(0, 0, self.widthWindow, self.gruboscGifa))
         self.lab_gif.setText("")
         self.lab_gif.setScaledContents(True)
         self.lab_gif.setObjectName("label")
@@ -40,7 +41,7 @@ class Ui_MainWindow(object):
         self.lab_gif.setMovie(self.movie)
         self.movie.start()
         self.lab_MapOrWidget = QtWidgets.QLabel(MainWindow)
-        self.lab_MapOrWidget.setGeometry(QtCore.QRect(0, 20, self.widthWindow, self.heightWindow-20))
+        self.lab_MapOrWidget.setGeometry(QtCore.QRect(0, self.gruboscGifa, self.widthWindow, self.heightWindow-20))
         self.lab_MapOrWidget.setText("")
         self.lab_MapOrWidget.setPixmap(QtGui.QPixmap("kolno_map.png"))
         self.lab_MapOrWidget.setScaledContents(True)
@@ -70,8 +71,8 @@ class Ui_MainWindow(object):
         self.heightWindow = self.mainWindow.frameGeometry().height()
         print("widthWindow :"+str(self.widthWindow))
         print("heightWindow :"+str(self.heightWindow))
-        self.lab_MapOrWidget.setGeometry(QtCore.QRect(0, 20, self.widthWindow, self.heightWindow))
-        self.lab_gif.setGeometry(QtCore.QRect(0, 0, self.widthWindow, 20))
+        self.lab_MapOrWidget.setGeometry(QtCore.QRect(0, self.gruboscGifa, self.widthWindow, self.heightWindow))
+        self.lab_gif.setGeometry(QtCore.QRect(0, 0, self.widthWindow, self.gruboscGifa))
 
 class Window(QtWidgets.QMainWindow):
     resized = QtCore.pyqtSignal()
