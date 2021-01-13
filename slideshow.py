@@ -77,6 +77,12 @@ class Ui_MainWindow(object):#WizardPage(object):
         print("widthWindow :"+str(self.widthWindow))
         print("heightWindow :"+str(self.heightWindow))
         self.label_2.setGeometry(QtCore.QRect(0, 20, self.widthWindow, self.heightWindow))
+        self.setSizeLabels
+
+    def setSizeLabels(self):
+        #widget/mapa
+        self.label_2.setGeometry(QtCore.QRect(0, 20, self.widthWindow, self.heightWindow-20))
+        #gif
 
 class Window(QtWidgets.QMainWindow):
     resized = QtCore.pyqtSignal()
