@@ -89,7 +89,6 @@ class Window(QtWidgets.QMainWindow):
 
     def resizeEvent(self, event):
         self.resized.emit()
-        self.ui.changePicture()
         self.ui.setSizeWindow()
         return super(Window, self).resizeEvent(event)
 
