@@ -24,11 +24,13 @@ class Ui_MainWindow(object):#WizardPage(object):
         self.centralWidget = None
         self.widthWindow = 925
         self.heightWindow = 810
+        self.MainWindow = None
 
     def setupUi(self, MainWindow):#WizardPage):
-        MainWindow.setObjectName("MainWindow")
-        MainWindow.setWindowTitle("MainWindow")
-        MainWindow.resize(self.widthWindow, self.heightWindow)
+        self.mainWindow = MainWindow
+        self.mainWindow.setObjectName("MainWindow")
+        self.mainWindow.setWindowTitle("MainWindow")
+        self.mainWindow.resize(self.widthWindow, self.heightWindow)
         #self.label = QtWidgets.QLabel(WizardPage)
         #self.label.setGeometry(QtCore.QRect(0, 0, 931, 21))
         #self.label.setText("")
@@ -69,6 +71,13 @@ class Ui_MainWindow(object):#WizardPage(object):
         self.label.setMovie(self.movie)
         self.movie.start()
 
+    def setSizeWindow(self):
+        self.widthWindow = self.mainWindow.frameGeometry().width()
+        self.heightWindow = self.mainWindow.frameGeometry().height()
+        print("widthWindow :"+str(self.widthWindow))
+        print("heightWindow :"+str(self.heightWindow))
+        self.label_2.setGeometry(QtCore.QRect(0, 20, self.widthWindow, self.heightWindow))
+
 class Window(QtWidgets.QMainWindow):
     resized = QtCore.pyqtSignal()
     def __init__(self, parent=None):
@@ -80,10 +89,12 @@ class Window(QtWidgets.QMainWindow):
     def resizeEvent(self, event):
         self.resized.emit()
         self.ui.changePicture()
+        self.ui.setSizeWindow()
         return super(Window, self).resizeEvent(event)
 
     def resizeEventFunction(self):
         print("resizeEvent")
+        #print("window width "+str(self.frameGeometry().width))
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
