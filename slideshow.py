@@ -45,12 +45,12 @@ class Ui_MainWindow(object):#WizardPage(object):
         #MainWindow.resized.connect(self.someFunction)
 
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-        self.label_2 = QtWidgets.QLabel(MainWindow)#WizardPage)
-        self.setSizeMapOrWidget
-        self.label_2.setText("matko boska")
-        self.label_2.setPixmap(QtGui.QPixmap("kolno_map.png"))
-        self.label_2.setScaledContents(True)
-        self.label_2.setObjectName("label_2")
+        self.lab_MapOrWidget = QtWidgets.QLabel(MainWindow)
+        self.lab_MapOrWidget.setGeometry(QtCore.QRect(0, 20, self.widthWindow, self.heightWindow-20))
+        self.lab_MapOrWidget.setText("")
+        self.lab_MapOrWidget.setPixmap(QtGui.QPixmap("kolno_map.png"))
+        self.lab_MapOrWidget.setScaledContents(True)
+        self.lab_MapOrWidget.setObjectName("label_2")
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         #self.timer = QtCore.QTimer()
         #self.timer.timeout.connect(self.changePicture)
@@ -59,10 +59,10 @@ class Ui_MainWindow(object):#WizardPage(object):
 
     def changePicture(self):
         if self.flagaWidget == 0:
-            self.label_2.setPixmap(QtGui.QPixmap("kolno_map.png"))
+            self.lab_MapOrWidget.setPixmap(QtGui.QPixmap("kolno_map.png"))
             self.flagaWidget = 1
         else:
-            self.label_2.setPixmap(QtGui.QPixmap("widget_kolno.png"))
+            self.lab_MapOrWidget.setPixmap(QtGui.QPixmap("widget_kolno.png"))
             self.flagaWidget = 0
             self.restartGifa
 
@@ -76,16 +76,7 @@ class Ui_MainWindow(object):#WizardPage(object):
         self.heightWindow = self.mainWindow.frameGeometry().height()
         print("widthWindow :"+str(self.widthWindow))
         print("heightWindow :"+str(self.heightWindow))
-        self.label_2.setGeometry(QtCore.QRect(0, 20, self.widthWindow, self.heightWindow))
-        self.setSizeLabels
-
-    def setSizeLabels(self):
-        #widget/mapa
-        self.setSizeMapOrWidget
-        #gif
-
-    def setSizeMapOrWidget(self):
-        self.label_2.setGeometry(QtCore.QRect(0, 20, self.widthWindow, self.heightWindow-20))
+        self.lab_MapOrWidget.setGeometry(QtCore.QRect(0, 20, self.widthWindow, self.heightWindow))
 
 class Window(QtWidgets.QMainWindow):
     resized = QtCore.pyqtSignal()
