@@ -75,15 +75,15 @@ class Window(QtWidgets.QMainWindow):
         super(Window, self).__init__(parent=parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        self.resized.connect(self.someFunction)
+        self.resized.connect(self.resizeEventFunction)
 
     def resizeEvent(self, event):
         self.resized.emit()
         self.ui.changePicture()
         return super(Window, self).resizeEvent(event)
 
-    def someFunction(self):
-        print("someFunction")
+    def resizeEventFunction(self):
+        print("resizeEvent")
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
