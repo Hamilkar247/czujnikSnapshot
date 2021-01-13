@@ -46,7 +46,7 @@ class Ui_MainWindow(object):#WizardPage(object):
 
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         self.label_2 = QtWidgets.QLabel(MainWindow)#WizardPage)
-        self.label_2.setGeometry(QtCore.QRect(0, 20, self.widthWindow, self.heightWindow))
+        self.setSizeMapOrWidget
         self.label_2.setText("matko boska")
         self.label_2.setPixmap(QtGui.QPixmap("kolno_map.png"))
         self.label_2.setScaledContents(True)
@@ -81,8 +81,11 @@ class Ui_MainWindow(object):#WizardPage(object):
 
     def setSizeLabels(self):
         #widget/mapa
-        self.label_2.setGeometry(QtCore.QRect(0, 20, self.widthWindow, self.heightWindow-20))
+        self.setSizeMapOrWidget
         #gif
+
+    def setSizeMapOrWidget(self):
+        self.label_2.setGeometry(QtCore.QRect(0, 20, self.widthWindow, self.heightWindow-20))
 
 class Window(QtWidgets.QMainWindow):
     resized = QtCore.pyqtSignal()
