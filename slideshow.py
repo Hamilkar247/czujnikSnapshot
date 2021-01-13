@@ -79,6 +79,7 @@ class Ui_MainWindow(object):#WizardPage(object):
         self.lab_MapOrWidget.setGeometry(QtCore.QRect(0, 20, self.widthWindow, self.heightWindow))
 
         self.lab_gif.setGeometry(QtCore.QRect(0, 0, self.widthWindow, 20))
+
 class Window(QtWidgets.QMainWindow):
     resized = QtCore.pyqtSignal()
     def __init__(self, parent=None):
