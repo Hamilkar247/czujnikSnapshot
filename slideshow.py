@@ -13,7 +13,7 @@ from PyQt5.QtGui import QMovie
 import time
 import sys
 
-class Ui_MainWindow(object):#WizardPage(object):
+class Ui_MainWindow(object):
 
     def __init__(self):
         self.label = None #label na gifa
@@ -26,7 +26,7 @@ class Ui_MainWindow(object):#WizardPage(object):
         self.heightWindow = 810
         self.MainWindow = None
 
-    def setupUi(self, MainWindow):#WizardPage):
+    def setupUi(self, MainWindow):
         self.mainWindow = MainWindow
         self.mainWindow.setObjectName("MainWindow")
         self.mainWindow.setWindowTitle("MainWindow")
@@ -39,12 +39,6 @@ class Ui_MainWindow(object):#WizardPage(object):
         self.movie = QMovie("10s.gif")
         self.lab_gif.setMovie(self.movie)
         self.movie.start()
-        ########self.centralwidget = QtWidgets.QWidget(MainWindow)
-        ########self.centralWidget.setObjectName("centralwidget")
-        ########MainWindow.setCentralWidget(self.centralWidget)
-        #MainWindow.resized.connect(self.someFunction)
-
-        #QtCore.QMetaObject.connectSlotsByName(MainWindow)
         self.lab_MapOrWidget = QtWidgets.QLabel(MainWindow)
         self.lab_MapOrWidget.setGeometry(QtCore.QRect(0, 20, self.widthWindow, self.heightWindow-20))
         self.lab_MapOrWidget.setText("")
@@ -77,7 +71,6 @@ class Ui_MainWindow(object):#WizardPage(object):
         print("widthWindow :"+str(self.widthWindow))
         print("heightWindow :"+str(self.heightWindow))
         self.lab_MapOrWidget.setGeometry(QtCore.QRect(0, 20, self.widthWindow, self.heightWindow))
-
         self.lab_gif.setGeometry(QtCore.QRect(0, 0, self.widthWindow, 20))
 
 class Window(QtWidgets.QMainWindow):
@@ -95,16 +88,9 @@ class Window(QtWidgets.QMainWindow):
 
     def resizeEventFunction(self):
         print("resizeEvent")
-        #print("window width "+str(self.frameGeometry().width))
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    #WizardPage = QtWidgets.QWizardPage()
     w = Window()
     w.show()
-   # MainWindow = QtWidgets.QMainWindow()
-   # ui = Ui_WizardPage()
-
-   # ui.setupUi(MainWindow)#WizardPage)
-   # MainWindow.show()#WizardPage.show()
     sys.exit(app.exec_())
