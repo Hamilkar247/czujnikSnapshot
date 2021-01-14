@@ -47,6 +47,7 @@ class Ui_MainWindow(object):
         self.gruboscGifa = int(gruboscGifa)
         self.timeSeq = timeSeq
         self.MainWindow = None
+        self.timer = None
 
     def setupUi(self, MainWindow):
         logging.debug
@@ -69,12 +70,7 @@ class Ui_MainWindow(object):
         self.lab_MapOrWidget.setScaledContents(True)
         self.lab_MapOrWidget.setObjectName("lab_MapOrWidget")
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-        self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(self.changePicture)
-        timeToChange=int(floor(int(self.timeSeq)/2))
-        logging.debug("timeSeq/2:"+str(timeToChange))
-        self.timer.setInterval(timeToChange)
-        self.timer.start()
+        self.setTimerChangePicture()
 
     def changePicture(self):
         logging.debug("changePicture Function - flagWidget="+str(self.flagaWidget))
@@ -86,6 +82,16 @@ class Ui_MainWindow(object):
             self.lab_MapOrWidget.setPixmap(QtGui.QPixmap("widget_kolno.png"))
             self.flagaWidget = 0
             self.restartGifa()
+
+    def setTimerChangePicture(self):
+        logging.debug("setTimerChangePicture")
+        self.timer = QtCore.QTimer()
+        self.timer.timeout.connect(self.changePicture)
+        timeToChange=int(floor(int(self.timeSeq)/2))
+        logging.debug("timeSeq/2:"+str(timeToChange))
+        self.timer.setInterval(timeToChange)
+        self.timer.start()
+
 
     def restartGifa(self):
         logging.debug("restartGifa")
