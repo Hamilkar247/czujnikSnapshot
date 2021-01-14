@@ -35,6 +35,7 @@ def def_params():
 class Ui_MainWindow(object):
 
     def __init__(self, gruboscGifa, timeSeq):
+        logging.debug("UI_MainWindow __init__")
         self.label = None #label na gifa
         self.label_2 = None #label na widget/mape
         self.movie = None #movie do odpalenia gifa
@@ -48,6 +49,7 @@ class Ui_MainWindow(object):
         self.MainWindow = None
 
     def setupUi(self, MainWindow):
+        logging.debug
         self.mainWindow = MainWindow
         self.mainWindow.setObjectName("MainWindow")
         self.mainWindow.setWindowTitle("MainWindow")
@@ -75,6 +77,7 @@ class Ui_MainWindow(object):
         self.timer.start()
 
     def changePicture(self):
+        logging.debug("changePicture Function - flagWidget="+str(self.flagaWidget))
         if self.flagaWidget == 0:
             self.lab_MapOrWidget.setPixmap(QtGui.QPixmap("kolno_map.png"))
             self.flagaWidget = 1
@@ -84,6 +87,7 @@ class Ui_MainWindow(object):
             self.restartGifa
 
     def restartGifa(self):
+        logging.debug("restartGifa")
         self.movie.stop()
         self.label.setMovie(self.movie)
         self.movie.start()
