@@ -22,6 +22,7 @@ def def_params():
     )
     parser.add_argument("-l", "--log", action='store_true', help="ustaw debug flage")
     parser.add_argument("-g", "--grubosc", default=20, help="ustaw grubosc gifa")
+    parser.add_argument("-f", "--fullScreen", action='store_true', help="ustaw maksymalny rozmiar")
     args = parser.parse_args()
     if args.log:
         logging.basicConfig(level=logging.DEBUG)
@@ -92,11 +93,13 @@ class Ui_MainWindow(object):
 
 class Window(QtWidgets.QMainWindow):
     resized = QtCore.pyqtSignal()
-    def __init__(self, gruboscGifa):
+    def __init__(self, gruboscGifa, fullScreen):
         super(Window, self).__init__(parent=None)
         self.ui = Ui_MainWindow(gruboscGifa)
         self.ui.setupUi(self)
         self.resized.connect(self.resizeEventFunction)
+        if fullScreen:
+            self.showMaximized()
 
     def resizeEvent(self, event):
         self.resized.emit()
@@ -109,7 +112,8 @@ class Window(QtWidgets.QMainWindow):
 if __name__ == "__main__":
     args=def_params()
     gruboscGifa=args.grubosc
+    fullScreen=args.fullScreen
     app = QtWidgets.QApplication(sys.argv)
-    w = Window(gruboscGifa)
+    w = Window(gruboscGifa, fullScreen)
     w.show()
     sys.exit(app.exec_())
