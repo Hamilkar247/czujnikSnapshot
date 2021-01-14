@@ -86,8 +86,8 @@ class Ui_MainWindow(object):
     def setSizeWindow(self):
         self.widthWindow = self.mainWindow.frameGeometry().width()
         self.heightWindow = self.mainWindow.frameGeometry().height()
-        print("widthWindow :"+str(self.widthWindow))
-        print("heightWindow :"+str(self.heightWindow))
+        logging.debug("widthWindow :"+str(self.widthWindow))
+        logging.debug("heightWindow :"+str(self.heightWindow))
         self.lab_MapOrWidget.setGeometry(QtCore.QRect(0, self.gruboscGifa, self.widthWindow, self.heightWindow))
         self.lab_gif.setGeometry(QtCore.QRect(0, 0, self.widthWindow, self.gruboscGifa))
 
@@ -107,7 +107,8 @@ class Window(QtWidgets.QMainWindow):
         return super(Window, self).resizeEvent(event)
 
     def resizeEventFunction(self):
-        print("resizeEvent")
+        logging.debug("resizeEvent")
+
 
 if __name__ == "__main__":
     args=def_params()
