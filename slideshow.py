@@ -82,14 +82,15 @@ class Ui_MainWindow(object):
             self.lab_MapOrWidget.setPixmap(QtGui.QPixmap("kolno_map.png"))
             self.flagaWidget = 1
         else:
+            self.restartGifa
             self.lab_MapOrWidget.setPixmap(QtGui.QPixmap("widget_kolno.png"))
             self.flagaWidget = 0
-            self.restartGifa
+            self.restartGifa()
 
     def restartGifa(self):
         logging.debug("restartGifa")
         self.movie.stop()
-        self.label.setMovie(self.movie)
+        self.lab_gif.setMovie(self.movie)
         self.movie.start()
 
     def setSizeWindow(self):
