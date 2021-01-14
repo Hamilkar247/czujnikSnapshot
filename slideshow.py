@@ -14,6 +14,7 @@ import time
 import sys
 import logging
 import argparse
+from math import floor
 
 
 def def_params():
@@ -23,6 +24,7 @@ def def_params():
     parser.add_argument("-l", "--log", action='store_true', help="ustaw debug flage")
     parser.add_argument("-g", "--grubosc", default=20, help="ustaw grubosc gifa")
     parser.add_argument("-f", "--fullScreen", action='store_true', help="ustaw maksymalny rozmiar")
+    parser.add_argument("-t", "--timeSeq", default=9960, help="podaj czas w [ms] całej sekwencji - pamietaj że przepływ gifa jest niezależny od tego")
     args = parser.parse_args()
     if args.log:
         logging.basicConfig(level=logging.DEBUG)
@@ -32,7 +34,7 @@ def def_params():
 
 class Ui_MainWindow(object):
 
-    def __init__(self, gruboscGifa):
+    def __init__(self, gruboscGifa, timeSeq):
         self.label = None #label na gifa
         self.label_2 = None #label na widget/mape
         self.movie = None #movie do odpalenia gifa
@@ -42,6 +44,7 @@ class Ui_MainWindow(object):
         self.widthWindow = 925
         self.heightWindow = 810
         self.gruboscGifa = int(gruboscGifa)
+        self.timeSeq = timeSeq
         self.MainWindow = None
 
     def setupUi(self, MainWindow):
@@ -66,7 +69,9 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.changePicture)
-        self.timer.setInterval(4980)
+        timeToChange=int(floor(int(self.timeSeq)/2))
+        logging.debug("timeSeq/2:"+str(timeToChange))
+        self.timer.setInterval(timeToChange)
         self.timer.start()
 
     def changePicture(self):
@@ -93,9 +98,9 @@ class Ui_MainWindow(object):
 
 class Window(QtWidgets.QMainWindow):
     resized = QtCore.pyqtSignal()
-    def __init__(self, gruboscGifa, fullScreen):
+    def __init__(self, gruboscGifa, fullScreen, timeSeq):
         super(Window, self).__init__(parent=None)
-        self.ui = Ui_MainWindow(gruboscGifa)
+        self.ui = Ui_MainWindow(gruboscGifa, timeSeq)
         self.ui.setupUi(self)
         self.resized.connect(self.resizeEventFunction)
         if fullScreen:
@@ -114,7 +119,8 @@ if __name__ == "__main__":
     args=def_params()
     gruboscGifa=args.grubosc
     fullScreen=args.fullScreen
+    timeSeq=args.timeSeq
     app = QtWidgets.QApplication(sys.argv)
-    w = Window(gruboscGifa, fullScreen)
+    w = Window(gruboscGifa, fullScreen, timeSeq)
     w.show()
     sys.exit(app.exec_())
