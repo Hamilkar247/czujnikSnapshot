@@ -6,6 +6,7 @@ import time
 import sys
 import logging
 import argparse
+import json
 from math import floor
 
 def def_params():
@@ -39,6 +40,18 @@ class Ui_MainWindow(object):
         self.timeSeq = timeSeq
         self.MainWindow = None
         self.timer = None
+        self.mapapng = None
+        self.widgetpng = None
+        self.gif = None
+
+        self.readURLPictures()
+
+    #wczytywanie nazw grafik z pliku slideshow.json
+    def readURLPictures(self):
+        with open('slideshow.json') as json_file:
+            urls = json.load(json_file)
+            print(urls)
+            print(urls['mapa'])
 
     def setupUi(self, MainWindow):
         logging.debug("setupUi")
