@@ -48,10 +48,12 @@ class Ui_MainWindow(object):
 
     #wczytywanie nazw grafik z pliku slideshow.json
     def readURLPictures(self):
+        logging.debug("readURLPictures")
         with open('slideshow.json') as json_file:
             urls = json.load(json_file)
-            print(urls)
-            print(urls['mapa'])
+            self.mapapng=urls['mapa']
+            self.widgetpng=urls['widget']
+            self.gif=urls['gif']
 
     def setupUi(self, MainWindow):
         logging.debug("setupUi")
@@ -64,13 +66,13 @@ class Ui_MainWindow(object):
         self.lab_gif.setText("")
         self.lab_gif.setScaledContents(True)
         self.lab_gif.setObjectName("lab_gif")
-        self.movie = QMovie("10s.gif")
+        self.movie = QMovie(self.gif)
         self.lab_gif.setMovie(self.movie)
         self.movie.start()
         self.lab_MapOrWidget = QtWidgets.QLabel(MainWindow)
         self.lab_MapOrWidget.setGeometry(QtCore.QRect(0, self.gruboscGifa, self.widthWindow, self.heightWindow-20))
         self.lab_MapOrWidget.setText("")
-        self.lab_MapOrWidget.setPixmap(QtGui.QPixmap("kolno_map.png"))
+        self.lab_MapOrWidget.setPixmap(QtGui.QPixmap(self.mapapng))
         self.lab_MapOrWidget.setScaledContents(True)
         self.lab_MapOrWidget.setObjectName("lab_MapOrWidget")
         self.setTimerChangePicture()
@@ -78,11 +80,11 @@ class Ui_MainWindow(object):
     def changePicture(self):
         logging.debug("changePicture Function - flagWidget="+str(self.flagaWidget))
         if self.flagaWidget == 0:
-            self.lab_MapOrWidget.setPixmap(QtGui.QPixmap("kolno_map.png"))
+            self.lab_MapOrWidget.setPixmap(QtGui.QPixmap(self.mapapng))
             self.flagaWidget = 1
         else:
             self.restartGifa
-            self.lab_MapOrWidget.setPixmap(QtGui.QPixmap("widget_kolno.png"))
+            self.lab_MapOrWidget.setPixmap(QtGui.QPixmap(self.widgetpng))
             self.flagaWidget = 0
             self.restartGifa()
 
