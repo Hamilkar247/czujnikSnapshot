@@ -14,7 +14,7 @@ def def_params():
             description="parametry do wyswietlenia"
     )
     parser.add_argument("-l", "--log", action='store_true', help="ustaw debug flage")
-    parser.add_argument("-g", "--grubosc", default=20, help="ustaw grubosc gifa")
+    parser.add_argument("-g", "--grubosc", default=4, help="ustaw grubosc gifa")
     parser.add_argument("-f", "--fullScreen", action='store_true', help="ustaw maksymalny rozmiar")
     parser.add_argument("-t", "--timeSeq", default=9960, help="podaj czas w [ms] całej sekwencji - pamietaj że przepływ gifa jest niezależny od tego")
     args = parser.parse_args()
