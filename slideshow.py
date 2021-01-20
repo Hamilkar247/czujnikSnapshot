@@ -119,7 +119,8 @@ class Window(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
         self.resized.connect(self.resizeEventFunction)
         if fullScreen:
-            self.showMaximized()
+            #self.showMaximized()
+            self.showFullScreen()
 
     def resizeEvent(self, event):
         self.resized.emit()
