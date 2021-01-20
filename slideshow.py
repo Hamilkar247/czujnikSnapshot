@@ -16,7 +16,7 @@ def def_params():
     parser.add_argument("-l", "--log", action='store_true', help="ustaw debug flage")
     parser.add_argument("-g", "--grubosc", default=4, help="ustaw grubosc gifa")
     parser.add_argument("-f", "--fullScreen", action='store_true', help="ustaw maksymalny rozmiar")
-    parser.add_argument("-t", "--timeSeq", default=9960, help="podaj czas w [ms] całej sekwencji - pamietaj że przepływ gifa jest niezależny od tego")
+    parser.add_argument("-t", "--timeSeq", default=9960, help="podaj czas w [ms] dla każdego obrazka - pamietaj że przepływ gifa jest niezależny od tego")
     args = parser.parse_args()
     if args.log:
         logging.basicConfig(level=logging.DEBUG)
@@ -92,8 +92,8 @@ class Ui_MainWindow(object):
         logging.debug("setTimerChangePicture")
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.changePicture)
-        timeToChange=int(floor(int(self.timeSeq)/2))
-        logging.debug("timeSeq/2:"+str(timeToChange))
+        timeToChange=int(floor(int(self.timeSeq)))
+        logging.debug("timeSeq:"+str(timeToChange))
         self.timer.setInterval(timeToChange)
         self.timer.start()
 
