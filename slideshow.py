@@ -2,6 +2,7 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QMovie
+from PyQt5.Qt import Qt
 import time
 import sys
 import logging
@@ -11,8 +12,14 @@ from math import floor
 
 def def_params():
     parser = argparse.ArgumentParser(
-            description="parametry do wyswietlenia"
-    )
+            description=
+            """
+            Klawisze akcji:
+            - spacja - przejście w tryb pełnoekranowy
+            - escape - wyjście z trybu pełnoekranowego
+            parametry do wyswietlenia
+            """
+            )
     parser.add_argument("-l", "--log", action='store_true', help="ustaw debug flage")
     parser.add_argument("-g", "--grubosc", default=4, help="ustaw grubosc gifa")
     parser.add_argument("-f", "--fullScreen", action='store_true', help="ustaw maksymalny rozmiar")
@@ -129,6 +136,20 @@ class Window(QtWidgets.QMainWindow):
 
     def resizeEventFunction(self):
         logging.debug("resizeEvent")
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Escape:
+            logging.debug("Klawisz Escape został wciśniety")
+            if self.isFullScreen():
+                self.showMaximized()
+                event.accept()
+                logging.debug("wyłączony tryb pełnoekranowy")
+        if event.key() == Qt.Key_Space :
+            logging.debug("Klawisz Spacja został wciśniety")
+            if self.isFullScreen()==False:
+                self.showFullScreen()
+                event.accept()
+                logging.debug("włączono tryb pełnoekranowy")
 
 if __name__ == "__main__":
     args=def_params()
