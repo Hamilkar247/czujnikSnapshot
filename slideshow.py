@@ -50,7 +50,10 @@ class Ui_MainWindow(object):
         self.mapapng = None
         self.widgetpng = None
         self.gif = None
-
+        self.kwadratpng = None
+        self.timerLoadingBar = None
+        self.wypelnienie = 1
+        
         self.readURLPictures()
 
     #wczytywanie nazw grafik z pliku slideshow.json
@@ -61,6 +64,7 @@ class Ui_MainWindow(object):
             self.mapapng=urls['mapa']
             self.widgetpng=urls['widget']
             self.gif=urls['gif']
+            self.kwadratpng=urls['kwadrat']
 
     def setupUi(self, MainWindow):
         logging.debug("setupUi")
@@ -68,14 +72,22 @@ class Ui_MainWindow(object):
         self.mainWindow.setObjectName("MainWindow")
         self.mainWindow.setWindowTitle("MainWindow")
         self.mainWindow.resize(self.widthWindow, self.heightWindow)
-        self.lab_gif = QtWidgets.QLabel(self.mainWindow)
-        self.lab_gif.setGeometry(QtCore.QRect(0, 0, self.widthWindow, self.gruboscGifa))
-        self.lab_gif.setText("")
-        self.lab_gif.setScaledContents(True)
-        self.lab_gif.setObjectName("lab_gif")
-        self.movie = QMovie(self.gif)
-        self.lab_gif.setMovie(self.movie)
-        self.movie.start()
+        #self.lab_gif = QtWidgets.QLabel(self.mainWindow)
+        #self.lab_gif.setGeometry(QtCore.QRect(0, 0, self.widthWindow, self.gruboscGifa))
+        #self.lab_gif.setText("")
+        #self.lab_gif.setScaledContents(True)
+        #self.lab_gif.setObjectName("lab_gif")
+        #self.movie = QMovie(self.gif)
+        #self.lab_gif.setMovie(self.movie)
+        #self.movie.start()
+       #pasek u góry
+        self.lab_Pasek = QtWidgets.QLabel(self.mainWindow)
+        self.setWidthLoadingBar()
+        self.lab_Pasek.setText("")
+        self.lab_Pasek.setScaledContents(True)
+        self.lab_Pasek.setObjectName("lab_Pasek")
+        self.lab_Pasek.setPixmap(QtGui.QPixmap(self.kwadratpng))
+        self.lab_Pasek.setScaledContents(True)
         self.lab_MapOrWidget = QtWidgets.QLabel(MainWindow)
         self.lab_MapOrWidget.setGeometry(QtCore.QRect(0, self.gruboscGifa, self.widthWindow, self.heightWindow-20))
         self.lab_MapOrWidget.setText("")
@@ -83,6 +95,10 @@ class Ui_MainWindow(object):
         self.lab_MapOrWidget.setScaledContents(True)
         self.lab_MapOrWidget.setObjectName("lab_MapOrWidget")
         self.setTimerChangePicture()
+        self.setTimerLoadingBar()
+
+    def setWidthLoadingBar(self):
+        self.lab_Pasek.setGeometry(QtCore.QRect(0,0, self.wypelnienie * self.widthWindow/10, self.gruboscGifa))
 
     def changePicture(self):
         logging.debug("changePicture Function - flagWidget="+str(self.flagaWidget))
@@ -95,6 +111,14 @@ class Ui_MainWindow(object):
             self.flagaWidget = 0
             self.restartGifa()
 
+    def changeLoadingBar(self):
+        if self.wypelnienie < 10:
+            self.wypelnienie = self.wypelnienie+1
+        else:
+            self.wypelnienie = 1
+        self.setWidthLoadingBar()
+        logging.debug(f"changeLoadingBar metoda - Wypelnienie={self.wypelnienie}")
+
     def setTimerChangePicture(self):
         logging.debug("setTimerChangePicture")
         self.timer = QtCore.QTimer()
@@ -104,11 +128,16 @@ class Ui_MainWindow(object):
         self.timer.setInterval(timeToChange)
         self.timer.start()
 
+    def setTimerLoadingBar(self):
+        logging.debug("setTimerLoadingBar")
+        #self.timerLoadingBar.timeout.connect(floor(int(self.timeSeq)/10))
+        self.timer.timeout.connect(self.changeLoadingBar)
+
     def restartGifa(self):
         logging.debug("restartGifa")
-        self.movie.stop()
-        self.lab_gif.setMovie(self.movie)
-        self.movie.start()
+        #self.movie.stop()
+        #self.lab_gif.setMovie(self.movie)
+        #self.movie.start()
 
     def setSizeWindow(self):
         self.widthWindow = self.mainWindow.frameGeometry().width()
@@ -116,7 +145,7 @@ class Ui_MainWindow(object):
         logging.debug("widthWindow :"+str(self.widthWindow))
         logging.debug("heightWindow :"+str(self.heightWindow))
         self.lab_MapOrWidget.setGeometry(QtCore.QRect(0, self.gruboscGifa, self.widthWindow, self.heightWindow))
-        self.lab_gif.setGeometry(QtCore.QRect(0, 0, self.widthWindow, self.gruboscGifa))
+        #self.lab_gif.setGeometry(QtCore.QRect(0, 0, self.widthWindow, self.gruboscGifa))
 
 class Window(QtWidgets.QMainWindow):
     resized = QtCore.pyqtSignal()
