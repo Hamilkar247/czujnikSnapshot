@@ -44,7 +44,7 @@ class Ui_MainWindow(object):
         self.widthWindow = 925
         self.heightWindow = 810
         self.gruboscGifa = int(gruboscGifa)
-        self.czasObrazka = time *1000 #w milisekundach
+        self.czasObrazka = int(time)*1000 #w milisekundach #bez int - napis zostanie ... wygenerowany 1000 razy
         self.MainWindow = None
         self.timer = None
         self.mapapng = None
