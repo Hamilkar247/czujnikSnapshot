@@ -53,8 +53,19 @@ class Ui_MainWindow(object):
         self.kwadratpng = None
         self.timerLoadingBar = None
         self.wypelnienie = 1
-        
         self.readURLPictures()
+        self.initLog()
+
+    def initLog(self):
+        logging.debug("initLog")
+        logging.debug("widthWindow: "+str(self.widthWindow))
+        logging.debug("heightWindow: "+str(self.heightWindow))
+        logging.debug("czasObrazka: "+str(self.czasObrazka))
+        logging.debug("wypelnienie: "+str(self.wypelnienie))
+        logging.debug(self.mapapng)
+        logging.debug(self.widgetpng)
+        logging.debug(self.gif)
+        logging.debug(self.kwadratpng)
 
     #wczytywanie nazw grafik z pliku slideshow.json
     def readURLPictures(self):
@@ -124,7 +135,7 @@ class Ui_MainWindow(object):
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.changePicture)
         timeToChange=int(floor(int(self.czasObrazka)))
-        logging.debug("czasObrazka:"+str(timeToChange))
+        logging.debug("czasObrazka:"+str(timeToChange) + "ms")
         self.timer.setInterval(timeToChange)
         self.timer.start()
 
@@ -190,6 +201,7 @@ if __name__ == "__main__":
     gruboscGifa=args.grubosc
     fullScreen=args.fullScreen
     time=args.time
+    logging.debug(f"args : {args}")
     app = QtWidgets.QApplication(sys.argv)
     w = Window(gruboscGifa, fullScreen, time)
     w.show()
