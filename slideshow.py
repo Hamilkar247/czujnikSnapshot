@@ -50,7 +50,7 @@ class Ui_MainWindow(object):
         self.widgetpng = None
         self.kwadratpng = None
         self.timerLoadingBar = None
-        self.wypelnienie = 1
+        self.wypelnienie = 0
         self.readURLPictures()
         self.initLog()
 
@@ -107,15 +107,19 @@ class Ui_MainWindow(object):
         if self.flagaWidget == 0:
             self.lab_MapOrWidget.setPixmap(QtGui.QPixmap(self.mapapng))
             self.flagaWidget = 1
+            self.wypelnienie = 0
+            self.setWidthLoadingBar()
         else:
             self.lab_MapOrWidget.setPixmap(QtGui.QPixmap(self.widgetpng))
             self.flagaWidget = 0
+            self.wypelnienie = 0
+            self.setWidthLoadingBar()
 
     def changeLoadingBar(self):
-        if self.wypelnienie < 10:
+        if self.wypelnienie < 11:
             self.wypelnienie = self.wypelnienie+1
         else:
-            self.wypelnienie = 1
+            self.wypelnienie = 0
         self.setWidthLoadingBar()
         logging.debug(f"changeLoadingBar metoda - Wypelnienie={self.wypelnienie}")
 
