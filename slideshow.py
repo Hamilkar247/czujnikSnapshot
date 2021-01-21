@@ -23,7 +23,7 @@ def def_params():
     parser.add_argument("-l", "--log", action='store_true', help="ustaw debug flage")
     parser.add_argument("-g", "--grubosc", default=4, help="ustaw grubosc gifa")
     parser.add_argument("-f", "--fullScreen", action='store_true', help="ustaw maksymalny rozmiar")
-    parser.add_argument("-t", "--timeSeq", default=9960, help="podaj czas w [ms] dla każdego obrazka - pamietaj że przepływ gifa jest niezależny od tego")
+    parser.add_argument("-t", "--timeSeq", default=10000, help="podaj czas w [ms] dla każdego obrazka - pamietaj że przepływ gifa jest niezależny od tego")
     args = parser.parse_args()
     if args.log:
         logging.basicConfig(level=logging.DEBUG)
@@ -130,8 +130,13 @@ class Ui_MainWindow(object):
 
     def setTimerLoadingBar(self):
         logging.debug("setTimerLoadingBar")
+        self.timerLoadingBar = QtCore.QTimer()
         #self.timerLoadingBar.timeout.connect(floor(int(self.timeSeq)/10))
-        self.timer.timeout.connect(self.changeLoadingBar)
+        self.timerLoadingBar.timeout.connect(self.changeLoadingBar)
+        timeToChange=int(floor(int(self.timeSeq)/10))
+        logging.debug("timeToChange:"+str(timeToChange))
+        self.timerLoadingBar.setInterval(timeToChange)
+        self.timerLoadingBar.start()
 
     def restartGifa(self):
         logging.debug("restartGifa")
