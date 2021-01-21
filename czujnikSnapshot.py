@@ -9,9 +9,6 @@ import json
 from time import sleep
 import datetime
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel
-from PyQt5.QtGui import QIcon, QPixmap
-from PyQt5.QtCore import QTimer
 
 class CzujnikSnap():
    #loghami=False
@@ -44,35 +41,6 @@ class CzujnikSnap():
    def __init__(self, args):
       self.loghami = args.loghami
 
-class App(QWidget):
-
-    def __init__(self, url_map, url_widget):
-        super().__init__()
-        self.title = "CzujnikImage"
-        self.left = 10
-        self.top = 10
-        self.width = 10
-        self.height = 400
-        self.url_map = url_map
-        self.url_widget = url_widget
-        self.initUI()
-
-    def initUI(self):
-        self.setWindowTitle(self.title)
-        self.setGeometry(self.left, self.top, self.width, self.height)
-
-        #Create widget
-        label = QLabel(self)
-        pixmap = QPixmap(self.url_map)
-        label.setPixmap(pixmap)
-        self.resize(pixmap.width(), pixmap.height())
-        QTime
-        label = QLabel(self)
-        pixmap = QPixmap(self.url_widget)
-        label.setPixmap(pixmap)
-
-        self.show()
-
 def def_params():
     parser = argparse.ArgumentParser(
             description="Description to fill"
@@ -92,11 +60,8 @@ def addCurrentFolderToPath():
 def main():
     args=def_params()
     addCurrentFolderToPath()
-    #czuj = CzujnikSnap(args)
-    #czuj.start()
-    app = QApplication(sys.argv)
-    ex = App('kolno_map.png', 'widget_kolno.png')
-    sys.exit(app.exec_())
+    czuj = CzujnikSnap(args)
+    czuj.start()
 
 if __name__ == "__main__":
     main()
