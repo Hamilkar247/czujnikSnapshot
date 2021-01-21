@@ -35,8 +35,8 @@ class Ui_MainWindow(object):
 
     def __init__(self, gruboscLoadingBara, time):
         logging.debug("UI_MainWindow __init__")
-        self.label = None #label na gifa
-        self.label_2 = None #label na widget/mape
+        self.lab_loadingbBar = None #label na loadingbara
+        self.lab_MapOrWidget = None #label na widget/mape
         self.movie = None #movie do odpalenia gifa
         self.timerPicture = None #timerPicture do zamiany zdjęć
         self.flagaWidget = 1 #flaga mowiaca czy jest teraz mapa czy widget
@@ -81,13 +81,13 @@ class Ui_MainWindow(object):
         self.mainWindow.setWindowTitle("MainWindow")
         self.mainWindow.resize(self.widthWindow, self.heightWindow)
         #pasek u góry
-        self.lab_Pasek = QtWidgets.QLabel(self.mainWindow)
+        self.lab_loadingBar = QtWidgets.QLabel(self.mainWindow)
         self.setWidthLoadingBar()
-        self.lab_Pasek.setText("")
-        self.lab_Pasek.setScaledContents(True)
-        self.lab_Pasek.setObjectName("lab_Pasek")
-        self.lab_Pasek.setPixmap(QtGui.QPixmap(self.kwadratpng))
-        self.lab_Pasek.setScaledContents(True)
+        self.lab_loadingBar.setText("")
+        self.lab_loadingBar.setScaledContents(True)
+        self.lab_loadingBar.setObjectName("lab_Pasek")
+        self.lab_loadingBar.setPixmap(QtGui.QPixmap(self.kwadratpng))
+        self.lab_loadingBar.setScaledContents(True)
         #mapa i widget
         self.lab_MapOrWidget = QtWidgets.QLabel(MainWindow)
         self.lab_MapOrWidget.setGeometry(QtCore.QRect(0, self.gruboscLoadingBara, self.widthWindow, self.heightWindow-20))
@@ -100,7 +100,7 @@ class Ui_MainWindow(object):
         self.setTimerLoadingBar()
 
     def setWidthLoadingBar(self):
-        self.lab_Pasek.setGeometry(QtCore.QRect(0,0, self.wypelnienie * self.widthWindow/10, self.gruboscLoadingBara))
+        self.lab_loadingBar.setGeometry(QtCore.QRect(0,0, self.wypelnienie * self.widthWindow/10, self.gruboscLoadingBara))
 
     def changePicture(self):
         logging.debug("changePicture Function - flagWidget="+str(self.flagaWidget))
