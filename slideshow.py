@@ -38,7 +38,7 @@ class Ui_MainWindow(object):
         self.label = None #label na gifa
         self.label_2 = None #label na widget/mape
         self.movie = None #movie do odpalenia gifa
-        self.timer = None #timer do zamiany zdjęć
+        self.timerPicture = None #timerPicture do zamiany zdjęć
         self.flagaWidget = 1 #flaga mowiaca czy jest teraz mapa czy widget
         self.centralWidget = None
         self.widthWindow = 925
@@ -46,10 +46,8 @@ class Ui_MainWindow(object):
         self.gruboscLoadingBara = int(gruboscLoadingBara)
         self.czasObrazka = int(time)*1000 #w milisekundach #bez int - napis zostanie ... wygenerowany 1000 razy
         self.MainWindow = None
-        self.timer = None
         self.mapapng = None
         self.widgetpng = None
-        self.gif = None
         self.kwadratpng = None
         self.timerLoadingBar = None
         self.wypelnienie = 1
@@ -123,12 +121,12 @@ class Ui_MainWindow(object):
 
     def setTimerChangePicture(self):
         logging.debug("setTimerChangePicture")
-        self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(self.changePicture)
+        self.timerPicture = QtCore.QTimer()
+        self.timerPicture.timeout.connect(self.changePicture)
         timeToChange=int(floor(int(self.czasObrazka)))
         logging.debug("czasObrazka:"+str(timeToChange) + "ms")
-        self.timer.setInterval(timeToChange)
-        self.timer.start()
+        self.timerPicture.setInterval(timeToChange)
+        self.timerPicture.start()
 
     def setTimerLoadingBar(self):
         logging.debug("setTimerLoadingBar")
