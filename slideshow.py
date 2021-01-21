@@ -23,7 +23,7 @@ def def_params():
     parser.add_argument("-l", "--log", action='store_true', help="ustaw debug flage")
     parser.add_argument("-g", "--grubosc", default=4, help="ustaw grubosc gifa")
     parser.add_argument("-f", "--fullScreen", action='store_true', help="ustaw maksymalny rozmiar")
-    parser.add_argument("-t", "--timeSeq", default=10000, help="podaj czas w [ms] dla każdego obrazka - pamietaj że przepływ gifa jest niezależny od tego")
+    parser.add_argument("-t", "--time", default=10, help="podaj czas w [s] dla każdego obrazka")
     args = parser.parse_args()
     if args.log:
         logging.basicConfig(level=logging.DEBUG)
@@ -33,7 +33,7 @@ def def_params():
 
 class Ui_MainWindow(object):
 
-    def __init__(self, gruboscGifa, timeSeq):
+    def __init__(self, gruboscGifa, time):
         logging.debug("UI_MainWindow __init__")
         self.label = None #label na gifa
         self.label_2 = None #label na widget/mape
@@ -44,7 +44,7 @@ class Ui_MainWindow(object):
         self.widthWindow = 925
         self.heightWindow = 810
         self.gruboscGifa = int(gruboscGifa)
-        self.timeSeq = timeSeq
+        self.czasObrazka = time *1000 #w milisekundach
         self.MainWindow = None
         self.timer = None
         self.mapapng = None
@@ -123,17 +123,17 @@ class Ui_MainWindow(object):
         logging.debug("setTimerChangePicture")
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.changePicture)
-        timeToChange=int(floor(int(self.timeSeq)))
-        logging.debug("timeSeq:"+str(timeToChange))
+        timeToChange=int(floor(int(self.czasObrazka)))
+        logging.debug("czasObrazka:"+str(timeToChange))
         self.timer.setInterval(timeToChange)
         self.timer.start()
 
     def setTimerLoadingBar(self):
         logging.debug("setTimerLoadingBar")
         self.timerLoadingBar = QtCore.QTimer()
-        #self.timerLoadingBar.timeout.connect(floor(int(self.timeSeq)/10))
+        #self.timerLoadingBar.timeout.connect(floor(int(self.czasObrazka)/10))
         self.timerLoadingBar.timeout.connect(self.changeLoadingBar)
-        timeToChange=int(floor(int(self.timeSeq)/10))
+        timeToChange=int(floor(int(self.czasObrazka)/10))
         logging.debug("timeToChange:"+str(timeToChange))
         self.timerLoadingBar.setInterval(timeToChange)
         self.timerLoadingBar.start()
@@ -154,9 +154,9 @@ class Ui_MainWindow(object):
 
 class Window(QtWidgets.QMainWindow):
     resized = QtCore.pyqtSignal()
-    def __init__(self, gruboscGifa, fullScreen, timeSeq):
+    def __init__(self, gruboscGifa, fullScreen, time):
         super(Window, self).__init__(parent=None)
-        self.ui = Ui_MainWindow(gruboscGifa, timeSeq)
+        self.ui = Ui_MainWindow(gruboscGifa, time)
         self.ui.setupUi(self)
         self.resized.connect(self.resizeEventFunction)
         if fullScreen:
@@ -189,8 +189,8 @@ if __name__ == "__main__":
     args=def_params()
     gruboscGifa=args.grubosc
     fullScreen=args.fullScreen
-    timeSeq=args.timeSeq
+    time=args.time
     app = QtWidgets.QApplication(sys.argv)
-    w = Window(gruboscGifa, fullScreen, timeSeq)
+    w = Window(gruboscGifa, fullScreen, time)
     w.show()
     sys.exit(app.exec_())
