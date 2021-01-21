@@ -10,15 +10,46 @@ from time import sleep
 import datetime
 import sys
 
+def def_params():
+    parser = argparse.ArgumentParser(
+            description=
+            """
+CzujnikSnapshot - odpowiada za snapy z pomiarów danego urządzenia podanego
+czujnika
+            """
+    )
+    parser.add_argument("-l", "--loghami", action='store_true', help="ustaw tryb debug")
+    parser.add_argument("-t", "--time", default=10, help="flaga określająca jak często ma być dokonywany snap czujnika")
+    args = parser.parse_args()
+    if args.loghami:
+        logging.basicConfig(level=logging.DEBUG)
+        logging.debug("Komunikat pokazywany wyłącznie w trybie debug")
+        print("args:" + str(args))
+    return args
+
+def addCurrentFolderToPath():
+    path_to_dir = os.path.dirname(os.path.realpath(__file__))
+    os.environ["PATH"] += os.pathsep + path_to_dir
+
 class CzujnikSnap():
-   #loghami=False
+   def __init__(self, loghami, time_to_snap):
+      self.loghami = loghami
+      self.time_to_snap = time_to_snap
+      self.mapa = None
+      self.widget = None
 
    def readConfigFunction(self):
-       with open('config.json') as f:
-           data = json.load(f)
-       if self.loghami:
-           logging.debug("readConfig")
-           logging.debug(data)
+       logging.debug("readConfig")
+       with open('config.json') as json_file:
+           urls = json.load(json_file)
+           self.mapa = urls['mapa']
+           self.widget=urls['widget']
+       logging.debug("mapa :"+self.mapa)
+       logging.debug("widget:"+self.widget)
+
+   def start(self):
+       print("czujnikSnap")
+       self.seleniumWork()
 
    def seleniumWork(self):
        self.options = webdriver.ChromeOptions()
@@ -38,29 +69,12 @@ class CzujnikSnap():
        self.readConfigFunction()
        self.seleniumWork()
 
-   def __init__(self, args):
-      self.loghami = args.loghami
-
-def def_params():
-    parser = argparse.ArgumentParser(
-            description="Description to fill"
-    )
-    parser.add_argument("-l", "--loghami", action='store_true', help="set debug")
-    args = parser.parse_args()
-    if args.loghami:
-        logging.basicConfig(level=logging.DEBUG)
-        logging.debug("Only shown in debug mode")
-        print("args:" + str(args))
-    return args
-
-def addCurrentFolderToPath():
-    path_to_dir = os.path.dirname(os.path.realpath(__file__))
-    os.environ["PATH"] += os.pathsep + path_to_dir
-
 def main():
     args=def_params()
+    loghami=args.loghami
+    time=args.time
     addCurrentFolderToPath()
-    czuj = CzujnikSnap(args)
+    czuj = CzujnikSnap(loghami, time)
     czuj.start()
 
 if __name__ == "__main__":
