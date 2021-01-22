@@ -96,7 +96,7 @@ class CzujnikSnap():
        print(t, " ScreenShoot: Widget ")
 
    def snapMapa(self):
-       logging.debug("snapMapa - robienie zdjęcia widgetu")
+       logging.debug("snapMapa - robienie zdjęcia mapy")
        milli_sec = int(round(time.time()*1000))
        now = datetime.now()
        t = now.strftime("[%Y/%m/%d-%H:%M:%S]")
@@ -111,7 +111,7 @@ def main():
     visible=args.visible
     time=args.time
     display = Display(visible=0, size=(1920,1200))
-    addCurrentFolderToPath()
+    #addCurrentFolderToPath()
     czuj = CzujnikSnap(loghami, visible, time)
     display = display.stop()
 
