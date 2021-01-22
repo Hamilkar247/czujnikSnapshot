@@ -85,7 +85,7 @@ class Ui_MainWindow(object):
         self.setWidthLoadingBar()
         self.lab_loadingBar.setText("")
         self.lab_loadingBar.setScaledContents(True)
-        self.lab_loadingBar.setObjectName("lab_Pasek")
+        self.lab_loadingBar.setObjectName("lab_loadingBar")
         self.lab_loadingBar.setPixmap(QtGui.QPixmap(self.kwadratpng))
         self.lab_loadingBar.setScaledContents(True)
         #mapa i widget
@@ -120,6 +120,7 @@ class Ui_MainWindow(object):
             self.wypelnienie = self.wypelnienie+1
         else:
             self.wypelnienie = 0
+
         self.setWidthLoadingBar()
         logging.debug(f"changeLoadingBar metoda - Wypelnienie={self.wypelnienie}")
 
