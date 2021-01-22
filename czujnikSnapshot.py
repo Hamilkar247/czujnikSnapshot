@@ -21,7 +21,7 @@ czujnika
     )
     parser.add_argument("-l", "--loghami", action='store_true', help="ustaw tryb debug")
     parser.add_argument("-v", "--visible", action='store_true', help="odpalenie progromu bez trybu headless")
-    parser.add_argument("-t", "--time", default=10, help="flaga określająca jak często ma być dokonywany snap czujnika")
+    parser.add_argument("-t", "--time", default=3, help="flaga określająca jak często ma być dokonywany snap czujnika")
     args = parser.parse_args()
     if args.loghami:
         logging.basicConfig(level=logging.DEBUG)
