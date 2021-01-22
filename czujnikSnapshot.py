@@ -34,8 +34,9 @@ def addCurrentFolderToPath():
     os.environ["PATH"] += os.pathsep + path_to_dir
 
 class CzujnikSnap():
-   def __init__(self, loghami, time_to_snap):
+   def __init__(self, loghami, visible, time_to_snap):
       self.loghami = loghami
+      self.visible = visible
       self.time_to_snap = time_to_snap
       self.mapa = None
       self.widget = None
@@ -61,7 +62,7 @@ class CzujnikSnap():
        self.options.add_argument("--start-fullscreen")
        self.options.add_argument("--kiosk")
        self.options.add_argument("--disable-application-cache")
-       if self.loghami:
+       if self.visible:
            self.options.headless=False
        else:
            self.options.headless=True
@@ -106,10 +107,11 @@ class CzujnikSnap():
 def main():
     args=def_params()
     loghami=args.loghami
+    visible=args.visible
     time=args.time
     display = Display(visible=0, size=(1920,1200))
     addCurrentFolderToPath()
-    czuj = CzujnikSnap(loghami, time)
+    czuj = CzujnikSnap(loghami, visible, time)
     display = display.stop()
 
 if __name__ == "__main__":
