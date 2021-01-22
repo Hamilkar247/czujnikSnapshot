@@ -106,7 +106,6 @@ def main():
     time=args.time
     addCurrentFolderToPath()
     czuj = CzujnikSnap(loghami, time)
-    czuj.start()
 
 if __name__ == "__main__":
     main()
