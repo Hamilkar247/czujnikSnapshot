@@ -1,5 +1,5 @@
 {
-  "mapa" : "kolno_map.png",
-  "widget": "widget_kolno.png",
+  "mapa" : "mapa.png",
+  "widget": "widget.png",
   "kwadrat": "kwadrat.png"
 }
