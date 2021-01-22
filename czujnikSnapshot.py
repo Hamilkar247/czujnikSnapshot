@@ -70,7 +70,7 @@ class CzujnikSnap():
        logging.debug(f"options: {self.options}")
        #driver przeglądarki
        self.driver = webdriver.Chrome(options=self.options)
-       #self.driver.set_window_size(1920,1316)
+       self.driver.set_window_size(1920,1316)
        self.driver.set_script_timeout(30)
        self.driver.set_page_load_timeout(30) # seconds
        logging.debug(f"driver: {self.driver}")

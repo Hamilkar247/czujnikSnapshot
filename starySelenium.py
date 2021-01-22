@@ -40,7 +40,7 @@ if __name__ == "__main__":
     chrome_options.add_argument("--disable-application-cache")
     addCurrentFolderToPath()
     driver = webdriver.Chrome(options=chrome_options)
-    #driver.set_window_size(1920,1316)
+    driver.set_window_size(1920,1316)
     driver.set_script_timeout(30)
     driver.set_page_load_timeout(30) # seconds
     while  True:
