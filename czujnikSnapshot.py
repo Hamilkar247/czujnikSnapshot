@@ -62,6 +62,7 @@ class CzujnikSnap():
        self.options.add_argument("--start-fullscreen")
        self.options.add_argument("--kiosk")
        self.options.add_argument("--disable-application-cache")
+       self.options.binary_location = "/usr/bin/chromium-browser"
        if self.visible:
            self.options.headless=False
        else:
