@@ -20,6 +20,7 @@ czujnika
             """
     )
     parser.add_argument("-l", "--loghami", action='store_true', help="ustaw tryb debug")
+    parser.add_argument("-v", "--visible", action='store_true', help="odpalenie progromu bez trybu headless")
     parser.add_argument("-t", "--time", default=10, help="flaga określająca jak często ma być dokonywany snap czujnika")
     args = parser.parse_args()
     if args.loghami:
@@ -38,7 +39,7 @@ class CzujnikSnap():
       self.time_to_snap = time_to_snap
       self.mapa = None
       self.widget = None
-      self.options = Options()
+      self.options = None
       self.driver = None
       self.start()
 
@@ -60,6 +61,11 @@ class CzujnikSnap():
        self.options.add_argument("--start-fullscreen")
        self.options.add_argument("--kiosk")
        self.options.add_argument("--disable-application-cache")
+       if self.loghami:
+           self.options.headless=False
+       else:
+           self.options.headless=True
+       logging.debug(f"headless mode is: {self.options.headless}")
        logging.debug(f"options: {self.options}")
        #driver przeglądarki
        self.driver = webdriver.Chrome(options=self.options)
@@ -71,13 +77,9 @@ class CzujnikSnap():
 
    def seleniumJob(self):
        logging.debug("seleniumJob - method")
-       if self.loghami:
-           self.options.headless=False
-       else:
-           self.options.headless=True
-       #while True:
-       self.snapWidget()
-       self.snapMapa()
+       while True:
+           self.snapWidget()
+           self.snapMapa()
        self.driver.quit()
 
    def snapWidget(self):
@@ -89,6 +91,7 @@ class CzujnikSnap():
        self.driver.get(self.widget+str(milli_sec))
        sleep(3)
        screenshot = self.driver.save_screenshot('widget.png')
+       print(t, " ScreenShoot: Widget ")
 
    def snapMapa(self):
        logging.debug("snapMapa - robienie zdjęcia widgetu")
@@ -98,14 +101,16 @@ class CzujnikSnap():
        self.driver.get(self.mapa+str(milli_sec))
        sleep(3)
        screenshot = self.driver.save_screenshot('mapa.png')
+       print(t, " ScreenShoot: Mapa ")
 
 def main():
     args=def_params()
-    display = Display(visible=0, size=(1920,1200))
     loghami=args.loghami
     time=args.time
+    display = Display(visible=0, size=(1920,1200))
     addCurrentFolderToPath()
     czuj = CzujnikSnap(loghami, time)
+    display = display.stop()
 
 if __name__ == "__main__":
     main()
