@@ -9,6 +9,7 @@ import logging
 import argparse
 import json
 from math import floor
+from PIL import Image
 
 def def_params():
     parser = argparse.ArgumentParser(
@@ -102,15 +103,40 @@ class Ui_MainWindow(object):
     def setWidthLoadingBar(self):
         self.lab_loadingBar.setGeometry(QtCore.QRect(0,0, self.wypelnienie * self.widthWindow/10, self.gruboscLoadingBara))
 
+    #uwaga - metoda verify dziala tylko dla png formatu
+    def checkPicture(self, picturepng):
+        img = Image.open(picturepng)
+        brokenImage=False
+        try:
+            img.verify()
+            print('Valid Image')
+            brokenImage=False
+        except Exception:
+            brokenImage=True
+            print('Invali image')
+            logging.debug(f'Zdjęcie {picturepng} jest błędne')
+        return brokenImage
+
+
     def changePicture(self):
         logging.debug("changePicture Function - flagWidget="+str(self.flagaWidget))
         if self.flagaWidget == 0:
-            self.lab_MapOrWidget.setPixmap(QtGui.QPixmap(self.mapapng))
+            brokenImage=self.checkPicture(self.mapapng)
+            if brokenImage == False:
+                self.lab_MapOrWidget.setPixmap(QtGui.QPixmap(self.mapapng))
+            else:
+                self.lab_MapOrWidget.setPixmap(QtGui.QPixmap(f'{self.mapapng}.bkp'))
+                logging.debug(f'{self.mapapng}.bkp')
             self.flagaWidget = 1
             self.wypelnienie = 0
             self.setWidthLoadingBar()
         else:
-            self.lab_MapOrWidget.setPixmap(QtGui.QPixmap(self.widgetpng))
+            brokenImage=self.checkPicture(self.widgetpng)
+            if brokenImage == False:
+                self.lab_MapOrWidget.setPixmap(QtGui.QPixmap(self.widgetpng))
+            else:
+                self.lab_MapOrWidget.setPixmap(QtGui.QPixmap(f'{self.widgetpng}.bkp'))
+                logging.debug(f'{self.widgetpng}.bkp')
             self.flagaWidget = 0
             self.wypelnienie = 0
             self.setWidthLoadingBar()
@@ -120,7 +146,6 @@ class Ui_MainWindow(object):
             self.wypelnienie = self.wypelnienie+1
         else:
             self.wypelnienie = 0
-
         self.setWidthLoadingBar()
         logging.debug(f"changeLoadingBar metoda - Wypelnienie={self.wypelnienie}")
 

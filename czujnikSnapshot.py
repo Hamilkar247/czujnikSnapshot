@@ -10,6 +10,8 @@ from time import sleep
 from datetime import datetime
 import sys
 import time
+import subprocess
+from PIL import Image
 
 def def_params():
     parser = argparse.ArgumentParser(
@@ -84,6 +86,24 @@ class CzujnikSnap():
            self.snapMapa()
        self.driver.quit()
 
+   #Uwaga img.verify działa tylko dla png formatu
+   def backupScreen(self, nameOfPicture):
+       img = Image.open(f'{nameOfPicture}')
+       logging.debug(f'{nameOfPicture}')
+       brokenImage=False
+       try:
+           img.verify()
+           print('Valid image')
+           brokenImage=False
+       except Exception:
+           print('Invalid image')
+           logging.debug("Zdjęcia jest błędne, backup nie został nadpisany")
+           brokenImage=True
+       if brokenImage==False:
+           backupScreen = subprocess.Popen(['cp', f'{nameOfPicture}', f'{nameOfPicture}.bkp'], stdout=subprocess.PIPE)
+           execute = backupScreen.stdout.read()
+           logging.debug(f'zrobiono kopie {nameOfPicture}.bkp')
+
    def snapWidget(self):
        logging.debug("snapWidget - robienie zdjęcia widgetu")
        milli_sec = int(round(time.time()*1000))
@@ -91,6 +111,7 @@ class CzujnikSnap():
        t = now.strftime("[%Y/%m/%d-%H:%M:%S]")
        logging.debug(f"driver: {self.driver}")
        self.driver.get(self.widget+str(milli_sec))
+       self.backupScreen('widget.png')
        sleep(3)
        screenshot = self.driver.save_screenshot('widget.png')
        print(t, " ScreenShoot: Widget ")
@@ -101,6 +122,7 @@ class CzujnikSnap():
        now = datetime.now()
        t = now.strftime("[%Y/%m/%d-%H:%M:%S]")
        self.driver.get(self.mapa+str(milli_sec))
+       self.backupScreen('mapa.png')
        sleep(3)
        screenshot = self.driver.save_screenshot('mapa.png')
        print(t, " ScreenShoot: Mapa ")
