@@ -5,6 +5,7 @@ from PyQt5.QtGui import QMovie
 from PyQt5.Qt import Qt
 import time
 import sys
+import os
 import logging
 import argparse
 import json
@@ -25,6 +26,7 @@ def def_params():
     parser.add_argument("-g", "--grubosc", default=4, help="ustaw grubosc loadingBara")
     parser.add_argument("-f", "--fullScreen", action='store_true', help="ustaw maksymalny rozmiar")
     parser.add_argument("-t", "--time", default=10, help="podaj czas w [s] dla każdego obrazka")
+    parser.add_argument("-wd", "--workdirectory", default="/home/matball/Projects/czujnikSnapshot", help="argument wskazuje folder roboczy - wazny z tego wzgledu że tam powinien się znajdować plik konfiguracyjny")
     args = parser.parse_args()
     if args.log:
         logging.basicConfig(level=logging.DEBUG)
@@ -208,11 +210,17 @@ class Window(QtWidgets.QMainWindow):
                 logging.debug("włączono tryb pełnoekranowy")
 
 if __name__ == "__main__":
+    obecny_folder=os.getcwd()
+    logging.debug(f"początkowy folder wykonywania:{obecny_folder}")
     args=def_params()
     gruboscLoadingBara=args.grubosc
     fullScreen=args.fullScreen
     time=args.time
+    workdirectory=args.workdirectory
     logging.debug(f"args : {args}")
+    os.chdir(workdirectory)
+    obecny_folder=os.getcwd()
+    logging.debug(f"obecny folder roboczy:{obecny_folder}")
     app = QtWidgets.QApplication(sys.argv)
     w = Window(gruboscLoadingBara, fullScreen, time)
     w.show()
