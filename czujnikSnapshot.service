@@ -1,0 +1,17 @@
+[Unit]
+Description=CzujnikSnapshot
+Wants=graphical.target
+After=graphical.target
+
+[Service]
+#ekrany są numerowane - i 0 jest ekranem domyślnym/pierwszym
+Environment=DISPLAY=0.0
+Environment=XAUTHORITY=/home/matball/.Xauthority
+Type=simple
+ExecStart=/home/matball/Projects/czujnikSnapshot/venv/bin/python /home/matball/Projects/czujnikSnapshot/czujnikSnapshot.py
+Restart=on-abort
+User=matball
+Group=matball
+
+[Install]
+WantedBy=graphical.target
