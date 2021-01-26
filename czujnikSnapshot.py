@@ -25,6 +25,7 @@ czujnika
     parser.add_argument("-v", "--visible", action='store_true', help="odpalenie progromu bez trybu headless")
     parser.add_argument("-t", "--time", default=3, help="flaga określająca jak często ma być dokonywany snap czujnika")
     parser.add_argument("-wd", "--workdirectory", default="/home/matball/Projects/czujnikSnapshot", help="argument określa folder roboczy projektu - o tyle istotne, że w owym folderze szuka plików konfiguracyjnych json")
+    parser.add_argument("-ch", "--chromiumurl", default="/usr/bin/chromium-browser", help="zmienna przechowująca link do chromium-browser")
     args = parser.parse_args()
     if args.loghami:
         logging.basicConfig(level=logging.DEBUG)
@@ -37,10 +38,11 @@ def addCurrentFolderToPath():
     os.environ["PATH"] += os.pathsep + path_to_dir
 
 class CzujnikSnap():
-   def __init__(self, loghami, visible, time_to_snap):
+   def __init__(self, loghami, visible, time_to_snap, chromiumurl):
       self.loghami = loghami
       self.visible = visible
       self.time_to_snap = time_to_snap
+      self.chromiumurl = chromiumurl
       self.mapa = None
       self.widget = None
       self.options = None
@@ -65,7 +67,8 @@ class CzujnikSnap():
        self.options.add_argument("--start-fullscreen")
        self.options.add_argument("--kiosk")
        self.options.add_argument("--disable-application-cache")
-       self.options.binary_location = "/usr/bin/chromium-browser"
+       self.options.binary_location = self.chromiumurl
+       logging.debug(f"chromiumurl:{self.chromiumurl}")
        if self.visible:
            self.options.headless=False
        else:
@@ -135,13 +138,14 @@ def main():
     loghami=args.loghami
     visible=args.visible
     workdirectory=args.workdirectory
+    chromiumurl=args.chromiumurl
     os.chdir(workdirectory)
     obecny_folder=os.getcwd()
     logging.debug(f"obecny folder roboczy:{obecny_folder}")
     time=args.time
     display = Display(visible=0, size=(1920,1200))
     addCurrentFolderToPath()
-    czuj = CzujnikSnap(loghami, visible, time)
+    czuj = CzujnikSnap(loghami, visible, time, chromiumurl)
     display = display.stop()
 
 if __name__ == "__main__":
