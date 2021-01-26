@@ -17,4 +17,13 @@ W parametrze np. a - w wysylaniu na adres url='http://czujnikimiejskie.pl/apipos
 
 uwaga 3004 to numer rasberki w cencnie
 
+=========== pip install Pillow nie PIL - ma jakiś alias w środku
 
+w przypadku błędu przy instalacji
+    The headers or library files could not be found for jpeg,
+    a required dependency when compiling Pillow from source.
+
+prawdopodobnie brakuje jednej libki w systemie raspbianowi odpowiedzialnej za jpeg
+
+sudo apt-get install libjpeg-dev zlib1g-dev
+pip install Pillow
