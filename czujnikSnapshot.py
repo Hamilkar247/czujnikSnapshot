@@ -24,6 +24,7 @@ czujnika
     parser.add_argument("-l", "--loghami", action='store_true', help="ustaw tryb debug")
     parser.add_argument("-v", "--visible", action='store_true', help="odpalenie progromu bez trybu headless")
     parser.add_argument("-t", "--time", default=3, help="flaga określająca jak często ma być dokonywany snap czujnika")
+    parser.add_argument("-wd", "--workdirectory", default="/home/matball/Projects/czujnikSnapshot", help="argument określa folder roboczy projektu - o tyle istotne, że w owym folderze szuka plików konfiguracyjnych json")
     args = parser.parse_args()
     if args.loghami:
         logging.basicConfig(level=logging.DEBUG)
@@ -128,12 +129,18 @@ class CzujnikSnap():
        print(t, " ScreenShoot: Mapa ")
 
 def main():
+    obecny_folder=os.getcwd()
+    logging.debug(f"początkowy folder wykonywania:{obecny_folder}")
     args=def_params()
     loghami=args.loghami
     visible=args.visible
+    workdirectory=args.workdirectory
+    os.chdir(workdirectory)
+    obecny_folder=os.getcwd()
+    logging.debug(f"obecny folder roboczy:{obecny_folder}")
     time=args.time
     display = Display(visible=0, size=(1920,1200))
-    #addCurrentFolderToPath()
+    addCurrentFolderToPath()
     czuj = CzujnikSnap(loghami, visible, time)
     display = display.stop()
 
