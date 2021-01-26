@@ -92,21 +92,27 @@ class CzujnikSnap():
 
    #Uwaga img.verify działa tylko dla png formatu
    def backupScreen(self, nameOfPicture):
-       img = Image.open(f'{nameOfPicture}')
-       logging.debug(f'{nameOfPicture}')
-       brokenImage=False
-       try:
-           img.verify()
-           print('Valid image')
+       if os.path.exists(nameOfPicture):
+           img = Image.open(f'{nameOfPicture}')
+           logging.debug(f'{nameOfPicture}')
            brokenImage=False
-       except Exception:
-           print('Invalid image')
-           logging.debug("Zdjęcia jest błędne, backup nie został nadpisany")
-           brokenImage=True
-       if brokenImage==False:
-           backupScreen = subprocess.Popen(['cp', f'{nameOfPicture}', f'{nameOfPicture}.bkp'], stdout=subprocess.PIPE)
-           execute = backupScreen.stdout.read()
-           logging.debug(f'zrobiono kopie {nameOfPicture}.bkp')
+           try:
+               img.verify()
+               print('Valid image')
+               brokenImage=False
+           except FileExistError:
+               print(f'nie znaleziono pliku {nameOfPicture}.png')
+           except Exception:
+               print('Invalid image')
+               logging.debug("Zdjęcia jest błędne, backup nie został nadpisany")
+               brokenImage=True
+           if brokenImage==False:
+               copyFile = subprocess.Popen(['cp', f'{nameOfPicture}', f'{nameOfPicture}.bkp'], stdout=subprocess.PIPE)
+               execute = copyFile.stdout.read()
+               logging.debug(f'zrobiono kopie {nameOfPicture}.bkp')
+       else:
+           print(f"nie znaleziono zdjęcia {nameOfPicture}")
+
 
    def snapWidget(self):
        logging.debug("snapWidget - robienie zdjęcia widgetu")
