@@ -28,6 +28,10 @@ czujnika
     parser.add_argument("-ch", "--chromiumurl", default="/usr/bin/chromium-browser", help="zmienna przechowująca link do chromium-browser")
 
     args = parser.parse_args()
+    for key, value in args.__dict__.items():
+        if value == None or value == False:
+            del args.__dict__[key]
+            break
 
     if os.path.exists('config.json'):
         config_args = argparse.Namespace()
