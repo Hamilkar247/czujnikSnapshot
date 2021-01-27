@@ -23,15 +23,32 @@ czujnika
     )
     parser.add_argument("-l", "--loghami", action='store_true', help="ustaw tryb debug")
     parser.add_argument("-v", "--visible", action='store_true', help="odpalenie progromu bez trybu headless")
-    parser.add_argument("-t", "--time", default=3, help="flaga określająca jak często ma być dokonywany snap czujnika")
+    parser.add_argument("-t", "--time", help="flaga określająca jak często ma być dokonywany snap czujnika")
     parser.add_argument("-wd", "--workdirectory", default="/home/matball/Projects/czujnikSnapshot", help="argument określa folder roboczy projektu - o tyle istotne, że w owym folderze szuka plików konfiguracyjnych json")
     parser.add_argument("-ch", "--chromiumurl", default="/usr/bin/chromium-browser", help="zmienna przechowująca link do chromium-browser")
+
     args = parser.parse_args()
-    if args.loghami:
+
+    if os.path.exists('config.json'):
+        config_args = argparse.Namespace()
+        with open('config.json', 'rt') as f:
+             config_args = argparse.Namespace()
+             config_args.__dict__.update(json.load(f))
+             print(config_args)
+             print("dodaniu")
+             config_args.__dict__.update(vars(args))
+             print("config_args zmodyfikowane o komendy")
+             print(config_args)
+             print("po config_args")
+    else:
+        config_args = args
+
+    if config_args.loghami:
         logging.basicConfig(level=logging.DEBUG, force=True)
         logging.debug("Komunikat pokazywany wyłącznie w trybie debug")
         print("args:" + str(args))
-    return args
+
+    return config_args
 
 def addCurrentFolderToPath():
     path_to_dir = os.path.dirname(os.path.realpath(__file__))

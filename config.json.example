@@ -1,4 +1,6 @@
 {
+  "width_screen": 1920,
+  "height_screen": 1200,
   "mapa" : "mapa.png",
   "widget": "widget.png",
   "kwadrat": "kwadrat.png",
