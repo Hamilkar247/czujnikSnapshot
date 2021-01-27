@@ -70,7 +70,7 @@ class Ui_MainWindow(object):
     #wczytywanie nazw grafik z pliku slideshow.json
     def readURLPictures(self):
         logging.debug("readURLPictures")
-        with open('slideshowConfig.json') as json_file:
+        with open('config.json') as json_file:
             urls = json.load(json_file)
             self.mapapng=urls['mapa']
             self.widgetpng=urls['widget']
