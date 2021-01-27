@@ -28,7 +28,7 @@ czujnika
     parser.add_argument("-ch", "--chromiumurl", default="/usr/bin/chromium-browser", help="zmienna przechowująca link do chromium-browser")
     args = parser.parse_args()
     if args.loghami:
-        logging.basicConfig(level=logging.DEBUG)
+        logging.basicConfig(level=logging.DEBUG, force=True)
         logging.debug("Komunikat pokazywany wyłącznie w trybie debug")
         print("args:" + str(args))
     return args

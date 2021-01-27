@@ -29,7 +29,7 @@ def def_params():
     parser.add_argument("-wd", "--workdirectory", default="/home/matball/Projects/czujnikSnapshot", help="argument wskazuje folder roboczy - wazny z tego wzgledu że tam powinien się znajdować plik konfiguracyjny")
     args = parser.parse_args()
     if args.log:
-        logging.basicConfig(level=logging.DEBUG)
+        logging.basicConfig(level=logging.DEBUG, force=True)
         logging.debug("Ten komunikat pokazuje sie tylko w trybie debug")
         print("args:" + str(args))
     return args
