@@ -53,8 +53,8 @@ class CzujnikSnap():
        logging.debug("readConfigFunction")
        with open('czujnikSnapConfig.json') as json_file:
            urls = json.load(json_file)
-           self.mapa = urls['mapa']
-           self.widget=urls['widget']
+           self.mapa = urls['mapa-link']
+           self.widget=urls['widget-link']
        logging.debug("mapa :"+self.mapa)
        logging.debug("widget:"+self.widget)
 

@@ -1,4 +1,4 @@
 {
-  "mapa"  : "https://czujnikimiejskie.pl/public/kozienice/?url_node_id=196&kml=false&a=",
-  "widget" : "https://czujnikimiejskie.pl/public/widgety/widget_kozienice.html?id=196&a="
+  "mapa-link"  : "https://czujnikimiejskie.pl/public/kozienice/?url_node_id=196&kml=false&a=",
+  "widget-link" : "https://czujnikimiejskie.pl/public/widgety/widget_kozienice.html?id=196&a="
 }
