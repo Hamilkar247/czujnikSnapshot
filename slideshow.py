@@ -11,6 +11,7 @@ import argparse
 import json
 from math import floor
 from PIL import Image
+from pprint import pprint
 
 def def_params():
     parser = argparse.ArgumentParser(
@@ -27,11 +28,15 @@ def def_params():
     parser.add_argument("-f", "--fullScreenSlideshow", action='store_true', help="ustaw maksymalny rozmiarprzy odpaleniu programu")
     parser.add_argument("-t", "--timeForPicture", type=int, default=10, help="podaj czas w [s] dla każdego obrazka")
     parser.add_argument("-wd", "--workdirectory", default="/home/matball/Projects/czujnikSnapshot", help="argument wskazuje folder roboczy - wazny z tego wzgledu że tam powinien się znajdować plik konfiguracyjny")
+    parser.add_argument("-mapa", "--mapapng", default="mapa.png", help="url do ścieszki z png screenshota mapy - uwaga zalecany format png!(jpg ma pewne problemy w walidacji)")
+    parser.add_argument("-widget", "--widgetpng", default="widget.png", help="url do ścieszki z png screenshota widgeta - uwaga zalecany format png!(jpg ma pewne problemy w walidacji)")
+    parser.add_argument("-kwadrat", "--kwadratpng", default="kwadrat.png", help="url do ścieszki z png używanego w LoadingBar-ze - uwaga zalecany format png!")
     args = parser.parse_args()
     if args.logslideshow:
         logging.basicConfig(level=logging.DEBUG, force=True)
         logging.debug("Ten komunikat pokazuje sie tylko w trybie debug")
-        print("args:" + str(args))
+        print("args:")
+        pprint(args)
     return args
 
 class Ui_MainWindow(object):
@@ -49,12 +54,11 @@ class Ui_MainWindow(object):
         self.rozmiarLoadingBara = int(rozmiarLoadingBara)
         self.czasObrazka = int(timeForPicture)*1000 #w milisekundach #bez int - napis zostanie ... wygenerowany 1000 razy
         self.MainWindow = None
-        self.mapapng = None
-        self.widgetpng = None
-        self.kwadratpng = None
+        self.mapapng = mapa
+        self.widgetpng = widget
+        self.kwadratpng = kwadrat
         self.timerLoadingBar = None
         self.wypelnienie = 0
-        self.readURLPictures()
         self.initLog()
 
     def initLog(self):
@@ -66,15 +70,6 @@ class Ui_MainWindow(object):
         logging.debug(self.mapapng)
         logging.debug(self.widgetpng)
         logging.debug(self.kwadratpng)
-
-    #wczytywanie nazw grafik z pliku slideshow.json
-    def readURLPictures(self):
-        logging.debug("readURLPictures")
-        with open('config.json') as config:
-            urls = json.load(config)
-            self.mapapng=urls['mapa']
-            self.widgetpng=urls['widget']
-            self.kwadratpng=urls['kwadrat']
 
     def setupUi(self, MainWindow):
         logging.debug("setupUi")
@@ -178,7 +173,7 @@ class Ui_MainWindow(object):
 
 class Window(QtWidgets.QMainWindow):
     resized = QtCore.pyqtSignal()
-    def __init__(self, rozmiarLoadingBara, fullScreen, time):
+    def __init__(self, rozmiarLoadingBara, fullScreen, time, mapa, widget, kwadrat):
         super(Window, self).__init__(parent=None)
         self.ui = Ui_MainWindow(rozmiarLoadingBara, time)
         self.ui.setupUi(self)
@@ -218,12 +213,15 @@ if __name__ == "__main__":
     fullScreen=args.fullScreenSlideshow
     time=int(args.timeForPicture)
     workdirectory=args.workdirectory
-    logging.debug(f"args : {args}")
+    mapa=args.mapapng
+    widget=args.widgetpng
+    kwadrat=args.kwadratpng
+    logging.debug(pprint(args))
     os.chdir(workdirectory)
     obecny_folder=os.getcwd()
     logging.debug(f"obecny folder roboczy:{obecny_folder}")
     #odpalenie aplikacji
     app = QtWidgets.QApplication(sys.argv)
-    w = Window(rozmiarLoadingBara, fullScreen, time)
+    w = Window(rozmiarLoadingBara, fullScreen, time, mapa, widget, kwadrat)
     w.show()
     sys.exit(app.exec_())
