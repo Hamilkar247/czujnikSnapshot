@@ -19,6 +19,11 @@ def def_params():
             """
 CzujnikSnapshot - odpowiada za snapy z pomiarów danego urządzenia podanego
 czujnika
+
+UWAGA - plik konfiguracyjny przyjmuje dla parametrów nastepujące stringi jako wartości logiczne 
+True true - boolean True w pythonie
+False false - boolean false w pythonie
+
             """
     )
     parser.add_argument("-l", "--loghami", action='store_true', help="ustaw tryb debug")
@@ -41,16 +46,20 @@ czujnika
              print(config_args)
              print("dodaniu")
              config_args.__dict__.update(vars(args))
-             print("config_args zmodyfikowane o komendy")
-             print(config_args)
-             print("po config_args")
+        for key, value in config_args.__dict__.items():
+            if value == "False" or value == "false":
+                print(f"{key} {value}")
+                config_args.__dict__[key]=False
+            elif value == "True" or value == "true":
+                print(f"{key} {value}")
+                config_args.__dict__[key]=True
     else:
-        config_args = args
+        print("Brak pliku konfiguracyjnego - jeśli żadnego nie posiadasz prośba o skopiowanie \n config.json.example i nazwanie owej kopii config.json")
 
     if config_args.loghami:
         logging.basicConfig(level=logging.DEBUG, force=True)
         logging.debug("Komunikat pokazywany wyłącznie w trybie debug")
-        print("args:" + str(args))
+        print(f"config_args: {config_args}")
 
     return config_args
 
