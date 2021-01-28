@@ -133,12 +133,11 @@ class Ui_MainWindow(object):
         brokenImage=False
         try:
             img.verify()
-            print('Valid Image')
+            print(f"Poprawny png {picturepng}")
             brokenImage=False
         except Exception:
             brokenImage=True
-            print('Invali image')
-            logging.debug(f'Zdjęcie {picturepng} jest błędne')
+            print('Błąd przy odczycie zdjęcia {picturepng}')
         return brokenImage
 
 
