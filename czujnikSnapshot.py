@@ -11,6 +11,7 @@ from datetime import datetime
 import sys
 import time
 import subprocess
+from pprint import pprint
 from PIL import Image
 
 def def_params():
@@ -31,27 +32,28 @@ False false - boolean false w pythonie
     parser.add_argument("-t", "--time", help="flaga określająca jak często ma być dokonywany snap czujnika")
     parser.add_argument("-wd", "--workdirectory", default="/home/matball/Projects/czujnikSnapshot", help="argument określa folder roboczy projektu - o tyle istotne, że w owym folderze szuka plików konfiguracyjnych json")
     parser.add_argument("-ch", "--chromiumurl", default="/usr/bin/chromium-browser", help="zmienna przechowująca link do chromium-browser")
+    parser.add_argument("-wcz", "--width_czujnik", type=int, help="określa szerokość ekranu(displaya) w jakiej będzie odpalone selenium")
+    parser.add_argument("-hcz", "--height_czujnik", type=int, help="określa wysokość ekranu(displaya) w jakiej będzie odpalone selenium")
 
     args = parser.parse_args()
     for key, value in args.__dict__.items():
-        if value == None or value == False:
+        if value is None or value == False:
+            print(f"usuniete {key} {value}")
             del args.__dict__[key]
-            break
+    print("after command line")
+    pprint(args.__dict__)
 
     if os.path.exists('config.json'):
         config_args = argparse.Namespace()
         with open('config.json', 'rt') as f:
              config_args = argparse.Namespace()
              config_args.__dict__.update(json.load(f))
-             print(config_args)
-             print("dodaniu")
+             pprint(config_args)
              config_args.__dict__.update(vars(args))
         for key, value in config_args.__dict__.items():
             if value == "False" or value == "false":
-                print(f"{key} {value}")
                 config_args.__dict__[key]=False
             elif value == "True" or value == "true":
-                print(f"{key} {value}")
                 config_args.__dict__[key]=True
     else:
         print("Brak pliku konfiguracyjnego - jeśli żadnego nie posiadasz prośba o skopiowanie \n config.json.example i nazwanie owej kopii config.json")
@@ -68,11 +70,13 @@ def addCurrentFolderToPath():
     os.environ["PATH"] += os.pathsep + path_to_dir
 
 class CzujnikSnap():
-   def __init__(self, loghami, visible, time_to_snap, chromiumurl):
+   def __init__(self, loghami, visible, time_to_snap, chromiumurl, width, height):
       self.loghami = loghami
       self.visible = visible
       self.time_to_snap = time_to_snap
       self.chromiumurl = chromiumurl
+      self.width = int(width)
+      self.height = int(height)
       self.mapa = None
       self.widget = None
       self.options = None
@@ -107,7 +111,7 @@ class CzujnikSnap():
        logging.debug(f"options: {self.options}")
        #driver przeglądarki
        self.driver = webdriver.Chrome(options=self.options)
-       self.driver.set_window_size(1920,1316)
+       self.driver.set_window_size(self.width, self.height)
        self.driver.set_script_timeout(30)
        self.driver.set_page_load_timeout(30) # seconds
        logging.debug(f"driver: {self.driver}")
@@ -173,15 +177,20 @@ def main():
     args=def_params()
     loghami=args.loghami
     visible=args.visible
+    width=args.width_czujnik
+    height=args.height_czujnik
+    print(f"width {width}")
+    print(f"height {height}")
+    height=args.height_czujnik
     workdirectory=args.workdirectory
     chromiumurl=args.chromiumurl
     os.chdir(workdirectory)
     obecny_folder=os.getcwd()
     logging.debug(f"obecny folder roboczy:{obecny_folder}")
     time=args.time
-    display = Display(visible=0, size=(1920,1200))
+    display = Display(visible=1, size=(width, height))
     addCurrentFolderToPath()
-    czuj = CzujnikSnap(loghami, visible, time, chromiumurl)
+    czuj = CzujnikSnap(loghami, visible, time, chromiumurl, width, height)
     display = display.stop()
 
 if __name__ == "__main__":
