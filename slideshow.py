@@ -17,6 +17,8 @@ def def_params():
     parser = argparse.ArgumentParser(
             description=
             """
+            Slideshow - odpowiada za wyświetlanie pobranych zdjęć
+
             Klawisze akcji:
             - spacja - przejście w tryb pełnoekranowy
             - escape - wyjście z trybu pełnoekranowego
@@ -32,12 +34,36 @@ def def_params():
     parser.add_argument("-widget", "--widgetpng", default="widget.png", help="url do ścieszki z png screenshota widgeta - uwaga zalecany format png!(jpg ma pewne problemy w walidacji)")
     parser.add_argument("-kwadrat", "--kwadratpng", default="kwadrat.png", help="url do ścieszki z png używanego w LoadingBar-ze - uwaga zalecany format png!")
     args = parser.parse_args()
-    if args.logslideshow:
+    for key, value in list(args.__dict__.items()):
+        if value is None or value == False:
+            print(f"usuniete {key} {value}")
+            del args.__dict__[key]
+    print("after command line")
+    pprint(args.__dict__)
+
+    if os.path.exists('config.json'):
+        config_args = argparse.Namespace()
+        with open('config.json', 'rt') as f:
+             config_args = argparse.Namespace()
+             config_args.__dict__.update(json.load(f))
+             pprint(config_args)
+             config_args.__dict__.update(vars(args))
+        for key, value in list(config_args.__dict__.items()):
+            if value == "False" or value == "false":
+                config_args.__dict__[key]=False
+            elif value == "True" or value == "true":
+                config_args.__dict__[key]=True
+            if key == "__comment__":
+                del config_args.__dict__[key]
+    else:
+        print("Brak pliku konfiguracyjnego - jeśli żadnego nie posiadasz prośba o skopiowanie \n config.json.example i nazwanie owej kopii config.json")
+
+    if config_args.logslideshow:
         logging.basicConfig(level=logging.DEBUG, force=True)
         logging.debug("Ten komunikat pokazuje sie tylko w trybie debug")
-        print("args:")
-        pprint(args)
-    return args
+        print("config_args:")
+        pprint(config_args.__dict__)
+    return config_args
 
 class Ui_MainWindow(object):
 
