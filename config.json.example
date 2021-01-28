@@ -13,8 +13,9 @@
   "__comment__": "poniżej zmienne używane w slideshow",
   "logslideshow": "true",
   "timeForPicture": 10,
-  "fullScreenSlideshow": true,
-  "mapa" : "mapa.png",
-  "widget": "widget.png",
-  "kwadrat": "kwadrat.png"
+  "fullScreenSlideshow": "true",
+  "rozmiarLoadingBara": 5,
+  "mapapng" : "mapa.png",
+  "widgetpng": "widget.png",
+  "kwadratpng": "kwadrat.png"
 }

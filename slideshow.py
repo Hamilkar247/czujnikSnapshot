@@ -26,13 +26,13 @@ def def_params():
             """
             )
     parser.add_argument("-l", "--logslideshow", action='store_true', help="ustaw flage 'debug' i wyswietlaj logi")
-    parser.add_argument("-r", "--rozmiarLoadingBara", default=4, help="ustaw rozmiar(grubość)  loadingBara")
+    parser.add_argument("-r", "--rozmiarLoadingBara", help="ustaw rozmiar(grubość)  loadingBara")
     parser.add_argument("-f", "--fullScreenSlideshow", action='store_true', help="ustaw maksymalny rozmiarprzy odpaleniu programu")
-    parser.add_argument("-t", "--timeForPicture", type=int, default=10, help="podaj czas w [s] dla każdego obrazka")
-    parser.add_argument("-wd", "--workdirectory", default="/home/matball/Projects/czujnikSnapshot", help="argument wskazuje folder roboczy - wazny z tego wzgledu że tam powinien się znajdować plik konfiguracyjny")
-    parser.add_argument("-mapa", "--mapapng", default="mapa.png", help="url do ścieszki z png screenshota mapy - uwaga zalecany format png!(jpg ma pewne problemy w walidacji)")
-    parser.add_argument("-widget", "--widgetpng", default="widget.png", help="url do ścieszki z png screenshota widgeta - uwaga zalecany format png!(jpg ma pewne problemy w walidacji)")
-    parser.add_argument("-kwadrat", "--kwadratpng", default="kwadrat.png", help="url do ścieszki z png używanego w LoadingBar-ze - uwaga zalecany format png!")
+    parser.add_argument("-t", "--timeForPicture", type=int, help="podaj czas w [s] dla każdego obrazka")
+    parser.add_argument("-wd", "--workdirectory", help="argument wskazuje folder roboczy - wazny z tego wzgledu że tam powinien się znajdować plik konfiguracyjny")
+    parser.add_argument("-mapa", "--mapapng", help="url do ścieszki z png screenshota mapy - uwaga zalecany format png!(jpg ma pewne problemy w walidacji)")
+    parser.add_argument("-widget", "--widgetpng", help="url do ścieszki z png screenshota widgeta - uwaga zalecany format png!(jpg ma pewne problemy w walidacji)")
+    parser.add_argument("-kwadrat", "--kwadratpng", help="url do ścieszki z png używanego w LoadingBar-ze - uwaga zalecany format png!")
     args = parser.parse_args()
     for key, value in list(args.__dict__.items()):
         if value is None or value == False:
