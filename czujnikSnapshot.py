@@ -50,18 +50,21 @@ False false - boolean false w pythonie
              config_args.__dict__.update(json.load(f))
              pprint(config_args)
              config_args.__dict__.update(vars(args))
-        for key, value in config_args.__dict__.items():
+        for key, value in list(config_args.__dict__.items()):
             if value == "False" or value == "false":
                 config_args.__dict__[key]=False
             elif value == "True" or value == "true":
                 config_args.__dict__[key]=True
+            if key == "__comment__":
+                del config_args.__dict__[key]
     else:
         print("Brak pliku konfiguracyjnego - jeśli żadnego nie posiadasz prośba o skopiowanie \n config.json.example i nazwanie owej kopii config.json")
 
     if config_args.loghami:
         logging.basicConfig(level=logging.DEBUG, force=True)
         logging.debug("Komunikat pokazywany wyłącznie w trybie debug")
-        print(f"config_args: {config_args}")
+        pprint("config_args:")
+        pprint(config_args.__dict__)
 
     return config_args
 
