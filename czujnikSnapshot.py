@@ -192,7 +192,7 @@ def main():
     obecny_folder=os.getcwd()
     logging.debug(f"obecny folder roboczy:{obecny_folder}")
     time=args.time
-    display = Display(visible=1, size=(width, height))
+    display = Display(visible=0, size=(width, height))
     addCurrentFolderToPath()
     czuj = CzujnikSnap(loghami, visible, time, chromiumurl, width, height)
     display = display.stop()
