@@ -192,6 +192,7 @@ def main():
     obecny_folder=os.getcwd()
     logging.debug(f"obecny folder roboczy:{obecny_folder}")
     time=args.time
+    #display - visible 0 - odpala się nam na glownym monitorze - visible - 1 odpala się na drugim
     display = Display(visible=0, size=(width, height))
     addCurrentFolderToPath()
     czuj = CzujnikSnap(loghami, visible, time, chromiumurl, width, height)
