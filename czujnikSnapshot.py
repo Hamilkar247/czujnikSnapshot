@@ -27,6 +27,7 @@ False false - boolean false w pythonie
 
             """
     )
+    #UWAGA - nie dopisuj argumentom wartości default - do takich wartości używamy tylko i wyłącznie plik konfiguracyjny
     parser.add_argument("-l", "--loghami", action='store_true', help="ustaw tryb debug")
     parser.add_argument("-v", "--visible", action='store_true', help="odpalenie progromu bez trybu headless")
     parser.add_argument("-t", "--time", help="flaga określająca jak często ma być dokonywany snap czujnika")

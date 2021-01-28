@@ -25,6 +25,7 @@ def def_params():
             parametry do wyswietlenia:
             """
             )
+    #UWAGA - nie dopisuj argumentom wartości default - do takich wartości używamy tylko i wyłącznie plik konfiguracyjny
     parser.add_argument("-l", "--logslideshow", action='store_true', help="ustaw flage 'debug' i wyswietlaj logi")
     parser.add_argument("-r", "--rozmiarLoadingBara", help="ustaw rozmiar(grubość)  loadingBara")
     parser.add_argument("-f", "--fullScreenSlideshow", action='store_true', help="ustaw maksymalny rozmiarprzy odpaleniu programu")
