@@ -30,8 +30,8 @@ False false - boolean false w pythonie
     parser.add_argument("-l", "--loghami", action='store_true', help="ustaw tryb debug")
     parser.add_argument("-v", "--visible", action='store_true', help="odpalenie progromu bez trybu headless")
     parser.add_argument("-t", "--time", help="flaga określająca jak często ma być dokonywany snap czujnika")
-    parser.add_argument("-wd", "--workdirectory", default="/home/matball/Projects/czujnikSnapshot", help="argument określa folder roboczy projektu - o tyle istotne, że w owym folderze szuka plików konfiguracyjnych json")
-    parser.add_argument("-ch", "--chromiumurl", default="/usr/bin/chromium-browser", help="zmienna przechowująca link do chromium-browser")
+    parser.add_argument("-wd", "--workdirectory", help="argument określa folder roboczy projektu - o tyle istotne, że w owym folderze szuka plików konfiguracyjnych json")
+    parser.add_argument("-ch", "--chromiumurl", help="zmienna przechowująca link do chromium-browser")
     parser.add_argument("-wcz", "--width_czujnik", type=int, help="określa szerokość ekranu(displaya) w jakiej będzie odpalone selenium")
     parser.add_argument("-hcz", "--height_czujnik", type=int, help="określa wysokość ekranu(displaya) w jakiej będzie odpalone selenium")
 
