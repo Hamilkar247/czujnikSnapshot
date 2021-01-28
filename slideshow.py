@@ -22,13 +22,13 @@ def def_params():
             parametry do wyswietlenia:
             """
             )
-    parser.add_argument("-l", "--log", action='store_true', help="ustaw flage 'debug' i wyswietlaj logi")
-    parser.add_argument("-g", "--grubosc", default=4, help="ustaw grubosc loadingBara")
-    parser.add_argument("-f", "--fullScreen", action='store_true', help="ustaw maksymalny rozmiar")
-    parser.add_argument("-t", "--time", default=10, help="podaj czas w [s] dla każdego obrazka")
+    parser.add_argument("-l", "--logslideshow", action='store_true', help="ustaw flage 'debug' i wyswietlaj logi")
+    parser.add_argument("-r", "--rozmiarLoadingBara", default=4, help="ustaw rozmiar(grubość)  loadingBara")
+    parser.add_argument("-f", "--fullScreenSlideshow", action='store_true', help="ustaw maksymalny rozmiarprzy odpaleniu programu")
+    parser.add_argument("-t", "--timeForPicture", type=int, default=10, help="podaj czas w [s] dla każdego obrazka")
     parser.add_argument("-wd", "--workdirectory", default="/home/matball/Projects/czujnikSnapshot", help="argument wskazuje folder roboczy - wazny z tego wzgledu że tam powinien się znajdować plik konfiguracyjny")
     args = parser.parse_args()
-    if args.log:
+    if args.logslideshow:
         logging.basicConfig(level=logging.DEBUG, force=True)
         logging.debug("Ten komunikat pokazuje sie tylko w trybie debug")
         print("args:" + str(args))
@@ -36,7 +36,7 @@ def def_params():
 
 class Ui_MainWindow(object):
 
-    def __init__(self, gruboscLoadingBara, time):
+    def __init__(self, rozmiarLoadingBara, timeForPicture):
         logging.debug("UI_MainWindow __init__")
         self.lab_loadingbBar = None #label na loadingbara
         self.lab_MapOrWidget = None #label na widget/mape
@@ -46,8 +46,8 @@ class Ui_MainWindow(object):
         self.centralWidget = None
         self.widthWindow = 925
         self.heightWindow = 810
-        self.gruboscLoadingBara = int(gruboscLoadingBara)
-        self.czasObrazka = int(time)*1000 #w milisekundach #bez int - napis zostanie ... wygenerowany 1000 razy
+        self.rozmiarLoadingBara = int(rozmiarLoadingBara)
+        self.czasObrazka = int(timeForPicture)*1000 #w milisekundach #bez int - napis zostanie ... wygenerowany 1000 razy
         self.MainWindow = None
         self.mapapng = None
         self.widgetpng = None
@@ -70,8 +70,8 @@ class Ui_MainWindow(object):
     #wczytywanie nazw grafik z pliku slideshow.json
     def readURLPictures(self):
         logging.debug("readURLPictures")
-        with open('config.json') as json_file:
-            urls = json.load(json_file)
+        with open('config.json') as config:
+            urls = json.load(config)
             self.mapapng=urls['mapa']
             self.widgetpng=urls['widget']
             self.kwadratpng=urls['kwadrat']
@@ -93,7 +93,7 @@ class Ui_MainWindow(object):
         self.lab_loadingBar.setScaledContents(True)
         #mapa i widget
         self.lab_MapOrWidget = QtWidgets.QLabel(MainWindow)
-        self.lab_MapOrWidget.setGeometry(QtCore.QRect(0, self.gruboscLoadingBara, self.widthWindow, self.heightWindow-20))
+        self.lab_MapOrWidget.setGeometry(QtCore.QRect(0, self.rozmiarLoadingBara, self.widthWindow, self.heightWindow-20))
         self.lab_MapOrWidget.setText("")
         self.lab_MapOrWidget.setPixmap(QtGui.QPixmap(self.mapapng))
         self.lab_MapOrWidget.setScaledContents(True)
@@ -103,7 +103,7 @@ class Ui_MainWindow(object):
         self.setTimerLoadingBar()
 
     def setWidthLoadingBar(self):
-        self.lab_loadingBar.setGeometry(QtCore.QRect(0,0, self.wypelnienie * self.widthWindow/10, self.gruboscLoadingBara))
+        self.lab_loadingBar.setGeometry(QtCore.QRect(0,0, self.wypelnienie * self.widthWindow/10, self.rozmiarLoadingBara))
 
     #uwaga - metoda verify dziala tylko dla png formatu
     def checkPicture(self, picturepng):
@@ -174,13 +174,13 @@ class Ui_MainWindow(object):
         self.heightWindow = self.mainWindow.frameGeometry().height()
         logging.debug("widthWindow :"+str(self.widthWindow))
         logging.debug("heightWindow :"+str(self.heightWindow))
-        self.lab_MapOrWidget.setGeometry(QtCore.QRect(0, self.gruboscLoadingBara, self.widthWindow, self.heightWindow))
+        self.lab_MapOrWidget.setGeometry(QtCore.QRect(0, self.rozmiarLoadingBara, self.widthWindow, self.heightWindow))
 
 class Window(QtWidgets.QMainWindow):
     resized = QtCore.pyqtSignal()
-    def __init__(self, gruboscLoadingBara, fullScreen, time):
+    def __init__(self, rozmiarLoadingBara, fullScreen, time):
         super(Window, self).__init__(parent=None)
-        self.ui = Ui_MainWindow(gruboscLoadingBara, time)
+        self.ui = Ui_MainWindow(rozmiarLoadingBara, time)
         self.ui.setupUi(self)
         self.resized.connect(self.resizeEventFunction)
         if fullScreen:
@@ -213,15 +213,17 @@ if __name__ == "__main__":
     obecny_folder=os.getcwd()
     logging.debug(f"początkowy folder wykonywania:{obecny_folder}")
     args=def_params()
-    gruboscLoadingBara=args.grubosc
-    fullScreen=args.fullScreen
-    time=args.time
+    #ustawioneParametry
+    rozmiarLoadingBara=int(args.rozmiarLoadingBara)
+    fullScreen=args.fullScreenSlideshow
+    time=int(args.timeForPicture)
     workdirectory=args.workdirectory
     logging.debug(f"args : {args}")
     os.chdir(workdirectory)
     obecny_folder=os.getcwd()
     logging.debug(f"obecny folder roboczy:{obecny_folder}")
+    #odpalenie aplikacji
     app = QtWidgets.QApplication(sys.argv)
-    w = Window(gruboscLoadingBara, fullScreen, time)
+    w = Window(rozmiarLoadingBara, fullScreen, time)
     w.show()
     sys.exit(app.exec_())
