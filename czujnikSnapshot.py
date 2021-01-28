@@ -36,7 +36,7 @@ False false - boolean false w pythonie
     parser.add_argument("-hcz", "--height_czujnik", type=int, help="określa wysokość ekranu(displaya) w jakiej będzie odpalone selenium")
 
     args = parser.parse_args()
-    for key, value in args.__dict__.items():
+    for key, value in list(args.__dict__.items()):
         if value is None or value == False:
             print(f"usuniete {key} {value}")
             del args.__dict__[key]
