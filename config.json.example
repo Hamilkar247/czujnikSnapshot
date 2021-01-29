@@ -14,7 +14,7 @@
       "logslideshow": "true",
       "timeForPicture": 10,
       "fullScreenSlideshow": "false",
-      "rozmiarLoadingBara": 5,
+      "sizeOfLoadingBar": 100,
       "mapapng" : "mapa.png",
       "widgetpng": "widget.png",
       "kwadratpng": "kwadrat.png"
