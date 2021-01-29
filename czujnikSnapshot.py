@@ -28,7 +28,7 @@ False false - boolean false w pythonie
             """
     )
     #UWAGA - nie dopisuj argumentom wartości default - do takich wartości używamy tylko i wyłącznie plik konfiguracyjny
-    parser.add_argument("-l", "--loghami", action='store_true', help="ustaw tryb debug")
+    parser.add_argument("-l", "--logsnapshot", action='store_true', help="ustaw tryb debug dla czujnikSnapshot")
     parser.add_argument("-v", "--visible", action='store_true', help="odpalenie progromu bez trybu headless")
     parser.add_argument("-t", "--time", help="flaga określająca jak często ma być dokonywany snap czujnika")
     parser.add_argument("-wd", "--workdirectory", help="argument określa folder roboczy projektu - o tyle istotne, że w owym folderze szuka plików konfiguracyjnych json")
@@ -61,7 +61,7 @@ False false - boolean false w pythonie
     else:
         print("Brak pliku konfiguracyjnego - jeśli żadnego nie posiadasz prośba o skopiowanie \n config.json.example i nazwanie owej kopii config.json")
 
-    if config_args.loghami:
+    if config_args.logsnapshot:
         logging.basicConfig(level=logging.DEBUG, force=True)
         logging.debug("Komunikat pokazywany wyłącznie w trybie debug")
         pprint("config_args:")
@@ -74,8 +74,8 @@ def addCurrentFolderToPath():
     os.environ["PATH"] += os.pathsep + path_to_dir
 
 class CzujnikSnap():
-   def __init__(self, loghami, visible, time_to_snap, chromiumurl, width, height):
-      self.loghami = loghami
+   def __init__(self, logsnapshot, visible, time_to_snap, chromiumurl, width, height):
+      self.logsnapshot = logsnapshot
       self.visible = visible
       self.time_to_snap = time_to_snap
       self.chromiumurl = chromiumurl
@@ -179,7 +179,7 @@ def main():
     obecny_folder=os.getcwd()
     logging.debug(f"początkowy folder wykonywania:{obecny_folder}")
     args=def_params()
-    loghami=args.loghami
+    logsnapshot=args.logsnapshot
     visible=args.visible
     width=args.width_czujnik
     height=args.height_czujnik
@@ -195,7 +195,7 @@ def main():
     #display - visible 0 - odpala się nam na glownym monitorze - visible - 1 odpala się na drugim
     display = Display(visible=0, size=(width, height))
     addCurrentFolderToPath()
-    czuj = CzujnikSnap(loghami, visible, time, chromiumurl, width, height)
+    czuj = CzujnikSnap(logsnapshot, visible, time, chromiumurl, width, height)
     display = display.stop()
 
 if __name__ == "__main__":
