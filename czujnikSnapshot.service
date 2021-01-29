@@ -8,7 +8,7 @@ After=graphical.target
 Environment=DISPLAY=:0.0
 Environment=XAUTHORITY=/home/matball/.Xauthority
 Type=simple
-ExecStart=/home/matball/Projects/czujnikSnapshot/venv/bin/python /home/matball/Projects/czujnikSnapshot/czujnikSnapshot.py
+ExecStart=/home/matball/Projects/czujnikSnapshot/runnerCzujnikSnapshot.sh
 Restart=on-abort
 User=matball
 Group=matball
