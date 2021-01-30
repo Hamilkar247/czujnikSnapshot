@@ -29,7 +29,7 @@ False false - boolean false w pythonie
     )
     #UWAGA - nie dopisuj argumentom wartości default - do takich wartości używamy tylko i wyłącznie plik konfiguracyjny
     parser.add_argument("-l", "--logsnapshot", action='store_true', help="ustaw tryb debug dla czujnikSnapshot")
-    parser.add_argument("-v", "--visible", action='store_true', help="odpalenie progromu bez trybu headless")
+    parser.add_argument("-v", "--visibleSelenium", action='store_true', help="odpalenie progromu bez trybu headless")
     parser.add_argument("-t", "--time", help="flaga określająca jak często ma być dokonywany snap czujnika")
     parser.add_argument("-wd", "--workdirectory", help="argument określa folder roboczy projektu - o tyle istotne, że w owym folderze szuka plików konfiguracyjnych json")
     parser.add_argument("-ch", "--chromiumurl", help="zmienna przechowująca link do chromium-browser")
@@ -180,7 +180,7 @@ def main():
     logging.debug(f"początkowy folder wykonywania:{obecny_folder}")
     args=def_params()
     logsnapshot=args.logsnapshot
-    visible=args.visible
+    visibleSelenium=args.visibleSelenium
     width=args.width_czujnik
     height=args.height_czujnik
     print(f"width {width}")
@@ -195,7 +195,7 @@ def main():
     #display - visible 0 - odpala się nam na glownym monitorze - visible - 1 odpala się na drugim
     display = Display(visible=0, size=(width, height))
     addCurrentFolderToPath()
-    czuj = CzujnikSnap(logsnapshot, visible, time, chromiumurl, width, height)
+    czuj = CzujnikSnap(logsnapshot, visibleSelenium, time, chromiumurl, width, height)
     display = display.stop()
 
 if __name__ == "__main__":
