@@ -1,12 +1,11 @@
 {
   "__comment__": "ustawienia debug programów",
-      "debug_logsnapshot"  : "true",
+      "debug_logsnapshot"  : "false",
       "debug_logslideshow" : "true",
   "__comment__": "czynniki wspólne dla obu programów",
       "workdirectory": "/home/matball/Projects/czujnikSnapshot",
   "__comment__": "poniżej zmienne uzywane w czujniksnapshot",
       "time": 50,
-      "logsnapshot": "true",
       "visibleSelenium": "false",
       "chromiumurl": "/usr/bin/chromium-browser",
       "width_czujnik": 1920,
