@@ -4,6 +4,8 @@ import argparse
 from selenium import webdriver
 from pyvirtualdisplay import Display
 from selenium.webdriver.chrome.options import Options
+from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import WebDriverException
 import os
 import json
 from time import sleep
@@ -158,22 +160,35 @@ class CzujnikSnap():
        now = datetime.now()
        t = now.strftime("[%Y/%m/%d-%H:%M:%S]")
        logging.debug(f"driver: {self.driver}")
-       self.driver.get(self.widget+str(milli_sec))
-       self.backupScreen('widget.png')
-       sleep(3)
-       screenshot = self.driver.save_screenshot('widget.png')
-       print(t, " ScreenShoot: Widget ")
+       try:
+           self.driver.set_page_load_timeout(3)
+           logging.debug(f"widget: {self.widget} {milli_sec}")
+           self.driver.get(self.widget+str(milli_sec))
+           self.backupScreen('widget.png') #funkcja sprawdza checksum zdjęcia png
+           screenshot = self.driver.save_screenshot('widget.png')
+           print(f"{t} ScreenShoot: Widget ")
+       except TimeoutException:
+           print(f"Zbyt długi czas oczekiwania na stronę - widget")
+       except WebDriverException:
+           print(f"Problemy z połączeniem - screenshot widgeta nie doszedł do skutku")
 
    def snapMapa(self):
        logging.debug("snapMapa - robienie zdjęcia mapy")
        milli_sec = int(round(time.time()*1000))
        now = datetime.now()
        t = now.strftime("[%Y/%m/%d-%H:%M:%S]")
-       self.driver.get(self.mapa+str(milli_sec))
-       self.backupScreen('mapa.png')
-       sleep(3)
-       screenshot = self.driver.save_screenshot('mapa.png')
-       print(t, " ScreenShoot: Mapa ")
+       logging.debug(f"driver: {self.driver}")
+       try:
+           self.driver.set_page_load_timeout(3)
+           self.driver.get(self.mapa+str(milli_sec))
+           self.backupScreen('mapa.png') #funkcja sprawdza checksum zjdęcia png
+           screenshot = self.driver.save_screenshot('mapa.png')
+           print(f"{t} ScreenShoot: Mapa")
+       except TimeoutException:
+           print(f"Zbyt długi czas oczekiwana na stronę - mapa")
+       except WebDriverException:
+           print(f"Problemy z połączeniem - screenshot mapy nie doszedł do skutku")
+
 
 def main():
     obecny_folder=os.getcwd()
