@@ -5,7 +5,7 @@
   "__comment__": "czynniki wspólne dla obu programów",
       "workdirectory": "/home/matball/Projects/czujnikSnapshot",
   "__comment__": "poniżej zmienne uzywane w czujniksnapshot",
-      "time": 50,
+      "time": 200,
       "visibleSelenium": "false",
       "chromiumurl": "/usr/bin/chromium-browser",
       "width_czujnik": 1920,
@@ -14,12 +14,10 @@
       "widget-link" : "https://czujnikimiejskie.pl/public/widgety/widget_kozienice.html?id=196&a=",
   "__comment__": "poniżej zmienne używane w slideshow",
       "logslideshow": "true",
-      "timeForPicture": 10,
+      "timeForPicture": 3,
       "fullScreenSlideshow": "false",
       "sizeOfLoadingBar": 100,
-      "mapapng" : "mapa.png",
-      "widgetpng": "widget.png",
-      "kwadratpng": "kwadrat.png",
-      "url_mapa": "http://134.122.69.201/mapaKozienice/",
-      "url_widget": "http://134.122.69.201/widgetKozienice/"
+      "kwadrat": ["kwadrat.png", ""],
+      "mapa" : ["mapa.png", "http://134.122.69.201/mapaKozienice/"],
+      "widget" : ["widget.png", "http://134.122.69.201/widgetKozienice/"]
 }
