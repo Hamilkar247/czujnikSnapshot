@@ -83,12 +83,12 @@ class Ui_MainWindow(object):
         self.czasObrazka = int(timeForPicture)*1000 #w milisekundach #bez int - napis zostanie ... wygenerowany 1000 razy
         self.timeForDownload = int(timeForDownload)*1000 #w milisekundach
         self.MainWindow = None
-        self.mapapng = mapa[0]
-        self.widgetpng = widget[0]
+        self.mapapng = mapa['nazwapng']
+        self.widgetpng = widget['nazwapng']
         self.kwadratpng = kwadrat[0]
         self.wypelnienie = 0
-        self.url_mapa = mapa[1]
-        self.url_widget = widget[1]
+        self.url_mapa = mapa['url']
+        self.url_widget = widget['url']
         self.mapa = mapa
         self.widget = widget
 
@@ -297,8 +297,8 @@ if __name__ == "__main__":
     timeForDownloader=int(args.timeForDownloader)
     workdirectory=args.workdirectory
     kwadrat=args.kwadrat
-    mapa=args.mapa
-    widget=args.widget
+    mapa=args.zdjeciaSlajd[0]
+    widget=args.zdjeciaSlajd[1]
     logging.debug(pprint(args))
     os.chdir(workdirectory)
     obecny_folder=os.getcwd()

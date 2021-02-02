@@ -14,11 +14,21 @@
       "widget-link" : "https://czujnikimiejskie.pl/public/widgety/widget_kozienice.html?id=196&a=",
   "__comment__": "poniżej zmienne używane w slideshow",
       "logslideshow": "true",
-      "timeForPicture": 10,
+      "timeForPicture": 20,
       "timeForDownloader": 2,
       "fullScreenSlideshow": "false",
       "sizeOfLoadingBar": 100,
+
+  "__comment__": "rubryka na zdjęcia - pierwsze nazwa zdjęcia, drugi url skąd updatujemy",
       "kwadrat": ["kwadrat.png", ""],
-      "mapa" : ["mapa.png", "http://134.122.69.201/mapaKozienice/"],
-      "widget" : ["widget.png", "http://134.122.69.201/widgetKozienice/"]
+      "zdjeciaSlajd": [
+           {
+               "nazwapng": "mapa.png",
+               "url"     : "http://134.122.69.201/mapaKozienice/"
+           },
+           {
+               "nazwapng": "widget.png",
+               "url"     : "http://134.122.69.201/widgetKozienice/"
+           }
+      ]
 }
