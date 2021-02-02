@@ -71,7 +71,7 @@ def def_params():
 
 class Ui_MainWindow(object):
 
-    def __init__(self, sizeOfLoadingBar, timeForPicture, timeForDownload, mapa, widget):
+    def __init__(self, sizeOfLoadingBar, timeForPicture, timeForDownload, slajdy):
         logging.debug("UI_MainWindow __init__")
         self.lab_loadingbBar = None #label na loadingbara
         self.lab_MapOrWidget = None #label na widget/mape
@@ -83,14 +83,14 @@ class Ui_MainWindow(object):
         self.czasObrazka = int(timeForPicture)*1000 #w milisekundach #bez int - napis zostanie ... wygenerowany 1000 razy
         self.timeForDownload = int(timeForDownload)*1000 #w milisekundach
         self.MainWindow = None
-        self.mapapng = mapa['nazwapng']
-        self.widgetpng = widget['nazwapng']
+        self.mapapng = slajdy[0]['nazwapng']
+        self.widgetpng = slajdy[1]['nazwapng']
         self.kwadratpng = kwadrat[0]
         self.wypelnienie = 0
-        self.url_mapa = mapa['url']
-        self.url_widget = widget['url']
-        self.mapa = mapa
-        self.widget = widget
+        self.url_mapa = slajdy[0]['url']
+        self.url_widget = slajdy[1]['url']
+        #self.mapa = mapa
+        #self.widget = widget
 
         #timery
         self.timerPicture = None #timerPicture do zamiany zdjęć
@@ -255,9 +255,9 @@ class Ui_MainWindow(object):
 
 class Window(QtWidgets.QMainWindow):
     resized = QtCore.pyqtSignal()
-    def __init__(self, sizeOfLoadingBar, fullScreen, timeForPicture, timeForDownloader, kwadrat, mapa, widget):
+    def __init__(self, sizeOfLoadingBar, fullScreen, timeForPicture, timeForDownloader, kwadrat, slajdy):
         super(Window, self).__init__(parent=None)
-        self.ui = Ui_MainWindow(sizeOfLoadingBar, timeForPicture, timeForDownloader, mapa, widget)
+        self.ui = Ui_MainWindow(sizeOfLoadingBar, timeForPicture, timeForDownloader, slajdy)
         self.ui.setupUi(self)
         self.resized.connect(self.resizeEventFunction)
         if fullScreen:
@@ -297,14 +297,13 @@ if __name__ == "__main__":
     timeForDownloader=int(args.timeForDownloader)
     workdirectory=args.workdirectory
     kwadrat=args.kwadrat
-    mapa=args.zdjeciaSlajd[0]
-    widget=args.zdjeciaSlajd[1]
+    slajdy=args.zdjeciaSlajd
     logging.debug(pprint(args))
     os.chdir(workdirectory)
     obecny_folder=os.getcwd()
     logging.debug(f"obecny folder roboczy:{obecny_folder}")
     #odpalenie aplikacji
     app = QtWidgets.QApplication(sys.argv)
-    w = Window(sizeOfLoadingBar, fullScreen, timeForPicture, timeForDownloader, kwadrat, mapa, widget)
+    w = Window(sizeOfLoadingBar, fullScreen, timeForPicture, timeForDownloader, kwadrat, slajdy)
     w.show()
     sys.exit(app.exec_())
