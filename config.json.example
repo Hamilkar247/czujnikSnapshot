@@ -17,17 +17,17 @@
       "timeForPicture": 20,
       "timeForDownloader": 2,
       "fullScreenSlideshow": "false",
-      "sizeOfLoadingBar": 100,
+      "sizeOfLoadingBar": 4,
 
   "__comment__": "rubryka na zdjęcia - pierwsze nazwa zdjęcia, drugi url skąd updatujemy",
       "kwadrat": ["kwadrat.png", ""],
       "zdjeciaSlajd": [
            {
-               "nazwapng": "mapa.png",
+               "nazwapng": "mapaKoz.png",
                "url"     : "http://134.122.69.201/mapaKozienice/"
            },
            {
-               "nazwapng": "widget.png",
+               "nazwapng": "widgetKoz.png",
                "url"     : "http://134.122.69.201/widgetKozienice/"
            }
       ]

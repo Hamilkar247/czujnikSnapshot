@@ -1,0 +1,11 @@
+#!/bin/bash
+
+function cpExampleConfig
+{
+  cp config.json.example config.json 
+}
+
+function cpDefaultConfig
+{
+  cp config.json config.json.example
+}
