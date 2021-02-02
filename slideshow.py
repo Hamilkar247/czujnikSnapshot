@@ -80,6 +80,8 @@ class Ui_MainWindow(object):
         self.heightWindow = 810
         self.sizeOfLoadingBar = int(sizeOfLoadingBar)
         self.czasObrazka = int(timeForPicture)*1000 #w milisekundach #bez int - napis zostanie ... wygenerowany 1000 razy
+        self.timeToDownloadPictures = 60*1000
+        self.timerDownloader = None
         self.MainWindow = None
         self.mapapng = mapa
         self.widgetpng = widget
@@ -121,6 +123,7 @@ class Ui_MainWindow(object):
         self.lab_MapOrWidget.setScaledContents(True)
         self.lab_MapOrWidget.setObjectName("lab_MapOrWidget")
         #timery
+        self.setTimerDownloadPictures()
         self.setTimerChangePicture()
         self.setTimerLoadingBar()
 
@@ -171,6 +174,18 @@ class Ui_MainWindow(object):
             self.wypelnienie = 0
         self.setWidthLoadingBar()
         logging.debug(f"changeLoadingBar metoda - Wypelnienie={self.wypelnienie}")
+
+    def downloadPictures(self):
+        logging.debug("downloadPictures")
+
+    def setTimerDownloadPictures(self):
+        logging.debug("setTimerDownloadPictures")
+        self.timerDownloader = QtCore.QTimer()
+        self.timerDownloader.timeout.connect(self.downloadPictures)
+        timeToDownload=self.timeToDownloadPictures
+        logging.debug(f"czasUruchomieniaPobrania: {timeToDownload} minself")
+        self.timerDownloader.setInterval(timeToDownload)
+        self.timerDownloader.start()
 
     def setTimerChangePicture(self):
         logging.debug("setTimerChangePicture")
