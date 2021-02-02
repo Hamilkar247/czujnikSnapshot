@@ -32,6 +32,7 @@ def def_params():
     parser.add_argument("-s", "--sizeOfLoadingBar", help="ustaw rozmiar(grubość) loadingBara")
     parser.add_argument("-f", "--fullScreenSlideshow", action='store_true', help="ustaw maksymalny rozmiar programu przy odpaleniu programu")
     parser.add_argument("-t", "--timeForPicture", type=int, help="podaj czas w [s] dla każdego obrazka")
+    parser.add_argument("-td", "--timeForDownload", type=int, help="podaj czas w [s] jak często mają być pobierane pliki")
     parser.add_argument("-wd", "--workdirectory", help="argument wskazuje folder roboczy - wazny z tego wzgledu że tam powinien się znajdować plik konfiguracyjny")
     parser.add_argument("-mapa", "--mapapng", help="url do ścieszki z png screenshota mapy - uwaga zalecany format png!(jpg ma pewne problemy w walidacji)")
     parser.add_argument("-widget", "--widgetpng", help="url do ścieszki z png screenshota widgeta - uwaga zalecany format png!(jpg ma pewne problemy w walidacji)")
@@ -70,7 +71,7 @@ def def_params():
 
 class Ui_MainWindow(object):
 
-    def __init__(self, sizeOfLoadingBar, timeForPicture, mapa, widget):
+    def __init__(self, sizeOfLoadingBar, timeForPicture, timeForDownload, mapa, widget):
         logging.debug("UI_MainWindow __init__")
         self.lab_loadingbBar = None #label na loadingbara
         self.lab_MapOrWidget = None #label na widget/mape
@@ -80,7 +81,7 @@ class Ui_MainWindow(object):
         self.heightWindow = 810
         self.sizeOfLoadingBar = int(sizeOfLoadingBar)
         self.czasObrazka = int(timeForPicture)*1000 #w milisekundach #bez int - napis zostanie ... wygenerowany 1000 razy
-        self.timeToDownloadPictures = 6*1000
+        self.timeForDownload = int(timeForDownload)*1000 #w milisekundach
         self.MainWindow = None
         self.mapapng = mapa[0]
         self.widgetpng = widget[0]
@@ -222,9 +223,9 @@ class Ui_MainWindow(object):
         logging.debug("setTimerDownloadPictures")
         self.timerDownloader = QtCore.QTimer()
         self.timerDownloader.timeout.connect(self.downloadPictures)
-        timeToDownload=self.timeToDownloadPictures
-        logging.debug(f"czasUruchomieniaPobrania: {timeToDownload} minself")
-        self.timerDownloader.setInterval(timeToDownload)
+        timeForDownload=self.timeForDownload
+        logging.debug(f"czasUruchomieniaPobrania: {timeForDownload} minself")
+        self.timerDownloader.setInterval(timeForDownload)
         self.timerDownloader.start()
 
     def setTimerChangePicture(self):
@@ -254,9 +255,9 @@ class Ui_MainWindow(object):
 
 class Window(QtWidgets.QMainWindow):
     resized = QtCore.pyqtSignal()
-    def __init__(self, sizeOfLoadingBar, fullScreen, time, kwadrat, mapa, widget):
+    def __init__(self, sizeOfLoadingBar, fullScreen, timeForPicture, timeForDownloader, kwadrat, mapa, widget):
         super(Window, self).__init__(parent=None)
-        self.ui = Ui_MainWindow(sizeOfLoadingBar, time, mapa, widget)
+        self.ui = Ui_MainWindow(sizeOfLoadingBar, timeForPicture, timeForDownloader, mapa, widget)
         self.ui.setupUi(self)
         self.resized.connect(self.resizeEventFunction)
         if fullScreen:
@@ -292,7 +293,8 @@ if __name__ == "__main__":
     #ustawioneParametry
     sizeOfLoadingBar=int(args.sizeOfLoadingBar)
     fullScreen=args.fullScreenSlideshow
-    time=int(args.timeForPicture)
+    timeForPicture=int(args.timeForPicture)
+    timeForDownloader=int(args.timeForDownloader)
     workdirectory=args.workdirectory
     kwadrat=args.kwadrat
     mapa=args.mapa
@@ -303,6 +305,6 @@ if __name__ == "__main__":
     logging.debug(f"obecny folder roboczy:{obecny_folder}")
     #odpalenie aplikacji
     app = QtWidgets.QApplication(sys.argv)
-    w = Window(sizeOfLoadingBar, fullScreen, time, kwadrat, mapa, widget)
+    w = Window(sizeOfLoadingBar, fullScreen, timeForPicture, timeForDownloader, kwadrat, mapa, widget)
     w.show()
     sys.exit(app.exec_())
