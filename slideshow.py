@@ -70,7 +70,7 @@ def def_params():
 
 class Ui_MainWindow(object):
 
-    def __init__(self, sizeOfLoadingBar, timeForPicture, url_mapa, url_widget):
+    def __init__(self, sizeOfLoadingBar, timeForPicture, mapa, widget):
         logging.debug("UI_MainWindow __init__")
         self.lab_loadingbBar = None #label na loadingbara
         self.lab_MapOrWidget = None #label na widget/mape
@@ -82,12 +82,14 @@ class Ui_MainWindow(object):
         self.czasObrazka = int(timeForPicture)*1000 #w milisekundach #bez int - napis zostanie ... wygenerowany 1000 razy
         self.timeToDownloadPictures = 6*1000
         self.MainWindow = None
-        self.mapapng = mapa
-        self.widgetpng = widget
-        self.kwadratpng = kwadrat
+        self.mapapng = mapa[0]
+        self.widgetpng = widget[0]
+        self.kwadratpng = kwadrat[0]
         self.wypelnienie = 0
-        self.url_mapa = url_mapa
-        self.url_widget = url_widget
+        self.url_mapa = mapa[1]
+        self.url_widget = widget[1]
+        self.mapa = mapa
+        self.widget = widget
 
         #timery
         self.timerPicture = None #timerPicture do zamiany zdjęć
@@ -152,7 +154,7 @@ class Ui_MainWindow(object):
         return brokenImage
 
     def changePicture(self):
-        logging.debug("changePicture Function - flagWidget="+str(self.flagaWidget))
+        logging.debug("changePicture Function - flagaWidget="+str(self.flagaWidget))
         if self.flagaWidget == 0:
             brokenImage=self.checkPicture(self.mapapng)
             if brokenImage == False:
@@ -186,10 +188,10 @@ class Ui_MainWindow(object):
         logging.debug("downloadPictures")
         try:
             r_widget = requests.get(self.url_widget, allow_redirects=True)
-            with open('widget.png', 'wb') as file_widget:
+            with open(self.widgetpng, 'wb') as file_widget:
                 file_widget.write(r_widget.content)
             r_map = requests.get(self.url_mapa, allow_redirects=True)
-            with open('mapa.png', 'wb') as file_map:
+            with open(self.mapapng, 'wb') as file_map:
                 file_map.write(r_map.content)
             logging.debug("pobrano zdjęcia")
             ###### WYSŁANIE SATUSU NA SERVER CZUJNIKI MIEJSKIE ZE WSZYSTKO JEST OK ########
@@ -252,9 +254,9 @@ class Ui_MainWindow(object):
 
 class Window(QtWidgets.QMainWindow):
     resized = QtCore.pyqtSignal()
-    def __init__(self, sizeOfLoadingBar, fullScreen, time, mapa, widget, kwadrat, url_mapa, url_widget):
+    def __init__(self, sizeOfLoadingBar, fullScreen, time, kwadrat, mapa, widget):
         super(Window, self).__init__(parent=None)
-        self.ui = Ui_MainWindow(sizeOfLoadingBar, time, url_mapa, url_widget)
+        self.ui = Ui_MainWindow(sizeOfLoadingBar, time, mapa, widget)
         self.ui.setupUi(self)
         self.resized.connect(self.resizeEventFunction)
         if fullScreen:
@@ -292,17 +294,15 @@ if __name__ == "__main__":
     fullScreen=args.fullScreenSlideshow
     time=int(args.timeForPicture)
     workdirectory=args.workdirectory
-    mapa=args.mapapng
-    widget=args.widgetpng
-    kwadrat=args.kwadratpng
-    url_widget=args.url_widget
-    url_mapa=args.url_mapa
+    kwadrat=args.kwadrat
+    mapa=args.mapa
+    widget=args.widget
     logging.debug(pprint(args))
     os.chdir(workdirectory)
     obecny_folder=os.getcwd()
     logging.debug(f"obecny folder roboczy:{obecny_folder}")
     #odpalenie aplikacji
     app = QtWidgets.QApplication(sys.argv)
-    w = Window(sizeOfLoadingBar, fullScreen, time, mapa, widget, kwadrat, url_mapa, url_widget)
+    w = Window(sizeOfLoadingBar, fullScreen, time, kwadrat, mapa, widget)
     w.show()
     sys.exit(app.exec_())
