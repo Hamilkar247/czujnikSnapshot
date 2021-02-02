@@ -72,22 +72,23 @@ class Ui_MainWindow(object):
         logging.debug("UI_MainWindow __init__")
         self.lab_loadingbBar = None #label na loadingbara
         self.lab_MapOrWidget = None #label na widget/mape
-        self.movie = None #movie do odpalenia gifa
-        self.timerPicture = None #timerPicture do zamiany zdjęć
+        self.timerLoadingBar = None
         self.flagaWidget = 1 #flaga mowiaca czy jest teraz mapa czy widget
-        self.centralWidget = None
         self.widthWindow = 925
         self.heightWindow = 810
         self.sizeOfLoadingBar = int(sizeOfLoadingBar)
         self.czasObrazka = int(timeForPicture)*1000 #w milisekundach #bez int - napis zostanie ... wygenerowany 1000 razy
         self.timeToDownloadPictures = 60*1000
-        self.timerDownloader = None
         self.MainWindow = None
         self.mapapng = mapa
         self.widgetpng = widget
         self.kwadratpng = kwadrat
-        self.timerLoadingBar = None
         self.wypelnienie = 0
+
+        #timery
+        self.timerPicture = None #timerPicture do zamiany zdjęć
+        self.timerDownloader = None
+        self.timerLoadingBar = None
         self.initLog()
 
     def initLog(self):
