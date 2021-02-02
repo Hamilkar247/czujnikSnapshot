@@ -12,6 +12,8 @@ import json
 from math import floor
 from PIL import Image
 from pprint import pprint
+from requests import Session
+import requests
 
 def def_params():
     parser = argparse.ArgumentParser(
@@ -78,7 +80,7 @@ class Ui_MainWindow(object):
         self.heightWindow = 810
         self.sizeOfLoadingBar = int(sizeOfLoadingBar)
         self.czasObrazka = int(timeForPicture)*1000 #w milisekundach #bez int - napis zostanie ... wygenerowany 1000 razy
-        self.timeToDownloadPictures = 60*1000
+        self.timeToDownloadPictures = 6*1000
         self.MainWindow = None
         self.mapapng = mapa
         self.widgetpng = widget
@@ -178,6 +180,39 @@ class Ui_MainWindow(object):
 
     def downloadPictures(self):
         logging.debug("downloadPictures")
+        try:
+            url_widget = 'http://134.122.69.201/widgetKozienice/'
+            r_widget = requests.get(url_widget, allow_redirects=True)
+            with open('widget.png', 'wb') as file_widget:
+                file_widget.write(r_widget.content)
+            url_map = 'http://134.122.69.201/mapaKozienice/'
+            r_map = requests.get(url_map, allow_redirects=True)
+            with open('mapa.png', 'wb') as file_map:
+                file_map.write(r_map.content)
+            logging.debug("pobrano zdjęcia")
+            ###### WYSŁANIE SATUSU NA SERVER CZUJNIKI MIEJSKIE ZE WSZYSTKO JEST OK ########
+            #session = Session()
+            # HEAD requests ask for *just* the headers, which is all you need to grab the
+            # session cookie
+            #stat_kweb = os.system('systemctl is-active --quiet kiosk_kweb.service')
+            #stat_downloader = os.system('systemctl is-active --quiet downloader_kiosk.service')
+            #print("Status kweb:")
+            #print(stat_kweb)
+            #print("Status downloader")
+            #print(stat_downloader)
+            #if (stat_kweb==0 and stat_downloader==0):
+            #        print("Kweb i downloader działają")
+            #        response = session.post(
+            #                    url='http://czujnikimiejskie.pl/apipost/add/measurement',
+            #                    data={"sn":"3004","a":"1","w":"0","z":"0"},
+            #        )
+            #        print(response.text)
+            #if stat_kweb!=0:
+            #        os.system('sudo systemctl stop kiosk_kweb.service')
+            #        os.system('sudo systemctl start kiosk_kweb.service')
+        except Exception as inst:
+            print("Wykryto bład : "+str(inst))
+        #time.sleep(600)
 
     def setTimerDownloadPictures(self):
         logging.debug("setTimerDownloadPictures")
