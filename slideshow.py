@@ -137,17 +137,19 @@ class Ui_MainWindow(object):
 
     #uwaga - metoda verify dziala tylko dla png formatu
     def checkPicture(self, picturepng):
-        img = Image.open(picturepng)
         brokenImage=False
         try:
+            img = Image.open(picturepng)
             img.verify()
             print(f"Poprawny png {picturepng}")
             brokenImage=False
         except Exception:
             brokenImage=True
             print('Błąd przy odczycie zdjęcia {picturepng}')
+        except FileExistsError:
+            logging.debug(f"Nie znaleziono pliku: {picturepng}")
+            brokenImage=True
         return brokenImage
-
 
     def changePicture(self):
         logging.debug("changePicture Function - flagWidget="+str(self.flagaWidget))
