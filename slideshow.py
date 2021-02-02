@@ -70,7 +70,7 @@ def def_params():
 
 class Ui_MainWindow(object):
 
-    def __init__(self, sizeOfLoadingBar, timeForPicture):
+    def __init__(self, sizeOfLoadingBar, timeForPicture, url_mapa, url_widget):
         logging.debug("UI_MainWindow __init__")
         self.lab_loadingbBar = None #label na loadingbara
         self.lab_MapOrWidget = None #label na widget/mape
@@ -86,6 +86,8 @@ class Ui_MainWindow(object):
         self.widgetpng = widget
         self.kwadratpng = kwadrat
         self.wypelnienie = 0
+        self.url_mapa = url_mapa
+        self.url_widget = url_widget
 
         #timery
         self.timerPicture = None #timerPicture do zamiany zdjęć
@@ -181,12 +183,10 @@ class Ui_MainWindow(object):
     def downloadPictures(self):
         logging.debug("downloadPictures")
         try:
-            url_widget = 'http://134.122.69.201/widgetKozienice/'
-            r_widget = requests.get(url_widget, allow_redirects=True)
+            r_widget = requests.get(self.url_widget, allow_redirects=True)
             with open('widget.png', 'wb') as file_widget:
                 file_widget.write(r_widget.content)
-            url_map = 'http://134.122.69.201/mapaKozienice/'
-            r_map = requests.get(url_map, allow_redirects=True)
+            r_map = requests.get(self.url_mapa, allow_redirects=True)
             with open('mapa.png', 'wb') as file_map:
                 file_map.write(r_map.content)
             logging.debug("pobrano zdjęcia")
@@ -250,9 +250,9 @@ class Ui_MainWindow(object):
 
 class Window(QtWidgets.QMainWindow):
     resized = QtCore.pyqtSignal()
-    def __init__(self, sizeOfLoadingBar, fullScreen, time, mapa, widget, kwadrat):
+    def __init__(self, sizeOfLoadingBar, fullScreen, time, mapa, widget, kwadrat, url_mapa, url_widget):
         super(Window, self).__init__(parent=None)
-        self.ui = Ui_MainWindow(sizeOfLoadingBar, time)
+        self.ui = Ui_MainWindow(sizeOfLoadingBar, time, url_mapa, url_widget)
         self.ui.setupUi(self)
         self.resized.connect(self.resizeEventFunction)
         if fullScreen:
@@ -293,12 +293,14 @@ if __name__ == "__main__":
     mapa=args.mapapng
     widget=args.widgetpng
     kwadrat=args.kwadratpng
+    url_widget=args.url_widget
+    url_mapa=args.url_mapa
     logging.debug(pprint(args))
     os.chdir(workdirectory)
     obecny_folder=os.getcwd()
     logging.debug(f"obecny folder roboczy:{obecny_folder}")
     #odpalenie aplikacji
     app = QtWidgets.QApplication(sys.argv)
-    w = Window(sizeOfLoadingBar, fullScreen, time, mapa, widget, kwadrat)
+    w = Window(sizeOfLoadingBar, fullScreen, time, mapa, widget, kwadrat, url_mapa, url_widget)
     w.show()
     sys.exit(app.exec_())

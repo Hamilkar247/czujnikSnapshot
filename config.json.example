@@ -19,5 +19,7 @@
       "sizeOfLoadingBar": 100,
       "mapapng" : "mapa.png",
       "widgetpng": "widget.png",
-      "kwadratpng": "kwadrat.png"
+      "kwadratpng": "kwadrat.png",
+      "url_mapa": "http://134.122.69.201/mapaKozienice/",
+      "url_widget": "http://134.122.69.201/widgetKozienice/"
 }
