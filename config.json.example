@@ -14,21 +14,38 @@
       "widget-link" : "https://czujnikimiejskie.pl/public/widgety/widget_kozienice.html?id=196&a=",
   "__comment__": "poniżej zmienne używane w slideshow",
       "logslideshow": "true",
-      "timeForPicture": 20,
-      "timeForDownloader": 2,
+      "timeForPicture": 5,
+      "timeForDownloader": 200,
       "fullScreenSlideshow": "false",
       "sizeOfLoadingBar": 4,
 
   "__comment__": "rubryka na zdjęcia - pierwsze nazwa zdjęcia, drugi url skąd updatujemy",
       "kwadrat": ["kwadrat.png", ""],
+      "__comment__": "uwaga - danie w url https może spowodować puste zdjecie",
       "zdjeciaSlajd": [
            {
-               "nazwapng": "mapaKoz.png",
+               "nazwapng": "mapaKozienice.png",
                "url"     : "http://134.122.69.201/mapaKozienice/"
            },
            {
-               "nazwapng": "widgetKoz.png",
+               "nazwapng": "widgetKozienice.png",
                "url"     : "http://134.122.69.201/widgetKozienice/"
+           },
+           {
+               "nazwapng": "mapaPiaseczno.png",
+               "url"     : "http://134.122.69.201/mapaPiaseczno/"
+           },
+           {
+               "nazwapng": "widgetPiaseczno.png",
+               "url"     : "http://134.122.69.201/widgetPiaseczno/"
+           },
+           {
+               "nazwapng": "mapaKolno.png",
+               "url"     : "http://134.122.69.201/mapaKolno/"
+           },
+           {
+               "nazwapng": "widgetKolno.png",
+               "url"     : "http://134.122.69.201/widgetKolno/"
            }
       ]
 }

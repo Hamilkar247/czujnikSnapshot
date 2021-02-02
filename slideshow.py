@@ -74,39 +74,35 @@ class Ui_MainWindow(object):
     def __init__(self, sizeOfLoadingBar, timeForPicture, timeForDownload, slajdy):
         logging.debug("UI_MainWindow __init__")
         self.lab_loadingbBar = None #label na loadingbara
-        self.lab_MapOrWidget = None #label na widget/mape
+        self.lab_slajd = None #label na widget/mape
         self.timerLoadingBar = None
-        self.flagaWidget = 1 #flaga mowiaca czy jest teraz mapa czy widget
+        self.numerZdjecia = 0 #zmienna wskazuje nam numer obrazka który obecnie jest wyświetlany
         self.widthWindow = 925
         self.heightWindow = 810
         self.sizeOfLoadingBar = int(sizeOfLoadingBar)
         self.czasObrazka = int(timeForPicture)*1000 #w milisekundach #bez int - napis zostanie ... wygenerowany 1000 razy
         self.timeForDownload = int(timeForDownload)*1000 #w milisekundach
         self.MainWindow = None
-        self.mapapng = slajdy[0]['nazwapng']
-        self.widgetpng = slajdy[1]['nazwapng']
+        self.slajdy = slajdy
+        self.numerZdjecia=0
         self.kwadratpng = kwadrat[0]
         self.wypelnienie = 0
-        self.url_mapa = slajdy[0]['url']
-        self.url_widget = slajdy[1]['url']
-        #self.mapa = mapa
-        #self.widget = widget
 
         #timery
         self.timerPicture = None #timerPicture do zamiany zdjęć
         self.timerDownloader = None
         self.timerLoadingBar = None
-        self.initLog()
 
     def initLog(self):
-        logging.debug("initLog")
-        logging.debug("widthWindow: "+str(self.widthWindow))
-        logging.debug("heightWindow: "+str(self.heightWindow))
-        logging.debug("czasObrazka: "+str(self.czasObrazka))
-        logging.debug("wypelnienie: "+str(self.wypelnienie))
-        logging.debug(self.mapapng)
-        logging.debug(self.widgetpng)
-        logging.debug(self.kwadratpng)
+        pass
+        #logging.debug("initLog")
+        #logging.debug("widthWindow: "+str(self.widthWindow))
+        #logging.debug("heightWindow: "+str(self.heightWindow))
+        #logging.debug("czasObrazka: "+str(self.czasObrazka))
+        #logging.debug("wypelnienie: "+str(self.wypelnienie))
+        #logging.debug(self.mapapng)
+        #logging.debug(self.widgetpng)
+        #logging.debug(self.kwadratpng)
 
     def setupUi(self, MainWindow):
         logging.debug("setupUi")
@@ -124,12 +120,15 @@ class Ui_MainWindow(object):
         self.lab_loadingBar.setPixmap(QtGui.QPixmap(self.kwadratpng))
         self.lab_loadingBar.setScaledContents(True)
         #mapa i widget
-        self.lab_MapOrWidget = QtWidgets.QLabel(MainWindow)
-        self.lab_MapOrWidget.setGeometry(QtCore.QRect(0, self.sizeOfLoadingBar, self.widthWindow, self.heightWindow-20))
-        self.lab_MapOrWidget.setText("")
-        self.lab_MapOrWidget.setPixmap(QtGui.QPixmap(self.mapapng))
-        self.lab_MapOrWidget.setScaledContents(True)
-        self.lab_MapOrWidget.setObjectName("lab_MapOrWidget")
+        self.lab_slajd = QtWidgets.QLabel(MainWindow)
+        self.lab_slajd.setGeometry(QtCore.QRect(0, self.sizeOfLoadingBar, self.widthWindow, self.heightWindow-20))
+        self.lab_slajd.setText("")
+        self.lab_slajd.setPixmap(QtGui.QPixmap(self.slajdy[self.numerZdjecia]['nazwapng']))
+        self.lab_slajd.setScaledContents(True)
+        self.lab_slajd.setObjectName("lab_slajd")
+        #inicjalne pobranie
+        logging.debug("inicjalne pobranie")
+        self.downloadPictures()
         #timery
         self.setTimerDownloadPictures()
         self.setTimerChangePicture()
@@ -155,27 +154,20 @@ class Ui_MainWindow(object):
         return brokenImage
 
     def changePicture(self):
-        logging.debug("changePicture Function - flagaWidget="+str(self.flagaWidget))
-        if self.flagaWidget == 0:
-            brokenImage=self.checkPicture(self.mapapng)
-            if brokenImage == False:
-                self.lab_MapOrWidget.setPixmap(QtGui.QPixmap(self.mapapng))
-            else:
-                self.lab_MapOrWidget.setPixmap(QtGui.QPixmap(f'{self.mapapng}.bkp'))
-                logging.debug(f'{self.mapapng}.bkp')
-            self.flagaWidget = 1
-            self.wypelnienie = 0
-            self.setWidthLoadingBar()
+        logging.debug(f"changePicture Function - numerZdjecia={self.numerZdjecia}")
+        numer=self.numerZdjecia
+        brokenImage=self.checkPicture(self.slajdy[numer]['nazwapng'])
+        if brokenImage == False:
+            self.lab_slajd.setPixmap(QtGui.QPixmap(self.slajdy[numer]['nazwapng']))
         else:
-            brokenImage=self.checkPicture(self.widgetpng)
-            if brokenImage == False:
-                self.lab_MapOrWidget.setPixmap(QtGui.QPixmap(self.widgetpng))
-            else:
-                self.lab_MapOrWidget.setPixmap(QtGui.QPixmap(f'{self.widgetpng}.bkp'))
-                logging.debug(f'{self.widgetpng}.bkp')
-            self.flagaWidget = 0
-            self.wypelnienie = 0
-            self.setWidthLoadingBar()
+            self.lab_slajd.setPixmap(QtGui.QPixmap(f"{self.slajdy[numer]}.bkp"))
+            logging.debug(f"{self.slajdy[numer]})")
+        if (len(self.slajdy)-1>numer):
+            self.numerZdjecia = self.numerZdjecia+1
+        else:
+            self.numerZdjecia = 0
+        self.wypelnienie = 0
+        self.setWidthLoadingBar()
 
     def changeLoadingBar(self):
         if self.wypelnienie < 11:
@@ -188,13 +180,11 @@ class Ui_MainWindow(object):
     def downloadPictures(self):
         logging.debug("downloadPictures")
         try:
-            r_widget = requests.get(self.url_widget, allow_redirects=True)
-            with open(self.widgetpng, 'wb') as file_widget:
-                file_widget.write(r_widget.content)
-            r_map = requests.get(self.url_mapa, allow_redirects=True)
-            with open(self.mapapng, 'wb') as file_map:
-                file_map.write(r_map.content)
-            logging.debug("pobrano zdjęcia")
+            for slajd in list(self.slajdy):
+                r_slajd = requests.get(slajd['url'], allow_redirects=True)
+                with open(slajd['nazwapng'], 'wb') as file_slajd:
+                    file_slajd.write(r_slajd.content)
+                logging.debug("pobrano zdjęcia {slajd[nazwapng]}")
             ###### WYSŁANIE SATUSU NA SERVER CZUJNIKI MIEJSKIE ZE WSZYSTKO JEST OK ########
             #session = Session()
             # HEAD requests ask for *just* the headers, which is all you need to grab the
@@ -251,7 +241,7 @@ class Ui_MainWindow(object):
         self.heightWindow = self.mainWindow.frameGeometry().height()
         logging.debug("widthWindow :"+str(self.widthWindow))
         logging.debug("heightWindow :"+str(self.heightWindow))
-        self.lab_MapOrWidget.setGeometry(QtCore.QRect(0, self.sizeOfLoadingBar, self.widthWindow, self.heightWindow))
+        self.lab_slajd.setGeometry(QtCore.QRect(0, self.sizeOfLoadingBar, self.widthWindow, self.heightWindow))
 
 class Window(QtWidgets.QMainWindow):
     resized = QtCore.pyqtSignal()
