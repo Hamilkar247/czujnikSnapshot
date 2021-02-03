@@ -132,11 +132,11 @@ class Ui_MainWindow(object):
         try:
             img = Image.open(picturepng)
             img.verify()
-            print(f"Poprawny png {picturepng}")
+            logging.debug(f"Poprawny png {picturepng}")
             brokenImage=False
         except Exception:
             brokenImage=True
-            print('Błąd przy odczycie zdjęcia {picturepng}')
+            logging.debug('Błąd przy odczycie zdjęcia {picturepng}')
         except FileExistsError:
             logging.debug(f"Nie znaleziono pliku: {picturepng}")
             brokenImage=True
@@ -175,25 +175,18 @@ class Ui_MainWindow(object):
                     file_slajd.write(r_slajd.content)
                 logging.debug("pobrano zdjęcia {slajd[nazwapng]}")
             ###### WYSŁANIE SATUSU NA SERVER CZUJNIKI MIEJSKIE ZE WSZYSTKO JEST OK ########
-            #session = Session()
+            session = Session()
             # HEAD requests ask for *just* the headers, which is all you need to grab the
             # session cookie
-            #stat_kweb = os.system('systemctl is-active --quiet kiosk_kweb.service')
-            #stat_downloader = os.system('systemctl is-active --quiet downloader_kiosk.service')
-            #print("Status kweb:")
-            #print(stat_kweb)
-            #print("Status downloader")
-            #print(stat_downloader)
-            #if (stat_kweb==0 and stat_downloader==0):
-            #        print("Kweb i downloader działają")
-            #        response = session.post(
-            #                    url='http://czujnikimiejskie.pl/apipost/add/measurement',
-            #                    data={"sn":"3004","a":"1","w":"0","z":"0"},
-            #        )
-            #        print(response.text)
-            #if stat_kweb!=0:
-            #        os.system('sudo systemctl stop kiosk_kweb.service')
-            #        os.system('sudo systemctl start kiosk_kweb.service')
+            if True:
+                    print("pobieranie w slideshow działa")
+                    response = session.post(
+                                url='http://czujnikimiejskie.pl/apipost/add/measurement',
+                                data={"sn":"3005","a":"1","w":"0","z":"0"},
+                    )
+                    print(response.text)
+        except requests.exceptions.RequestException as error:
+            print(f"Wystąpił problem z połączeniem:{error}")
         except Exception as inst:
             print("Wykryto bład : "+str(inst))
 
