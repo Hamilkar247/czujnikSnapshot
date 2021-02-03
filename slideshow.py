@@ -193,8 +193,12 @@ class Ui_MainWindow(object):
         except Exception as inst:
             self.liczbaPrzerwanychPolaczen=self.liczbaPrzerwanychPolaczen+1
             print("Wykryto bład : "+str(inst))
-        if self.liczbaPrzerwanychPolaczen>2:
-            print(f"RESET SERVICE")
+        if self.liczbaPrzerwanychPolaczen==2:
+            print(f"RESET SERVICE NETWORK")
+            os.system('sudo systemctl restart NetworkManager.service')
+        if self.liczbaPrzerwanychPolaczen>=4:
+            os.system('sudo systemctl stop slideshow.service')
+            os.system('sudo systemctl start slideshow.service')
 
     def setTimerDownloadPictures(self):
         logging.debug("setTimerDownloadPictures")
