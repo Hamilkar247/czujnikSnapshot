@@ -1,7 +1,7 @@
 {
   "__comment__": "ustawienia debug programów",
       "debug_logsnapshot"  : "false",
-      "debug_logslideshow" : "true",
+      "debug_logslideshow" : "false",
   "__comment__": "czynniki wspólne dla obu programów",
       "workdirectory": "/home/matball/Projects/czujnikSnapshot",
   "__comment__": "poniżej zmienne uzywane w czujniksnapshot",
@@ -13,7 +13,6 @@
       "mapa-link"  : "https://czujnikimiejskie.pl/public/kozienice/?url_node_id=196&kml=false&a=",
       "widget-link" : "https://czujnikimiejskie.pl/public/widgety/widget_kozienice.html?id=196&a=",
   "__comment__": "poniżej zmienne używane w slideshow",
-      "logslideshow": "true",
       "timeForPicture": 5,
       "timeForDownloader": 200,
       "fullScreenSlideshow": "false",

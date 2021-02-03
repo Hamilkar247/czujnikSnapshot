@@ -12,6 +12,7 @@ import json
 from math import floor
 from PIL import Image
 from pprint import pprint
+from pprint import pformat
 from requests import Session
 import requests
 
@@ -40,17 +41,17 @@ def def_params():
     args = parser.parse_args()
     for key, value in list(args.__dict__.items()):
         if value is None or value == False:
-            print(f"usuniete {key} {value}")
+            #print(f"usuniete {key} {value}")
             del args.__dict__[key]
-    print("after command line")
-    pprint(args.__dict__)
+    #print("after command line"))
+    #pprint(args.__dict__))
 
     if os.path.exists('config.json'):
         config_args = argparse.Namespace()
         with open('config.json', 'rt') as f:
              config_args = argparse.Namespace()
              config_args.__dict__.update(json.load(f))
-             pprint(config_args)
+             #pprint(config_args)
              config_args.__dict__.update(vars(args))
         for key, value in list(config_args.__dict__.items()):
             if value == "False" or value == "false":
@@ -65,8 +66,7 @@ def def_params():
     if config_args.debug_logslideshow:
         logging.basicConfig(level=logging.DEBUG, force=True)
         logging.debug("Ten komunikat pokazuje sie tylko w trybie debug")
-        print("config_args:")
-        pprint(config_args.__dict__)
+        logging.debug(pformat(config_args.__dict__))
     return config_args
 
 class Ui_MainWindow(object):
@@ -92,17 +92,6 @@ class Ui_MainWindow(object):
         self.timerPicture = None #timerPicture do zamiany zdjęć
         self.timerDownloader = None
         self.timerLoadingBar = None
-
-    def initLog(self):
-        pass
-        #logging.debug("initLog")
-        #logging.debug("widthWindow: "+str(self.widthWindow))
-        #logging.debug("heightWindow: "+str(self.heightWindow))
-        #logging.debug("czasObrazka: "+str(self.czasObrazka))
-        #logging.debug("wypelnienie: "+str(self.wypelnienie))
-        #logging.debug(self.mapapng)
-        #logging.debug(self.widgetpng)
-        #logging.debug(self.kwadratpng)
 
     def setupUi(self, MainWindow):
         logging.debug("setupUi")
@@ -207,7 +196,6 @@ class Ui_MainWindow(object):
             #        os.system('sudo systemctl start kiosk_kweb.service')
         except Exception as inst:
             print("Wykryto bład : "+str(inst))
-        #time.sleep(600)
 
     def setTimerDownloadPictures(self):
         logging.debug("setTimerDownloadPictures")
@@ -288,7 +276,7 @@ if __name__ == "__main__":
     workdirectory=args.workdirectory
     kwadrat=args.kwadrat
     slajdy=args.zdjeciaSlajd
-    logging.debug(pprint(args))
+    logging.debug(pformat(args))
     os.chdir(workdirectory)
     obecny_folder=os.getcwd()
     logging.debug(f"obecny folder roboczy:{obecny_folder}")
