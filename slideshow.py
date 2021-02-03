@@ -87,6 +87,7 @@ class Ui_MainWindow(object):
         self.numerZdjecia=0
         self.kwadratpng = kwadrat[0]
         self.wypelnienie = 0
+        self.liczbaPrzerwanychPolaczen=0
 
         #timery
         self.timerPicture = None #timerPicture do zamiany zdjęć
@@ -185,10 +186,15 @@ class Ui_MainWindow(object):
                                 data={"sn":"3005","a":"1","w":"0","z":"0"},
                     )
                     print(response.text)
+            self.liczbaPrzerwanychPolaczen=0
         except requests.exceptions.RequestException as error:
+            self.liczbaPrzerwanychPolaczen=self.liczbaPrzerwanychPolaczen+1
             print(f"Wystąpił problem z połączeniem:{error}")
         except Exception as inst:
+            self.liczbaPrzerwanychPolaczen=self.liczbaPrzerwanychPolaczen+1
             print("Wykryto bład : "+str(inst))
+        if self.liczbaPrzerwanychPolaczen>2:
+            print(f"RESET SERVICE")
 
     def setTimerDownloadPictures(self):
         logging.debug("setTimerDownloadPictures")
