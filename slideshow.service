@@ -9,7 +9,6 @@ Environment=XAUTHORITY=/home/matball/.Xauthority
 Type=simple
 ExecStart=/home/matball/Projects/czujnikSnapshot/runnerSlideshow.sh
 Restart=always
-RestartSec=120
 User=matball
 Group=matball
 
