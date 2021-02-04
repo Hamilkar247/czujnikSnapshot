@@ -32,12 +32,10 @@ def def_params():
     parser.add_argument("-l", "--debug_logslideshow", action='store_true', help="ustaw flage 'debug' i wyswietlaj logi")
     parser.add_argument("-s", "--sizeOfLoadingBar", help="ustaw rozmiar(grubość) loadingBara")
     parser.add_argument("-f", "--fullScreenSlideshow", action='store_true', help="ustaw maksymalny rozmiar programu przy odpaleniu programu")
-    parser.add_argument("-t", "--timeForPicture", type=int, help="podaj czas w [s] dla każdego obrazka")
+    parser.add_argument("-tp", "--timeForPicture", type=int, help="podaj czas w [s] dla każdego obrazka")
     parser.add_argument("-td", "--timeForDownload", type=int, help="podaj czas w [s] jak często mają być pobierane pliki")
     parser.add_argument("-wd", "--workdirectory", help="argument wskazuje folder roboczy - wazny z tego wzgledu że tam powinien się znajdować plik konfiguracyjny")
-    parser.add_argument("-mapa", "--mapapng", help="url do ścieszki z png screenshota mapy - uwaga zalecany format png!(jpg ma pewne problemy w walidacji)")
-    parser.add_argument("-widget", "--widgetpng", help="url do ścieszki z png screenshota widgeta - uwaga zalecany format png!(jpg ma pewne problemy w walidacji)")
-    parser.add_argument("-kwadrat", "--kwadratpng", help="url do ścieszki z png używanego w LoadingBar-ze - uwaga zalecany format png!")
+    parser.add_argument("-p", "--pasekpng", help="url do ścieszki z png używanego w LoadingBar-ze - uwaga zalecany format png!")
     args = parser.parse_args()
     for key, value in list(args.__dict__.items()):
         if value is None or value == False:
@@ -85,7 +83,7 @@ class Ui_MainWindow(object):
         self.MainWindow = None
         self.slajdy = slajdy
         self.numerZdjecia=0
-        self.kwadratpng = kwadrat[0]
+        self.pasekpng = pasek[0]
         self.wypelnienie = 0
         self.liczbaPrzerwanychPolaczen=0
 
@@ -107,7 +105,7 @@ class Ui_MainWindow(object):
         self.lab_loadingBar.setText("")
         self.lab_loadingBar.setScaledContents(True)
         self.lab_loadingBar.setObjectName("lab_loadingBar")
-        self.lab_loadingBar.setPixmap(QtGui.QPixmap(self.kwadratpng))
+        self.lab_loadingBar.setPixmap(QtGui.QPixmap(self.pasekpng))
         self.lab_loadingBar.setScaledContents(True)
         #mapa i widget
         self.lab_slajd = QtWidgets.QLabel(MainWindow)
@@ -239,7 +237,7 @@ class Ui_MainWindow(object):
 
 class Window(QtWidgets.QMainWindow):
     resized = QtCore.pyqtSignal()
-    def __init__(self, sizeOfLoadingBar, fullScreen, timeForPicture, timeForDownloader, kwadrat, slajdy):
+    def __init__(self, sizeOfLoadingBar, fullScreen, timeForPicture, timeForDownloader, pasek, slajdy):
         super(Window, self).__init__(parent=None)
         self.ui = Ui_MainWindow(sizeOfLoadingBar, timeForPicture, timeForDownloader, slajdy)
         self.ui.setupUi(self)
@@ -280,7 +278,7 @@ if __name__ == "__main__":
     timeForPicture=int(args.timeForPicture)
     timeForDownloader=int(args.timeForDownloader)
     workdirectory=args.workdirectory
-    kwadrat=args.kwadrat
+    pasek=args.pasekpng
     slajdy=args.zdjeciaSlajd
     logging.debug(pformat(args))
     os.chdir(workdirectory)
@@ -288,6 +286,6 @@ if __name__ == "__main__":
     logging.debug(f"obecny folder roboczy:{obecny_folder}")
     #odpalenie aplikacji
     app = QtWidgets.QApplication(sys.argv)
-    w = Window(sizeOfLoadingBar, fullScreen, timeForPicture, timeForDownloader, kwadrat, slajdy)
+    w = Window(sizeOfLoadingBar, fullScreen, timeForPicture, timeForDownloader, pasek, slajdy)
     w.show()
     sys.exit(app.exec_())
