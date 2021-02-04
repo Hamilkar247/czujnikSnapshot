@@ -144,12 +144,12 @@ class Ui_MainWindow(object):
     def changePicture(self):
         logging.debug(f"changePicture Function - numerZdjecia={self.numerZdjecia}")
         numer=self.numerZdjecia
-        brokenImage=self.checkPicture(self.slajdy[numer]['nazwapng'])
-        if brokenImage == False:
-            self.lab_slajd.setPixmap(QtGui.QPixmap(self.slajdy[numer]['nazwapng']))
-        else:
-            self.lab_slajd.setPixmap(QtGui.QPixmap(f"{self.slajdy[numer]}.bkp"))
-            logging.debug(f"{self.slajdy[numer]})")
+        #brokenImage=self.checkPicture(self.slajdy[numer]['nazwapng'])
+        #if brokenImage == False:
+        self.lab_slajd.setPixmap(QtGui.QPixmap(self.slajdy[numer]['nazwapng']))
+        #else:
+        #    self.lab_slajd.setPixmap(QtGui.QPixmap(f"{self.slajdy[numer]}.bkp"))
+        #    logging.debug(f"{self.slajdy[numer]})")
         if (len(self.slajdy)-1>numer):
             self.numerZdjecia = self.numerZdjecia+1
         else:
