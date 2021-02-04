@@ -195,10 +195,13 @@ class Ui_MainWindow(object):
             print("Wykryto bład : "+str(inst))
         if self.liczbaPrzerwanychPolaczen==2:
             print(f"RESET SERVICE NETWORK")
-            os.system('sudo systemctl restart NetworkManager.service')
-        if self.liczbaPrzerwanychPolaczen>=4:
-            os.system('sudo systemctl stop slideshow.service')
-            os.system('sudo systemctl start slideshow.service')
+            os.system('systemctl --user restart NetworkManager.service')
+        if self.liczbaPrzerwanychPolaczen>=5:
+            os.system('systemctl --user stop slideshow.service')
+            os.system('systemctl --user start slideshow.service')
+            print("Błąd połączenia z się po raz piąty - kończe działanie programu")
+            sys.exit()
+        logging.debug(f"liczbaPrzerwanychPolaczen:{self.liczbaPrzerwanychPolaczen}")
 
     def setTimerDownloadPictures(self):
         logging.debug("setTimerDownloadPictures")
