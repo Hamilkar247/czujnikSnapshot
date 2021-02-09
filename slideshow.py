@@ -173,6 +173,7 @@ class Ui_MainWindow(object):
             f=open("working_slideshow.txt", "w+")
             logging.debug("stworzono working_slideshow.txt plik")
         logging.debug("downloadPictures")
+        flagDownloadBroken=False
         try:
             for slajd in list(self.slajdy):
                 r_slajd = requests.get(slajd['url'], allow_redirects=True)
@@ -190,22 +191,25 @@ class Ui_MainWindow(object):
                                 data={"sn":"3005","a":"1","w":"0","z":"0"},
                     )
                     print(response.text)
+                    flagDownloadBroken=True
             self.liczbaPrzerwanychPolaczen=0
         except requests.exceptions.RequestException as error:
             self.liczbaPrzerwanychPolaczen=self.liczbaPrzerwanychPolaczen+1
+            flagDownloadBroken=False
             print(f"Wystąpił problem z połączeniem:{error}")
         except Exception as inst:
-            self.liczbaPrzerwanychPolaczen=self.liczbaPrzerwanychPolaczen+1
+            flagDownloadBroken=False
+            print(f"Wystąpił problem z połączeniem:{error}")
             print("Wykryto bład : "+str(inst))
-        if self.liczbaPrzerwanychPolaczen==2:
-            print(f"RESET SERVICE NETWORK")
-            os.system('systemctl --user restart NetworkManager.service')
-        if self.liczbaPrzerwanychPolaczen>=5:
-            os.system('systemctl --user stop slideshow.service')
-            os.system('systemctl --user start slideshow.service')
-            print("Błąd połączenia z się po raz piąty - kończe działanie programu")
-            sys.exit()
-        logging.debug(f"liczbaPrzerwanychPolaczen:{self.liczbaPrzerwanychPolaczen}")
+        if flagDownloadBroken==True:
+            if os.path.isfile('working_slideshow.txt'):
+                logging.debug("working_slideshow.txt plik istnieje")
+                pass
+            else:
+                f=open("working_slideshow.txt", "w+")
+                logging.debug("stworzono working_slideshow.txt plik")
+        logging.debug("downloadPictures")
+        flagDownloadBroken=False
 
     def setTimerDownloadPictures(self):
         logging.debug("setTimerDownloadPictures")

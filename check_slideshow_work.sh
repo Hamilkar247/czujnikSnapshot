@@ -1,7 +1,8 @@
 #!/bin/bash
 
 #zczytuje folder roboczy
-WD=$(sed 's/.*"workdirectory": "\(.*\)".*/\1/;t;d' config.json)
+WD=/home/matball/Projects/czujnikSnapshot
+cd "$WD"
 timeToSleep=$(sed 's/.*"timeToCheckSlideshow": \(.*\),/\1/;t;d' config.json)
 if [[ "$timeToSleep" == "" ]]
  then
@@ -10,10 +11,8 @@ if [[ "$timeToSleep" == "" ]]
    exit
 fi
 
-echo "$WD"
-cd "$WD" || return
-
 sleep 5 #czas by slideshow.py miał czas zczytać configa etc
+var_nofound=0
 while true
 do
   echo "sprawdzam czy plik working_slideshow.txt istnieje"
@@ -21,8 +20,29 @@ do
   then
     echo "usuwam plik working_slideshow.txt"
     rm working_slideshow.txt
+    var_nofound=0
   else
     echo "nie znalazłem pliku"
+    var_nofound=$(( var_nofound+1 ))
+  fi
+  echo "var_nofound=$var_nofound"
+  if [[ "$var_nofound" -eq "3" ]] #is a greater than or equal
+    then
+      echo "nie znaleziono po raz trzeci pliku"
+      var_nofound=$(( var_nofound+1 ))
+      echo "Wykonuje 'systemctl start stop' na serwisie 'NetworkManager.service'"
+      systemctl stop NetworkManager.service
+      systemctl start NetworkManager.service
+      #reboot
+  fi
+  if [[ "$var_nofound" -ge "5" ]]
+    then
+      echo "nie znaleziono pliku po raz piąty - resetuje slideshow"
+      echo "Stopuje i potem ponownie uruchomiam serwis 'slideshow.service'"
+      systemctl stop slideshow.service
+      systemctl start slideshow.service
+      var_nofound=0
+
   fi
   sleep "$timeToSleep" # czas w sekundach
 done

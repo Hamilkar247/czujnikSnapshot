@@ -1,7 +1,10 @@
 #!/bin/bash
 
-Czujniki="$HOME""/Projects/czujnikSnapshot"
+echo "HOME: $HOME"
+Slideshow="$HOME""/Projects/czujnikSnapshot"
+echo "$Slideshow"
 PythonEnv="$HOME""/Projects/czujnikSnapshot/venv/bin/python"
-cd "$Czujniki"
+echo "$PythonEnv"
+cd "$Slideshow"
 pwd
-"$PythonEnv" "$Czujniki"/slideshow.py
+"$PythonEnv" "$Slideshow"/slideshow.py
