@@ -1,0 +1,11 @@
+[Unit]
+Description=checkSlideshow
+
+[Service]
+Environment=XAUTHORITY=/home/matball/.Xauthority
+Type=simple
+ExecStart=/home/matball/Projects/czujnikSnapshot/check_slideshow_work.sh
+Restart=always
+
+[Install]
+WantedBy=graphical.target
