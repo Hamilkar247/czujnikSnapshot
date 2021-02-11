@@ -69,7 +69,7 @@ def def_params():
 
 class Ui_MainWindow(object):
 
-    def __init__(self, sizeOfLoadingBar, timeForPicture, timeForDownload, slajdy):
+    def __init__(self, sizeOfLoadingBar, timeForPicture, timeForDownload, slajdy, workdirectory):
         logging.debug("UI_MainWindow __init__")
         self.lab_loadingbBar = None #label na loadingbara
         self.lab_slajd = None #label na widget/mape
@@ -86,6 +86,7 @@ class Ui_MainWindow(object):
         self.pasekpng = pasek[0]
         self.wypelnienie = 0
         self.liczbaPrzerwanychPolaczen=0
+        self.workdirectory=workdirectory
 
         #timery
         self.timerPicture = None #timerPicture do zamiany zdjęć
@@ -195,13 +196,16 @@ class Ui_MainWindow(object):
             print(f"Wystąpił problem z połączeniem:{error}")
             print("Wykryto bład : "+str(inst))
         if flagDownloadBroken==False:
+            os.chdir('/tmp/')
+            logging.debug(f"folder na plik tymczasowy: {os.getcwd()}")
             if os.path.isfile('working_slideshow.txt'):
                 logging.debug("working_slideshow.txt plik istnieje")
             else:
                 f=open("working_slideshow.txt", "w+")
                 logging.debug("stworzono working_slideshow.txt plik")
+            os.chdir(self.workdirectory)
+            logging.debug(f"Wracamy do folderu roboczego: {os.getcwd()}")
         logging.debug("koniec downloadPictures")
-
     def setTimerDownloadPictures(self):
         logging.debug("setTimerDownloadPictures")
         self.timerDownloader = QtCore.QTimer()
@@ -238,9 +242,9 @@ class Ui_MainWindow(object):
 
 class Window(QtWidgets.QMainWindow):
     resized = QtCore.pyqtSignal()
-    def __init__(self, sizeOfLoadingBar, fullScreen, timeForPicture, timeForDownloader, pasek, slajdy):
+    def __init__(self, sizeOfLoadingBar, fullScreen, timeForPicture, timeForDownloader, pasek, slajdy, workdirectory):
         super(Window, self).__init__(parent=None)
-        self.ui = Ui_MainWindow(sizeOfLoadingBar, timeForPicture, timeForDownloader, slajdy)
+        self.ui = Ui_MainWindow(sizeOfLoadingBar, timeForPicture, timeForDownloader, slajdy, workdirectory)
         self.ui.setupUi(self)
         self.resized.connect(self.resizeEventFunction)
         if fullScreen:
@@ -287,6 +291,6 @@ if __name__ == "__main__":
     logging.debug(f"obecny folder roboczy:{obecny_folder}")
     #odpalenie aplikacji
     app = QtWidgets.QApplication(sys.argv)
-    w = Window(sizeOfLoadingBar, fullScreen, timeForPicture, timeForDownloader, pasek, slajdy)
+    w = Window(sizeOfLoadingBar, fullScreen, timeForPicture, timeForDownloader, pasek, slajdy, workdirectory)
     w.show()
     sys.exit(app.exec_())
