@@ -3,7 +3,8 @@
 #zczytuje folder roboczy
 WD=/home/matball/Projects/czujnikSnapshot
 cd "$WD"
-timeToSleep=$(sed 's/.*"timeToCheckSlideshow": \(.*\),/\1/;t;d' config.json)
+timeToSleep="$(jq '.timeToCheckSlideshow' config.json)"
+rebootActivate="$(jq -r '.rebootActivate' config.json)"
 if [[ "$timeToSleep" == "" ]]
  then
    timeToSleep=5
@@ -45,9 +46,14 @@ do
   fi
   if [[ "$var_nofound" -ge "7" ]]
     then
-      echo "nie znaleziono pliku po raz siódmy - dokonuje całego urządzenia"
-      sleep 1
-      reboot
+      if [[ rebootActivate -eq "true" ]]
+        then
+        echo "nie znaleziono pliku po raz siódmy - dokonuje całego urządzenia"
+        sleep 1
+        reboot
+      else
+        var_nofound="0"
+      fi
   fi
   sleep "$timeToSleep" # czas w sekundach
 done
