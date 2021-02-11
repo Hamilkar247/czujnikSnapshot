@@ -17,7 +17,7 @@ var_nofound=0
 while true
 do
   echo "sprawdzam czy plik working_slideshow.txt istnieje"
-  if [ -f "$WD""/working_slideshow.txt" ]
+  if [ -f "/tmp/working_slideshow.txt" ]
   then
     echo "usuwam plik working_slideshow.txt"
     rm working_slideshow.txt
