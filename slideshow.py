@@ -201,11 +201,15 @@ class Ui_MainWindow(object):
             if os.path.isfile('working_slideshow.txt'):
                 logging.debug("working_slideshow.txt plik istnieje")
             else:
-                f=open("working_slideshow.txt", "w+")
+                try:
+                    f=open("working_slideshow.txt", "w+")
+                except FileNotFoundError:
+                    logging.debug("Uszkodzony plik lub zła ścieszka")
                 logging.debug("stworzono working_slideshow.txt plik")
             os.chdir(self.workdirectory)
             logging.debug(f"Wracamy do folderu roboczego: {os.getcwd()}")
         logging.debug("koniec downloadPictures")
+
     def setTimerDownloadPictures(self):
         logging.debug("setTimerDownloadPictures")
         self.timerDownloader = QtCore.QTimer()
