@@ -46,7 +46,7 @@ do
   fi
   if [[ "$var_nofound" -ge "7" ]]
     then
-      if [[ rebootActivate -eq "true" ]]
+      if [[ "$rebootActivate" -eq "true" ]]
         then
         echo "nie znaleziono pliku po raz siódmy - dokonuje całego urządzenia"
         sleep 1
