@@ -166,12 +166,6 @@ class Ui_MainWindow(object):
         logging.debug(f"changeLoadingBar metoda - Wypelnienie={self.wypelnienie}")
 
     def downloadPictures(self):
-        if os.path.isfile('working_slideshow.txt'):
-            logging.debug("working_slideshow.txt plik istnieje")
-            pass
-        else:
-            f=open("working_slideshow.txt", "w+")
-            logging.debug("stworzono working_slideshow.txt plik")
         logging.debug("downloadPictures")
         flagDownloadBroken=False
         try:
