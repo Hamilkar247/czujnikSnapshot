@@ -167,7 +167,7 @@ class Ui_MainWindow(object):
 
     def downloadPictures(self):
         logging.debug("downloadPictures")
-        flagDownloadBroken=False
+        flagDownloadBroken=True
         try:
             for slajd in list(self.slajdy):
                 r_slajd = requests.get(slajd['url'], allow_redirects=True)
@@ -178,32 +178,29 @@ class Ui_MainWindow(object):
             session = Session()
             # HEAD requests ask for *just* the headers, which is all you need to grab the
             # session cookie
-            if True:
-                    print("pobieranie w slideshow działa")
-                    response = session.post(
-                                url='http://czujnikimiejskie.pl/apipost/add/measurement',
-                                data={"sn":"3005","a":"1","w":"0","z":"0"},
-                    )
-                    print(response.text)
-                    flagDownloadBroken=True
+            print("pobieranie w slideshow działa")
+            response = session.post(
+                        url='http://czujnikimiejskie.pl/apipost/add/measurement',
+                        data={"sn":"3005","a":"1","w":"0","z":"0"},
+            )
+            print(response.text)
+            flagDownloadBroken=False
             self.liczbaPrzerwanychPolaczen=0
         except requests.exceptions.RequestException as error:
             self.liczbaPrzerwanychPolaczen=self.liczbaPrzerwanychPolaczen+1
-            flagDownloadBroken=False
+            flagDownloadBroken=True
             print(f"Wystąpił problem z połączeniem:{error}")
         except Exception as inst:
-            flagDownloadBroken=False
+            flagDownloadBroken=True
             print(f"Wystąpił problem z połączeniem:{error}")
             print("Wykryto bład : "+str(inst))
-        if flagDownloadBroken==True:
+        if flagDownloadBroken==False:
             if os.path.isfile('working_slideshow.txt'):
                 logging.debug("working_slideshow.txt plik istnieje")
-                pass
             else:
                 f=open("working_slideshow.txt", "w+")
                 logging.debug("stworzono working_slideshow.txt plik")
-        logging.debug("downloadPictures")
-        flagDownloadBroken=False
+        logging.debug("koniec downloadPictures")
 
     def setTimerDownloadPictures(self):
         logging.debug("setTimerDownloadPictures")
