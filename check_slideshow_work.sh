@@ -35,14 +35,19 @@ do
       systemctl start NetworkManager.service
       #reboot
   fi
-  if [[ "$var_nofound" -ge "5" ]]
+  if [[ "$var_nofound" -eq "5" ]]
     then
       echo "nie znaleziono pliku po raz piąty - resetuje slideshow"
       echo "Stopuje i potem ponownie uruchomiam serwis 'slideshow.service'"
       systemctl stop slideshow.service
       systemctl start slideshow.service
-      var_nofound=0
-
+      var_nofound=$(( var_nofound+1 ))
+  fi
+  if [[ "$var_nofound" -ge "7" ]]
+    then
+      echo "nie znaleziono pliku po raz siódmy - dokonuje całego urządzenia"
+      sleep 1
+      reboot
   fi
   sleep "$timeToSleep" # czas w sekundach
 done
