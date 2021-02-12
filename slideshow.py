@@ -177,6 +177,7 @@ class Ui_MainWindow(object):
                 r_slajd = requests.get(slajd['url'], allow_redirects=True)
                 with open(slajd['nazwapng'], 'wb') as file_slajd:
                     file_slajd.write(r_slajd.content)
+                #logging.debug(f"Data utworzenia pliku:{self.get_created_taken()}")
                 logging.debug("pobrano zdjęcia {slajd[nazwapng]}")
             logging.debug("downloadConfig")
             r_serwer_config = requests.get(serwer_config, allow_redirects=True)
@@ -201,10 +202,10 @@ class Ui_MainWindow(object):
             self.liczbaPrzerwanychPolaczen=self.liczbaPrzerwanychPolaczen+1
             flagDownloadBroken=True
             print(f"Wystąpił problem z połączeniem:{error}")
-        except Exception as inst:
+        except Exception as error:
             flagDownloadBroken=True
             print(f"Wystąpił problem z połączeniem:{error}")
-            print("Wykryto bład : "+str(inst))
+            print("Wykryto bład : "+str(error))
         if flagDownloadBroken==False:
             os.chdir('/tmp/')
             logging.debug(f"folder na plik tymczasowy: {os.getcwd()}")
