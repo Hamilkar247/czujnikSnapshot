@@ -36,6 +36,7 @@ def def_params():
     parser.add_argument("-td", "--timeForDownload", type=int, help="podaj czas w [s] jak często mają być pobierane pliki")
     parser.add_argument("-wd", "--workdirectory", help="argument wskazuje folder roboczy - wazny z tego wzgledu że tam powinien się znajdować plik konfiguracyjny")
     parser.add_argument("-p", "--pasekpng", help="url do ścieszki z png używanego w LoadingBar-ze - uwaga zalecany format png!")
+    parser.add_argument("-sc", "--serwer_config", help="przechowuje url do serwera z plikiem jsonowy który będzie plikiem konfiguracyjnym")
     args = parser.parse_args()
     for key, value in list(args.__dict__.items()):
         if value is None or value == False:
@@ -69,7 +70,7 @@ def def_params():
 
 class Ui_MainWindow(object):
 
-    def __init__(self, sizeOfLoadingBar, timeForPicture, timeForDownload, slajdy, workdirectory):
+    def __init__(self, sizeOfLoadingBar, timeForPicture, timeForDownload, slajdy, workdirectory, serwer_config):
         logging.debug("UI_MainWindow __init__")
         self.lab_loadingbBar = None #label na loadingbara
         self.lab_slajd = None #label na widget/mape
@@ -87,6 +88,7 @@ class Ui_MainWindow(object):
         self.wypelnienie = 0
         self.liczbaPrzerwanychPolaczen=0
         self.workdirectory=workdirectory
+        self.serwer_config=serwer_config
 
         #timery
         self.timerPicture = None #timerPicture do zamiany zdjęć
@@ -94,7 +96,7 @@ class Ui_MainWindow(object):
         self.timerLoadingBar = None
 
     def setupUi(self, MainWindow):
-        logging.debug("setupUi")
+        logging.debug("setupUi - inicjalne uruchomienie")
         #glówne okno
         self.mainWindow = MainWindow
         self.mainWindow.setObjectName("MainWindow")
@@ -117,9 +119,9 @@ class Ui_MainWindow(object):
         self.lab_slajd.setObjectName("lab_slajd")
         #inicjalne pobranie
         logging.debug("inicjalne pobranie")
-        self.downloadPictures()
+        self.downloadFiles()
         #timery
-        self.setTimerDownloadPictures()
+        self.setTimerDownloadFiles()
         self.setTimerChangePicture()
         self.setTimerLoadingBar()
 
@@ -166,15 +168,23 @@ class Ui_MainWindow(object):
         self.setWidthLoadingBar()
         logging.debug(f"changeLoadingBar metoda - Wypelnienie={self.wypelnienie}")
 
-    def downloadPictures(self):
-        logging.debug("downloadPictures")
+    def downloadFiles(self):
+        logging.debug("downloadFiles")
         flagDownloadBroken=True
         try:
+            logging.debug("downloadPictures")
             for slajd in list(self.slajdy):
                 r_slajd = requests.get(slajd['url'], allow_redirects=True)
                 with open(slajd['nazwapng'], 'wb') as file_slajd:
                     file_slajd.write(r_slajd.content)
                 logging.debug("pobrano zdjęcia {slajd[nazwapng]}")
+            logging.debug("downloadConfig")
+            r_serwer_config = requests.get(serwer_config, allow_redirects=True)
+
+            nazwa_zapisanego_configa='config.json'
+            with open(nazwa_zapisanego_configa, 'wb') as file_json:
+                file_json.write(r_serwer_config.content)
+            logging.debug("pobrano plik configa - zapisany jako {nazwa_zapisanego_configa}")
             ###### WYSŁANIE SATUSU NA SERVER CZUJNIKI MIEJSKIE ZE WSZYSTKO JEST OK ########
             session = Session()
             # HEAD requests ask for *just* the headers, which is all you need to grab the
@@ -208,12 +218,12 @@ class Ui_MainWindow(object):
                 logging.debug("stworzono working_slideshow.txt plik")
             os.chdir(self.workdirectory)
             logging.debug(f"Wracamy do folderu roboczego: {os.getcwd()}")
-        logging.debug("koniec downloadPictures")
+        logging.debug("koniec downloadFiles")
 
-    def setTimerDownloadPictures(self):
-        logging.debug("setTimerDownloadPictures")
+    def setTimerDownloadFiles(self):
+        logging.debug("setTimerDownloadFiles")
         self.timerDownloader = QtCore.QTimer()
-        self.timerDownloader.timeout.connect(self.downloadPictures)
+        self.timerDownloader.timeout.connect(self.downloadFiles)
         timeForDownload=self.timeForDownload
         logging.debug(f"czasUruchomieniaPobrania: {timeForDownload} minself")
         self.timerDownloader.setInterval(timeForDownload)
@@ -246,9 +256,9 @@ class Ui_MainWindow(object):
 
 class Window(QtWidgets.QMainWindow):
     resized = QtCore.pyqtSignal()
-    def __init__(self, sizeOfLoadingBar, fullScreen, timeForPicture, timeForDownloader, pasek, slajdy, workdirectory):
+    def __init__(self, sizeOfLoadingBar, fullScreen, timeForPicture, timeForDownloader, pasek, slajdy, workdirectory, serwer_config):
         super(Window, self).__init__(parent=None)
-        self.ui = Ui_MainWindow(sizeOfLoadingBar, timeForPicture, timeForDownloader, slajdy, workdirectory)
+        self.ui = Ui_MainWindow(sizeOfLoadingBar, timeForPicture, timeForDownloader, slajdy, workdirectory, serwer_config)
         self.ui.setupUi(self)
         self.resized.connect(self.resizeEventFunction)
         if fullScreen:
@@ -289,12 +299,13 @@ if __name__ == "__main__":
     workdirectory=args.workdirectory
     pasek=args.pasekpng
     slajdy=args.zdjeciaSlajd
+    serwer_config=args.serwer_config
     logging.debug(pformat(args))
     os.chdir(workdirectory)
     obecny_folder=os.getcwd()
     logging.debug(f"obecny folder roboczy:{obecny_folder}")
     #odpalenie aplikacji
     app = QtWidgets.QApplication(sys.argv)
-    w = Window(sizeOfLoadingBar, fullScreen, timeForPicture, timeForDownloader, pasek, slajdy, workdirectory)
+    w = Window(sizeOfLoadingBar, fullScreen, timeForPicture, timeForDownloader, pasek, slajdy, workdirectory, serwer_config)
     w.show()
     sys.exit(app.exec_())
