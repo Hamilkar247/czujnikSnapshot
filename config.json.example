@@ -11,6 +11,8 @@
       "fullScreenSlideshow": "false",
       "sizeOfLoadingBar": 4,
       "workdirectory": "/home/matball/Projects/czujnikSnapshot",
+  "__comment__": "url skąd updatujemy plik config.json",
+      "serwer_config": "http://134.122.69.201/config/kiosk/config.json",
   "__comment__": "rubryka na zdjęcia - pierwsze nazwa zdjęcia, drugi url skąd updatujemy",
       "pasekpng": ["kwadrat.png", ""],
       "__comment__": "uwaga - danie w url https może spowodować puste zdjecie",
