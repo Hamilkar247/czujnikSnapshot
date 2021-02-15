@@ -1,8 +1,6 @@
 #!/bin/bash
 
 #zczytuje folder roboczy
-WD=/home/matball/Projects/czujnikSnapshot
-cd "$WD"
 timeToSleep="$(jq '.timeToCheckSlideshow' config.json)"
 rebootActivate="$(jq -r '.rebootActivate' config.json)"
 if [[ "$timeToSleep" == "" ]]
