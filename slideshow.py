@@ -33,7 +33,7 @@ def def_params():
     parser.add_argument("-s", "--sizeOfLoadingBar", help="ustaw rozmiar(grubość) loadingBara")
     parser.add_argument("-f", "--fullScreenSlideshow", action='store_true', help="ustaw maksymalny rozmiar programu przy odpaleniu programu")
     parser.add_argument("-tp", "--timeForPicture", type=int, help="podaj czas w [s] dla każdego obrazka")
-    parser.add_argument("-td", "--timeForDownload", type=int, help="podaj czas w [s] jak często mają być pobierane pliki")
+    parser.add_argument("-td", "--timeForDownloader", type=int, help="podaj czas w [s] jak często mają być pobierane pliki")
     parser.add_argument("-wd", "--workdirectory", help="argument wskazuje folder roboczy - wazny z tego wzgledu że tam powinien się znajdować plik konfiguracyjny")
     parser.add_argument("-p", "--pasekpng", help="url do ścieszki z png używanego w LoadingBar-ze - uwaga zalecany format png!")
     parser.add_argument("-sc", "--serwer_config", help="przechowuje url do serwera z plikiem jsonowy który będzie plikiem konfiguracyjnym")
@@ -70,7 +70,7 @@ def def_params():
 
 class Ui_MainWindow(object):
 
-    def __init__(self, sizeOfLoadingBar, timeForPicture, timeForDownload, slajdy, workdirectory, serwer_config):
+    def __init__(self, sizeOfLoadingBar, timeForPicture, timeForDownloader, slajdy, workdirectory, serwer_config):
         logging.debug("UI_MainWindow __init__")
         self.lab_loadingbBar = None #label na loadingbara
         self.lab_slajd = None #label na widget/mape
@@ -80,7 +80,7 @@ class Ui_MainWindow(object):
         self.heightWindow = 810
         self.sizeOfLoadingBar = int(sizeOfLoadingBar)
         self.czasObrazka = int(timeForPicture)*1000 #w milisekundach #bez int - napis zostanie ... wygenerowany 1000 razy
-        self.timeForDownload = int(timeForDownload)*1000 #w milisekundach
+        self.timeForDownloader = int(timeForDownloader)*1000 #w milisekundach
         self.MainWindow = None
         self.slajdy = slajdy
         self.numerZdjecia=0
@@ -225,9 +225,9 @@ class Ui_MainWindow(object):
         logging.debug("setTimerDownloadFiles")
         self.timerDownloader = QtCore.QTimer()
         self.timerDownloader.timeout.connect(self.downloadFiles)
-        timeForDownload=self.timeForDownload
-        logging.debug(f"czasUruchomieniaPobrania: {timeForDownload} minself")
-        self.timerDownloader.setInterval(timeForDownload)
+        timeForDownloader=self.timeForDownloader
+        logging.debug(f"czasUruchomieniaPobrania: {timeForDownloader} minself")
+        self.timerDownloader.setInterval(timeForDownloader)
         self.timerDownloader.start()
 
     def setTimerChangePicture(self):
