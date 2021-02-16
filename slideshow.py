@@ -299,7 +299,13 @@ if __name__ == "__main__":
     timeForDownloader=int(args.timeForDownloader)
     workdirectory=args.workdirectory
     pasek=args.pasekpng
-    slajdy=args.zdjeciaSlajd
+    slajdy=[[]]
+    zdjecia=args.zdjeciaSlajd
+    dictA={"nazwapng" : "png", "urlnazwa" : "url"}
+    listB=[[dictA], [dictA]]
+    for zdj in zdjecia:
+        slajdy.append([zdj,"miejsce_na_date"])
+    pprint(slajdy)
     serwer_config=args.serwer_config
     logging.debug(pformat(args))
     os.chdir(workdirectory)
