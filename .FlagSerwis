@@ -1,0 +1,103 @@
+#!/bin/bash
+
+alias sctl='sudo systemctl'
+alias libsystem='cd /lib/systemd/system'
+LIBSYSTEM='/lib/systemd/system' #uwaga serwisy są globalnie widzialne - nietrzeba przechodzić do folderu gdzie się znajdują
+
+function sctlstart
+{
+  type sctlstart
+  sudo systemctl start "$1"
+}
+
+function sctlst
+{
+  type sctlst
+  sudo systemctl status "$1"
+}
+
+function sctlstop
+{
+  type sctlstop
+  sudo systemctl stop "$1"
+}
+
+function sctlreset
+{
+  type sctlreset
+  sudo systemctl stop "$1"
+  sudo systemctl start "$1"
+}
+
+function sctlenable
+{
+  type sctlenable
+  sudo systemctl enable "$1"
+}
+
+function sctldisable
+{
+  type sctldisable
+  sudo systemctl disable "$1"
+}
+
+function sctldar
+{
+  type sctldar
+  sudo systemctl daemon-reload
+}
+
+function copyServiceToLibsystem
+{
+  type copyService
+  sudo cp "$(pwd)""/""$1" "$LIBSYSTEM""/""$1"
+}
+
+function copyServiceToCzujnikSnapshot
+{
+  type copyService
+  sudo cp "$LIBSYSTEM""/""$1" "$(pwd)""/""$1"
+}
+
+function zdezaktywujSerwisySlideshow
+{
+  type zdezaktywujSerwisySlideshow
+  sudo systemctl disable slideshow.service
+  sudo systemctl disable checkSlideshow.service
+}
+
+function aktywujSerwisySlideshow
+{
+  type aktywujSerwisySlideshow
+  sudo systemctl enable slideshow.service
+  sudo systemctl enable checkSlideshow.service
+}
+
+function zastopujSerwisySlideshow
+{
+  type zastopujSerwisySlideshow
+  sudo systemctl stop slideshow.service
+  sudo systemctl stop checkSlideshow.service
+}
+
+function wystartujSerwisySlideshow
+{
+  type wystartujSerwisySlideshow
+  sudo systemctl start slideshow.service
+  sudo systemctl start checkSlideshow.service
+}
+
+function zresetujSerwisySlideshow
+{
+  type zresetujSerwisySlideshow
+  sudo systemctl stop slideshow.service
+  sudo systemctl stop checkSlideshow.service
+  sudo systemctl start slideshow.service
+  sudo systemctl start checkSlideshow.service
+}
+
+function jctlf
+{
+  journalctl -u "$1" -f
+}
+
