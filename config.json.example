@@ -2,15 +2,15 @@
   "__comment__": "ustawienia debug programów",
       "debug_logslideshow" : "true",
   "__comment__": "zmienne używane w check_slideshow_work",
-      "timeToCheckSlideshow": 80,
+      "timeToCheckSlideshow": 320,
       "__comment__": "reboot będzie wykonany po 7 iteracjach braku reakcji",
       "rebootActivate":"true",
   "__comment__": "zmienne używane w slideshow - zmienne czasowe podane w sekundach",
-      "timeForPicture": 10,
-      "timeForDownloader": 60,
+      "timeForPicture": 5,
+      "timeForDownloader": 120,
       "fullScreenSlideshow": "true",
       "sizeOfLoadingBar": 10,
-      "workdirectory": "/home/matball/Projects/czujnikSnapshot",
+      "workdirectory": "/home/pi/slideshow",
   "__comment__": "url skąd updatujemy plik config.json",
       "serwer_config": "http://134.122.69.201/config/kiosk/config.json",
   "__comment__": "rubryka na zdjęcia - pierwsze nazwa zdjęcia, drugi url skąd updatujemy",
@@ -19,27 +19,33 @@
       "zdjeciaSlajd": [
            {
                "nazwapng": "mapaKozienice.png",
-               "url"     : "http://134.122.69.201/mapaKozienice/"
+               "url"     : "http://134.122.69.201/mapaKozienice/",
+               "dataUtworzenia": ""
            },
            {
                "nazwapng": "widgetKozienice.png",
-               "url"     : "http://134.122.69.201/widgetKozienice/"
+               "url"     : "http://134.122.69.201/widgetKozienice/",
+               "dataUtworzenia": ""
            },
            {
                "nazwapng": "mapaPiaseczno.png",
-               "url"     : "http://134.122.69.201/mapaPiaseczno/"
+               "url"     : "http://134.122.69.201/mapaPiaseczno/",
+               "dataUtworzenia": ""
            },
            {
                "nazwapng": "widgetPiaseczno.png",
-               "url"     : "http://134.122.69.201/widgetPiaseczno/"
+               "url"     : "http://134.122.69.201/widgetPiaseczno/",
+               "dataUtworzenia": ""
            },
            {
                "nazwapng": "mapaKolno.png",
-               "url"     : "http://134.122.69.201/mapaKolno/"
+               "url"     : "http://134.122.69.201/mapaKolno/",
+               "dataUtworzenia": ""
            },
            {
                "nazwapng": "widgetKolno.png",
-               "url"     : "http://134.122.69.201/widgetKolno/"
+               "url"     : "http://134.122.69.201/widgetKolno/",
+               "dataUtworzenia": ""
            }
       ]
 }
