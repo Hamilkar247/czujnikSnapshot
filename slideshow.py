@@ -15,6 +15,7 @@ from pprint import pprint
 from pprint import pformat
 from requests import Session
 import requests
+from urllib.request import urlopen
 
 def def_params():
     parser = argparse.ArgumentParser(
@@ -168,23 +169,46 @@ class Ui_MainWindow(object):
         self.setWidthLoadingBar()
         logging.debug(f"changeLoadingBar metoda - Wypelnienie={self.wypelnienie}")
 
+    def checkLastModifiedTimePicture(self, slajd):
+        czasUtworzenia=""
+        flag_taSamaData=False
+        try:
+            with urlopen(slajd['url']) as f:
+                logging.debug("Uwaga czasy są pokazywane w czasie uniwersalnym (greenwich)")
+                czasUtworzenia=dict(f.getheaders())['Last-Modified']
+                if czasUtworzenia==slajd['dataUtworzenia']:
+                    logging.debug("data zdjecia nie zmieniła się")
+                    flag_taSamaData=True
+                else:
+                    slajd['dataUtworzenia']=czasUtworzenia
+                    flag_taSamaData=False
+        except requests.exceptions.RequestException as error:
+            flag_taSamaData=False
+        return flag_taSamaData
+
     def downloadFiles(self):
+        pprint(f" halo ! masz tu ! {self.slajdy}")
         logging.debug("downloadFiles")
         flagDownloadBroken=True
         try:
             logging.debug("downloadPictures")
             for slajd in list(self.slajdy):
-                r_slajd = requests.get(slajd['url'], allow_redirects=True)
-                with open(slajd['nazwapng'], 'wb') as file_slajd:
-                    file_slajd.write(r_slajd.content)
-                #logging.debug(f"Data utworzenia pliku:{self.get_created_taken()}")
-                logging.debug("pobrano zdjęcia {slajd[nazwapng]}")
+                flaga_pobierzZdjecie=False
+                flaga_pobierzZdjecie=self.checkLastModifiedTimePicture(slajd)
+                if flaga_pobierzZdjecie:
+                    logging.debug(f" slajd {slajd['nazwapng']} {slajd['dataUtworzenia']}")
+                    r_slajd = requests.get(slajd['url'], allow_redirects=True)
+                    with open(slajd['nazwapng'], 'wb') as file_slajd:
+                        file_slajd.write(r_slajd.content)
+                    #logging.debug(f"Data utworzenia pliku:{self.get_created_taken()}")
+                    logging.debug(f"pobrano zdjęcia {slajd['nazwapng']}")
             logging.debug("downloadConfig")
-            r_serwer_config = requests.get(serwer_config, allow_redirects=True)
+            #r_serwer_config = requests.get(serwer_config, allow_redirects=True)
 
-            nazwa_zapisanego_configa='config.json'
-            with open(nazwa_zapisanego_configa, 'wb') as file_json:
-                file_json.write(r_serwer_config.content)
+            #nazwa_zapisanego_configa='config.json'
+            #with open(nazwa_zapisanego_configa, 'wb') as file_json:
+                #file_json.write(r_serwer_config.content)
+               # pass
             logging.debug("pobrano plik configa - zapisany jako {nazwa_zapisanego_configa}")
             ###### WYSŁANIE SATUSU NA SERVER CZUJNIKI MIEJSKIE ZE WSZYSTKO JEST OK ########
             session = Session()
@@ -299,12 +323,12 @@ if __name__ == "__main__":
     timeForDownloader=int(args.timeForDownloader)
     workdirectory=args.workdirectory
     pasek=args.pasekpng
-    slajdy=[[]]
-    zdjecia=args.zdjeciaSlajd
-    dictA={"nazwapng" : "png", "urlnazwa" : "url"}
-    listB=[[dictA], [dictA]]
-    for zdj in zdjecia:
-        slajdy.append([zdj,"miejsce_na_date"])
+    slajdy=args.zdjeciaSlajd
+    #dictA={"nazwapng" : "png", "urlnazwa" : "url"}
+    #listB=[[dictA], [dictA]]
+    #for zdj in zdjecia:
+    #    slajdy.append([zdj,"miejsce_na_date"])
+    #print("ahjo")
     pprint(slajdy)
     serwer_config=args.serwer_config
     logging.debug(pformat(args))

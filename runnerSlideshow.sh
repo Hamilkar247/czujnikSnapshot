@@ -6,4 +6,5 @@ echo "$Slideshow"
 PythonEnv="$HOME""/Projects/czujnikSnapshot/venv/bin/python"
 echo "$PythonEnv"
 pwd
-"$PythonEnv" "$Slideshow"/slideshow.py
+#$@ - pomocny tylko przy debugu - przekazuje wszystkie argumenty podane przy wywolaniu basha - dalej do pythona
+"$PythonEnv" "$Slideshow"/slideshow.py "$@"
