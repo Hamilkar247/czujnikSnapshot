@@ -174,7 +174,7 @@ class Ui_MainWindow(object):
         flag_taSamaData=False
         try:
             with urlopen(slajd['url']) as f:
-                logging.debug("Uwaga czasy są pokazywane w czasie uniwersalnym (greenwich)")
+                #logging.debug("Uwaga czasy są pokazywane w czasie uniwersalnym (greenwich)")
                 czasUtworzenia=dict(f.getheaders())['Last-Modified']
                 if czasUtworzenia==slajd['dataUtworzenia']:
                     logging.debug("data zdjecia nie zmieniła się")
@@ -191,12 +191,13 @@ class Ui_MainWindow(object):
         flag_taSamaData=False
         try:
             with urlopen(serwer_config['url']) as f:
-                logging.debug("Uwaga czasy są pokazywane w czasie uniwersalnym (greenwich)")
+                #logging.debug("Uwaga czasy są pokazywane w czasie uniwersalnym (greenwich)")
                 czasUtworzenia=dict(f.getheaders())['Last-Modified']
                 if czasUtworzenia==serwer_config['dataUtworzenia']:
                     logging.debug("data configu nie zmieniła się")
                     flag_taSamaData=True
                 else:
+                    logging.debug(f"nowa data configa na serwerze {czasUtworzenia}")
                     serwer_config['dataUtworzenia']=czasUtworzenia
                     flag_taSamaData=False
         except requests.exceptions.RequestException as error:
@@ -204,21 +205,24 @@ class Ui_MainWindow(object):
         return flag_taSamaData
 
     def downloadFiles(self):
+        logging.debug("----------------------------------------------")
         pprint(f" halo ! masz tu ! {self.slajdy}")
         logging.debug("downloadFiles")
         flagDownloadBroken=True
+        flaga_czyCosPobrano=False
         try:
             logging.debug("downloadPictures")
             for slajd in list(self.slajdy):
                 flaga_pobierzZdjecie=False
                 flaga_pobierzZdjecie=self.checkLastModifiedTimePicture(slajd)
                 if flaga_pobierzZdjecie:
-                    logging.debug(f" slajd {slajd['nazwapng']} {slajd['dataUtworzenia']}")
+                    logging.debug(f"Przed pobraniem: slajd {slajd['nazwapng']} {slajd['dataUtworzenia']}")
                     r_slajd = requests.get(slajd['url'], allow_redirects=True)
                     with open(slajd['nazwapng'], 'wb') as file_slajd:
                         file_slajd.write(r_slajd.content)
                     #logging.debug(f"Data utworzenia pliku:{self.get_created_taken()}")
-                    logging.debug(f"pobrano zdjęcia {slajd['nazwapng']}")
+                    logging.debug(f"pobrano zdjęcia {slajd['nazwapng']} {slajd['dataUtworzenia']}")
+                    flaga_czyCosPobrano=True
 
             logging.debug("downloadConfig")
             flaga_pobierzConfig=False
@@ -229,9 +233,10 @@ class Ui_MainWindow(object):
                 nazwa_zapisanego_configa='config.json'
                 with open(nazwa_zapisanego_configa, 'wb') as file_json:
                     file_json.write(r_serwer_config.content)
-                logging.debug("pobrano nowy plik config: {nazwa_zapisanego_configa}")
-                #metodadonapisania-aktualizacja parametrow programu
-            if flaga_pobierzConfig==True or flaga_pobierzZdjecia==True:
+                logging.debug(f"pobrano zapisany config o nazwie: {nazwa_zapisanego_configa}")
+                self.aktualizacjaConfigowychParametrow()
+                flaga_czyCosPobrano=True
+            if flaga_czyCosPobrano==True:
                 ###### WYSŁANIE SATUSU NA SERVER CZUJNIKI MIEJSKIE ZE WSZYSTKO JEST OK ########
                 session = Session()
                 # HEAD requests ask for *just* the headers, which is all you need to grab the
@@ -242,6 +247,7 @@ class Ui_MainWindow(object):
                             data={"sn":"3005","a":"1","w":"0","z":"0"},
                 )
                 print(response.text)
+
             flagDownloadBroken=False
         except requests.exceptions.RequestException as error:
             flagDownloadBroken=True
@@ -264,6 +270,42 @@ class Ui_MainWindow(object):
             os.chdir(self.workdirectory)
             logging.debug(f"Wracamy do folderu roboczego: {os.getcwd()}")
         logging.debug("koniec downloadFiles")
+
+    def aktualizacjaConfigowychParametrow(self):
+        print("----*****************----")
+        logging.debug("aktualizacjaConfigowychParametrow")
+        if os.path.exists('config.json'):
+            config_args = argparse.Namespace()
+            #zczytuje configa bo sie zmienił
+            with open('config.json', 'rt') as f:
+                 config_args = argparse.Namespace()
+                 config_args.__dict__.update(json.load(f))
+                 #pprint(config_args)
+            for key, value in list(config_args.__dict__.items()):
+                if value == "False" or value == "false":
+                    config_args.__dict__[key]=False
+                elif value == "True" or value == "true":
+                    config_args.__dict__[key]=True
+                if key == "__comment__":
+                    del config_args.__dict__[key]
+            logging.debug("zczytane zmienne")
+            pprint(config_args)
+
+            #ustawiam zmienne z nowego configa, ktorych zmiana jest istotna
+            self.sizeOfLoadingBar=config_args.sizeOfLoadingBar
+            self.timeForPicture=config_args.timeForPicture
+            self.timeForDownloader=config_args.timeForDownloader
+            self.slajdy=config_args.zdjeciaSlajd
+            self.pasek=config_args.pasekpng[0]
+            logging.debug("zupdatowanie zmiennych")
+
+            # resetuje timery
+            #self.setTimerDownloadFiles()
+            #self.setTimerChangePicture()
+            #self.setTimerLoadingBar()
+
+        else:
+            print("Brak pliku konfiguracyjnego - jeśli żadnego nie posiadasz prośba o skopiowanie \n     config.json.example i nazwanie owej kopii config.json")
 
     def setTimerDownloadFiles(self):
         logging.debug("setTimerDownloadFiles")
@@ -288,7 +330,7 @@ class Ui_MainWindow(object):
         self.timerLoadingBar = QtCore.QTimer()
         self.timerLoadingBar.timeout.connect(self.changeLoadingBar)
         timeToChange=int(floor(int(self.czasObrazka)/10))
-        logging.debug("timeToChange:"+str(timeToChange))
+        logging.debug("timeToChange:1"+str(timeToChange))
         self.timerLoadingBar.setInterval(timeToChange)
         self.timerLoadingBar.start()
 
@@ -344,12 +386,7 @@ if __name__ == "__main__":
     workdirectory=args.workdirectory
     pasek=args.pasekpng
     slajdy=args.zdjeciaSlajd
-    #listB=[[dictA], [dictA]]
-    #for zdj in zdjecia:
-    #    slajdy.append([zdj,"miejsce_na_date"])
-    #print("ahjo")
     pprint(slajdy)
-    #serwer_config=args.serwer_config
     serwer_config = { "url": args.serwer_config, "dataUtworzenia": "" }
     logging.debug(pformat(args))
     os.chdir(workdirectory)
