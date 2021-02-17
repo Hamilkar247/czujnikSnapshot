@@ -75,13 +75,12 @@ class Ui_MainWindow(object):
         logging.debug("UI_MainWindow __init__")
         self.lab_loadingbBar = None #label na loadingbara
         self.lab_slajd = None #label na widget/mape
-        self.timerLoadingBar = None
         self.numerZdjecia = 0 #zmienna wskazuje nam numer obrazka który obecnie jest wyświetlany
         self.widthWindow = 925
         self.heightWindow = 810
         self.sizeOfLoadingBar = int(sizeOfLoadingBar)
-        self.czasObrazka = int(timeForPicture)*1000 #w milisekundach #bez int - napis zostanie ... wygenerowany 1000 razy
-        self.timeForDownloader = int(timeForDownloader)*1000 #w milisekundach
+        self.ustawienieCzasowTimerow(timeForDownloader, timeForPicture)
+        self.sizeOfLoadingBar=sizeOfLoadingBar
         self.MainWindow = None
         self.slajdy = slajdy
         self.numerZdjecia=0
@@ -96,6 +95,11 @@ class Ui_MainWindow(object):
         self.timerPicture = None #timerPicture do zamiany zdjęć
         self.timerDownloader = None
         self.timerLoadingBar = None
+        self.timerResetInnych = None
+
+    def ustawienieCzasowTimerow(self, timeForDownloader, timeForPicture):
+        self.czasObrazka = int(timeForPicture)*1000 #w milisekundach #bez int - napis zostanie ... wygenerowany 1000 razy
+        self.timeForDownloader = int(timeForDownloader)*1000 #w milisekundach
 
     def setupUi(self, MainWindow):
         logging.debug("setupUi - inicjalne uruchomienie")
@@ -114,21 +118,24 @@ class Ui_MainWindow(object):
         self.lab_loadingBar.setScaledContents(True)
         #mapa i widget
         self.lab_slajd = QtWidgets.QLabel(MainWindow)
-        self.lab_slajd.setGeometry(QtCore.QRect(0, self.sizeOfLoadingBar, self.widthWindow, self.heightWindow-20))
+        self.lab_slajd.setGeometry(QtCore.QRect(0, self.sizeOfLoadingBar, self.widthWindow, self.heightWindow-self.sizeOfLoadingBar))
         self.lab_slajd.setText("")
         self.lab_slajd.setPixmap(QtGui.QPixmap(self.slajdy[self.numerZdjecia]['nazwapng']))
         self.lab_slajd.setScaledContents(True)
         self.lab_slajd.setObjectName("lab_slajd")
-        #inicjalne pobranie
-        logging.debug("inicjalne pobranie")
-        self.downloadFiles()
         #timery
         self.setTimerDownloadFiles()
         self.setTimerChangePicture()
         self.setTimerLoadingBar()
+        #inicjalne pobranie
+        logging.debug("inicjalne pobranie")
+        self.downloadFiles()
 
     def setWidthLoadingBar(self):
         self.lab_loadingBar.setGeometry(QtCore.QRect(0,0, self.wypelnienie * self.widthWindow/10, self.sizeOfLoadingBar))
+
+    def setLabelPicture(self):
+        self.lab_slajd.setGeometry(QtCore.QRect(0, self.sizeOfLoadingBar, self.widthWindow, self.heightWindow-self.sizeOfLoadingBar))
 
     #uwaga - metoda verify dziala tylko dla png formatu
     def checkPicture(self, picturepng):
@@ -148,19 +155,24 @@ class Ui_MainWindow(object):
 
     def changePicture(self):
         logging.debug(f"changePicture Function - numerZdjecia={self.numerZdjecia}")
-        numer=self.numerZdjecia
-        #brokenImage=self.checkPicture(self.slajdy[numer]['nazwapng'])
-        #if brokenImage == False:
-        self.lab_slajd.setPixmap(QtGui.QPixmap(self.slajdy[numer]['nazwapng']))
-        #else:
-        #    self.lab_slajd.setPixmap(QtGui.QPixmap(f"{self.slajdy[numer]}.bkp"))
-        #    logging.debug(f"{self.slajdy[numer]})")
-        if (len(self.slajdy)-1>numer):
-            self.numerZdjecia = self.numerZdjecia+1
-        else:
-            self.numerZdjecia = 0
-        self.wypelnienie = 0
+        try:
+            numer=self.numerZdjecia
+            #brokenImage=self.checkPicture(self.slajdy[numer]['nazwapng'])
+            #if brokenImage == False:
+            self.lab_slajd.setPixmap(QtGui.QPixmap(self.slajdy[numer]['nazwapng']))
+            #else:
+            #    self.lab_slajd.setPixmap(QtGui.QPixmap(f"{self.slajdy[numer]}.bkp"))
+            #    logging.debug(f"{self.slajdy[numer]})")
+            if (len(self.slajdy)-1>numer):
+                self.numerZdjecia = self.numerZdjecia+1
+            else:
+                self.numerZdjecia = 0
+            self.wypelnienie = 0
+        except Exception as error:
+            print(f"wystapil blad przy przemianie zdjecia w changePicture {error}")
+            numer=self.numerZdjecia=0
         self.setWidthLoadingBar()
+        self.setLabelPicture()
 
     def changeLoadingBar(self):
         if self.wypelnienie < 11:
@@ -177,11 +189,11 @@ class Ui_MainWindow(object):
             with urlopen(slajd['url']) as f:
                 #logging.debug("Uwaga czasy są pokazywane w czasie uniwersalnym (greenwich)")
                 czasUtworzenia=dict(f.getheaders())['Last-Modified']
-                logging.debug(f"slajd u nas: {slajd['dataUtworzenia']}")
-                logging.debug(f"slajd tam  : {czasUtworzenia}")
-                logging.debug(f"czy pobieramy? {flag_RozneDaty}")
+                #logging.debug(f"slajd u nas: {slajd['dataUtworzenia']}")
+                #logging.debug(f"slajd tam  : {czasUtworzenia}")
+                #logging.debug(f"czy pobieramy? {flag_RozneDaty}")
                 if czasUtworzenia==slajd['dataUtworzenia']:
-                    logging.debug("data zdjecia nie zmieniła się")
+                    #logging.debug("data zdjecia nie zmieniła się")
                     flag_RozneDaty=False
                 else:
                     slajd['dataUtworzenia']=czasUtworzenia
@@ -200,11 +212,11 @@ class Ui_MainWindow(object):
             with urlopen(serwer_config['url']) as f:
                 #logging.debug("Uwaga czasy są pokazywane w czasie uniwersalnym (greenwich)")
                 czasUtworzenia=dict(f.getheaders())['Last-Modified']
-                logging.debug(f"config u nas: {serwer_config['dataUtworzenia']}")
-                logging.debug(f"config tam  : {czasUtworzenia}")
-                logging.debug(f"czy pobieramy? {flag_RozneDaty}")
+                #logging.debug(f"config u nas: {serwer_config['dataUtworzenia']}")
+                #logging.debug(f"config tam  : {czasUtworzenia}")
+                #logging.debug(f"czy pobieramy? {flag_RozneDaty}")
                 if czasUtworzenia==serwer_config['dataUtworzenia']:
-                    logging.debug("data configu nie zmieniła się")
+                    #logging.debug("data configu nie zmieniła się")
                     flag_RozneDaty=False
                 else:
                     logging.debug(f"nowa data configa na serwerze {czasUtworzenia}")
@@ -251,6 +263,7 @@ class Ui_MainWindow(object):
                         file_json.write(r_serwer_config.content)
                     logging.debug(f"pobrano zapisany config o nazwie: {nazwa_zapisanego_configa}")
                     self.aktualizacjaConfigowychParametrow()
+
                     flaga_czyCosPobrano=True
                 if flaga_czyCosPobrano==True:
                     ###### WYSŁANIE SATUSU NA SERVER CZUJNIKI MIEJSKIE ZE WSZYSTKO JEST OK ########
@@ -286,9 +299,27 @@ class Ui_MainWindow(object):
                 os.chdir(self.workdirectory)
                 logging.debug(f"Wracamy do folderu roboczego: {os.getcwd()}")
             logging.debug("koniec downloadFiles")
+
         else: #self.flag_UpdatePrzedChwilaConfiga==True:
             logging.debug("przed chwila zmieniono dane configa - pobieranie wstrzymane do kolejnej iteracji pobierania")
             self.flag_UpdatePrzedChwilaConfiga=False
+        self.aktualnyStanZmiennychConfigowych()
+
+
+    def updateZmiennych(self, config_args):
+        logging.debug("updateZmiennych")
+        self.ustawienieCzasowTimerow(config_args.timeForDownloader, config_args.timeForPicture)
+        self.sizeOfLoadingBar=config_args.sizeOfLoadingBar
+        self.slajdy=config_args.zdjeciaSlajd
+        self.pasek=config_args.pasekpng[0]
+
+    def aktualnyStanZmiennychConfigowych(self):
+        print("---------stan-zmiennych-configowych---------")
+        print(f"sizeOfLoadingBar      : {self.sizeOfLoadingBar}")
+        print(f"pasek                 : {self.pasek}")
+        print(f"czasObrazka           : {self.czasObrazka}")
+        print(f"timeForDownloader     : {self.timeForDownloader}")
+        print(f"slajdy          : {self.slajdy}")
 
     def aktualizacjaConfigowychParametrow(self):
         print("----*****************----")
@@ -311,17 +342,16 @@ class Ui_MainWindow(object):
             pprint(config_args)
 
             #ustawiam zmienne z nowego configa, ktorych zmiana jest istotna
-            self.sizeOfLoadingBar=config_args.sizeOfLoadingBar
-            self.timeForPicture=config_args.timeForPicture
-            self.timeForDownloader=config_args.timeForDownloader
-            self.slajdy=config_args.zdjeciaSlajd
-            self.pasek=config_args.pasekpng[0]
-            logging.debug("zupdatowanie zmiennych")
+            self.updateZmiennych(config_args)
 
             # resetuje timery
-            #self.setTimerDownloadFiles()
-            #self.setTimerChangePicture()
-            #self.setTimerLoadingBar()
+            logging.debug("resetuje timery")
+            self.stopTimerDownloadFiles()
+            self.stopTimerChangePicture()
+            self.stopTimerLoadingBar()
+            self.setTimerDownloadFiles()
+            self.setTimerChangePicture()
+            self.setTimerLoadingBar()
             self.flag_UpdatePrzedChwilaConfiga=True
         else:
             print("Brak pliku konfiguracyjnego - jeśli żadnego nie posiadasz prośba o skopiowanie \n     config.json.example i nazwanie owej kopii config.json")
@@ -331,27 +361,39 @@ class Ui_MainWindow(object):
         self.timerDownloader = QtCore.QTimer()
         self.timerDownloader.timeout.connect(self.downloadFiles)
         timeForDownloader=self.timeForDownloader
-        logging.debug(f"czasUruchomieniaPobrania: {timeForDownloader} minself")
+        logging.debug(f"czasUruchomieniaPobrania: {timeForDownloader} minisekund")
         self.timerDownloader.setInterval(timeForDownloader)
         self.timerDownloader.start()
+
+    def stopTimerDownloadFiles(self):
+        self.timerDownloader.stop()
+        print(f"ahoj stopuje timerDownloader")
 
     def setTimerChangePicture(self):
         logging.debug("setTimerChangePicture")
         self.timerPicture = QtCore.QTimer()
         self.timerPicture.timeout.connect(self.changePicture)
         timeToChange=int(floor(int(self.czasObrazka)))
-        logging.debug("czasObrazka:"+str(timeToChange) + "ms")
+        logging.debug(f"czasObrazka:{str(timeToChange)} ms")
         self.timerPicture.setInterval(timeToChange)
         self.timerPicture.start()
+
+    def stopTimerChangePicture(self):
+        self.timerPicture.stop()
+        print(f"ahoj stopuje timerPicture")
 
     def setTimerLoadingBar(self):
         logging.debug("setTimerLoadingBar")
         self.timerLoadingBar = QtCore.QTimer()
         self.timerLoadingBar.timeout.connect(self.changeLoadingBar)
         timeToChange=int(floor(int(self.czasObrazka)/10))
-        logging.debug("timeToChange:1"+str(timeToChange))
+        logging.debug(f"timeToChange:{str(timeToChange)} ms")
         self.timerLoadingBar.setInterval(timeToChange)
         self.timerLoadingBar.start()
+
+    def stopTimerLoadingBar(self):
+        self.timerLoadingBar.stop()
+        print(f"ahoj stopuje timerLoadingBar")
 
     def setSizeWindow(self):
         self.widthWindow = self.mainWindow.frameGeometry().width()
