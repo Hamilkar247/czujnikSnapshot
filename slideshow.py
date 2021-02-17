@@ -87,6 +87,7 @@ class Ui_MainWindow(object):
         self.numerZdjecia=0
         self.pasekpng = pasek[0]
         self.wypelnienie = 0
+        self.flag_UpdatePrzedChwilaConfiga=False
         self.liczbaPrzerwanychPolaczen=0
         self.workdirectory=workdirectory
         self.serwer_config=serwer_config
@@ -205,71 +206,75 @@ class Ui_MainWindow(object):
         return flag_taSamaData
 
     def downloadFiles(self):
-        logging.debug("----------------------------------------------")
-        pprint(f" halo ! masz tu ! {self.slajdy}")
-        logging.debug("downloadFiles")
-        flagDownloadBroken=True
-        flaga_czyCosPobrano=False
-        try:
-            logging.debug("downloadPictures")
-            for slajd in list(self.slajdy):
-                flaga_pobierzZdjecie=False
-                flaga_pobierzZdjecie=self.checkLastModifiedTimePicture(slajd)
-                if flaga_pobierzZdjecie:
-                    logging.debug(f"Przed pobraniem: slajd {slajd['nazwapng']} {slajd['dataUtworzenia']}")
-                    r_slajd = requests.get(slajd['url'], allow_redirects=True)
-                    with open(slajd['nazwapng'], 'wb') as file_slajd:
-                        file_slajd.write(r_slajd.content)
-                    #logging.debug(f"Data utworzenia pliku:{self.get_created_taken()}")
-                    logging.debug(f"pobrano zdjęcia {slajd['nazwapng']} {slajd['dataUtworzenia']}")
+        if self.flag_UpdatePrzedChwilaConfiga==False:
+            logging.debug("----------------------------------------------")
+            pprint(f" halo ! masz tu ! {self.slajdy}")
+            logging.debug("downloadFiles")
+            flagDownloadBroken=True
+            flaga_czyCosPobrano=False
+            try:
+                logging.debug("downloadPictures")
+                for slajd in list(self.slajdy):
+                    flaga_pobierzZdjecie=False
+                    flaga_pobierzZdjecie=self.checkLastModifiedTimePicture(slajd)
+                    if flaga_pobierzZdjecie:
+                        logging.debug(f"Przed pobraniem: slajd {slajd['nazwapng']} {slajd['dataUtworzenia']}")
+                        r_slajd = requests.get(slajd['url'], allow_redirects=True)
+                        with open(slajd['nazwapng'], 'wb') as file_slajd:
+                            file_slajd.write(r_slajd.content)
+                        #logging.debug(f"Data utworzenia pliku:{self.get_created_taken()}")
+                        logging.debug(f"pobrano zdjęcia {slajd['nazwapng']} {slajd['dataUtworzenia']}")
+                        flaga_czyCosPobrano=True
+
+                logging.debug("downloadConfig")
+                flaga_pobierzConfig=False
+                flaga_pobierzConfig=self.checkLastModifiedTimeConfig(self.serwer_config)
+                if flaga_pobierzConfig:
+                    logging.debug(f" slajd {self.serwer_config['url']} {self.serwer_config['dataUtworzenia']}")
+                    r_serwer_config = requests.get(serwer_config['url'], allow_redirects=True)
+                    nazwa_zapisanego_configa='config.json'
+                    with open(nazwa_zapisanego_configa, 'wb') as file_json:
+                        file_json.write(r_serwer_config.content)
+                    logging.debug(f"pobrano zapisany config o nazwie: {nazwa_zapisanego_configa}")
+                    self.aktualizacjaConfigowychParametrow()
                     flaga_czyCosPobrano=True
+                if flaga_czyCosPobrano==True:
+                    ###### WYSŁANIE SATUSU NA SERVER CZUJNIKI MIEJSKIE ZE WSZYSTKO JEST OK ########
+                    session = Session()
+                    # HEAD requests ask for *just* the headers, which is all you need to grab the
+                    # session cookie
+                    print("pobieranie w slideshow działa")
+                    response = session.post(
+                                url='http://czujnikimiejskie.pl/apipost/add/measurement',
+                                data={"sn":"3005","a":"1","w":"0","z":"0"},
+                    )
+                    print(response.text)
 
-            logging.debug("downloadConfig")
-            flaga_pobierzConfig=False
-            flaga_pobierzConfig=self.checkLastModifiedTimeConfig(self.serwer_config)
-            if flaga_pobierzConfig:
-                logging.debug(f" slajd {self.serwer_config['url']} {self.serwer_config['dataUtworzenia']}")
-                r_serwer_config = requests.get(serwer_config['url'], allow_redirects=True)
-                nazwa_zapisanego_configa='config.json'
-                with open(nazwa_zapisanego_configa, 'wb') as file_json:
-                    file_json.write(r_serwer_config.content)
-                logging.debug(f"pobrano zapisany config o nazwie: {nazwa_zapisanego_configa}")
-                self.aktualizacjaConfigowychParametrow()
-                flaga_czyCosPobrano=True
-            if flaga_czyCosPobrano==True:
-                ###### WYSŁANIE SATUSU NA SERVER CZUJNIKI MIEJSKIE ZE WSZYSTKO JEST OK ########
-                session = Session()
-                # HEAD requests ask for *just* the headers, which is all you need to grab the
-                # session cookie
-                print("pobieranie w slideshow działa")
-                response = session.post(
-                            url='http://czujnikimiejskie.pl/apipost/add/measurement',
-                            data={"sn":"3005","a":"1","w":"0","z":"0"},
-                )
-                print(response.text)
-
-            flagDownloadBroken=False
-        except requests.exceptions.RequestException as error:
-            flagDownloadBroken=True
-            print(f"Wystąpił problem z połączeniem:{error}")
-        except Exception as error:
-            flagDownloadBroken=True
-            print(f"Wystąpił problem z połączeniem:{error}")
-            print("Wykryto bład : "+str(error))
-        if flagDownloadBroken==False:
-            os.chdir('/tmp/')
-            logging.debug(f"folder na plik tymczasowy: {os.getcwd()}")
-            if os.path.isfile('working_slideshow.txt'):
-                logging.debug("working_slideshow.txt plik istnieje")
-            else:
-                try:
-                    f=open("working_slideshow.txt", "w+")
-                except FileNotFoundError:
-                    logging.debug("Uszkodzony plik lub zła ścieszka")
-                logging.debug("stworzono working_slideshow.txt plik")
-            os.chdir(self.workdirectory)
-            logging.debug(f"Wracamy do folderu roboczego: {os.getcwd()}")
-        logging.debug("koniec downloadFiles")
+                flagDownloadBroken=False
+            except requests.exceptions.RequestException as error:
+                flagDownloadBroken=True
+                print(f"Wystąpił problem z połączeniem:{error}")
+            except Exception as error:
+                flagDownloadBroken=True
+                print(f"Wystąpił problem z połączeniem:{error}")
+                print("Wykryto bład : "+str(error))
+            if flagDownloadBroken==False:
+                os.chdir('/tmp/')
+                logging.debug(f"folder na plik tymczasowy: {os.getcwd()}")
+                if os.path.isfile('working_slideshow.txt'):
+                    logging.debug("working_slideshow.txt plik istnieje")
+                else:
+                    try:
+                        f=open("working_slideshow.txt", "w+")
+                    except FileNotFoundError:
+                        logging.debug("Uszkodzony plik lub zła ścieszka")
+                    logging.debug("stworzono working_slideshow.txt plik")
+                os.chdir(self.workdirectory)
+                logging.debug(f"Wracamy do folderu roboczego: {os.getcwd()}")
+            logging.debug("koniec downloadFiles")
+        else: #self.flag_UpdatePrzedChwilaConfiga==True:
+            logging.debug("przed chwila zmieniono dane configa - pobieranie wstrzymane do kolejnej iteracji pobierania")
+            self.flag_UpdatePrzedChwilaConfiga=False
 
     def aktualizacjaConfigowychParametrow(self):
         print("----*****************----")
@@ -303,7 +308,7 @@ class Ui_MainWindow(object):
             #self.setTimerDownloadFiles()
             #self.setTimerChangePicture()
             #self.setTimerLoadingBar()
-
+            self.flag_UpdatePrzedChwilaConfiga=True
         else:
             print("Brak pliku konfiguracyjnego - jeśli żadnego nie posiadasz prośba o skopiowanie \n     config.json.example i nazwanie owej kopii config.json")
 
