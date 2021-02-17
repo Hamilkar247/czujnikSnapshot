@@ -186,6 +186,23 @@ class Ui_MainWindow(object):
             flag_taSamaData=False
         return flag_taSamaData
 
+    def checkLastModifiedTimeConfig(self, serwer_config):
+        czasUtworzenia=""
+        flag_taSamaData=False
+        try:
+            with urlopen(serwer_config['url']) as f:
+                logging.debug("Uwaga czasy są pokazywane w czasie uniwersalnym (greenwich)")
+                czasUtworzenia=dict(f.getheaders())['Last-Modified']
+                if czasUtworzenia==serwer_config['dataUtworzenia']:
+                    logging.debug("data configu nie zmieniła się")
+                    flag_taSamaData=True
+                else:
+                    serwer_config['dataUtworzenia']=czasUtworzenia
+                    flag_taSamaData=False
+        except requests.exceptions.RequestException as error:
+            flag_taSamaData=False
+        return flag_taSamaData
+
     def downloadFiles(self):
         pprint(f" halo ! masz tu ! {self.slajdy}")
         logging.debug("downloadFiles")
@@ -202,28 +219,31 @@ class Ui_MainWindow(object):
                         file_slajd.write(r_slajd.content)
                     #logging.debug(f"Data utworzenia pliku:{self.get_created_taken()}")
                     logging.debug(f"pobrano zdjęcia {slajd['nazwapng']}")
-            logging.debug("downloadConfig")
-            #r_serwer_config = requests.get(serwer_config, allow_redirects=True)
 
-            #nazwa_zapisanego_configa='config.json'
-            #with open(nazwa_zapisanego_configa, 'wb') as file_json:
-                #file_json.write(r_serwer_config.content)
-               # pass
-            logging.debug("pobrano plik configa - zapisany jako {nazwa_zapisanego_configa}")
-            ###### WYSŁANIE SATUSU NA SERVER CZUJNIKI MIEJSKIE ZE WSZYSTKO JEST OK ########
-            session = Session()
-            # HEAD requests ask for *just* the headers, which is all you need to grab the
-            # session cookie
-            print("pobieranie w slideshow działa")
-            response = session.post(
-                        url='http://czujnikimiejskie.pl/apipost/add/measurement',
-                        data={"sn":"3005","a":"1","w":"0","z":"0"},
-            )
-            print(response.text)
+            logging.debug("downloadConfig")
+            flaga_pobierzConfig=False
+            flaga_pobierzConfig=self.checkLastModifiedTimeConfig(self.serwer_config)
+            if flaga_pobierzConfig:
+                logging.debug(f" slajd {self.serwer_config['url']} {self.serwer_config['dataUtworzenia']}")
+                r_serwer_config = requests.get(serwer_config['url'], allow_redirects=True)
+                nazwa_zapisanego_configa='config.json'
+                with open(nazwa_zapisanego_configa, 'wb') as file_json:
+                    file_json.write(r_serwer_config.content)
+                logging.debug("pobrano nowy plik config: {nazwa_zapisanego_configa}")
+                #metodadonapisania-aktualizacja parametrow programu
+            if flaga_pobierzConfig==True or flaga_pobierzZdjecia==True:
+                ###### WYSŁANIE SATUSU NA SERVER CZUJNIKI MIEJSKIE ZE WSZYSTKO JEST OK ########
+                session = Session()
+                # HEAD requests ask for *just* the headers, which is all you need to grab the
+                # session cookie
+                print("pobieranie w slideshow działa")
+                response = session.post(
+                            url='http://czujnikimiejskie.pl/apipost/add/measurement',
+                            data={"sn":"3005","a":"1","w":"0","z":"0"},
+                )
+                print(response.text)
             flagDownloadBroken=False
-            self.liczbaPrzerwanychPolaczen=0
         except requests.exceptions.RequestException as error:
-            self.liczbaPrzerwanychPolaczen=self.liczbaPrzerwanychPolaczen+1
             flagDownloadBroken=True
             print(f"Wystąpił problem z połączeniem:{error}")
         except Exception as error:
@@ -324,13 +344,13 @@ if __name__ == "__main__":
     workdirectory=args.workdirectory
     pasek=args.pasekpng
     slajdy=args.zdjeciaSlajd
-    #dictA={"nazwapng" : "png", "urlnazwa" : "url"}
     #listB=[[dictA], [dictA]]
     #for zdj in zdjecia:
     #    slajdy.append([zdj,"miejsce_na_date"])
     #print("ahjo")
     pprint(slajdy)
-    serwer_config=args.serwer_config
+    #serwer_config=args.serwer_config
+    serwer_config = { "url": args.serwer_config, "dataUtworzenia": "" }
     logging.debug(pformat(args))
     os.chdir(workdirectory)
     obecny_folder=os.getcwd()
