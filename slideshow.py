@@ -38,6 +38,7 @@ def def_params():
     parser.add_argument("-wd", "--workdirectory", help="argument wskazuje folder roboczy - wazny z tego wzgledu że tam powinien się znajdować plik konfiguracyjny")
     parser.add_argument("-p", "--pasekpng", help="url do ścieszki z png używanego w LoadingBar-ze - uwaga zalecany format png!")
     parser.add_argument("-sc", "--serwer_config", help="przechowuje url do serwera z plikiem jsonowy który będzie plikiem konfiguracyjnym")
+    parser.add_argument("-d", "--discretizationLoadingBar", type=int, help="określa poziom dyskretyzacji")
     args = parser.parse_args()
     for key, value in list(args.__dict__.items()):
         if value is None or value == False:
@@ -71,7 +72,7 @@ def def_params():
 
 class Ui_MainWindow(object):
 
-    def __init__(self, sizeOfLoadingBar, timeForPicture, timeForDownloader, slajdy, workdirectory, serwer_config):
+    def __init__(self, sizeOfLoadingBar, discretizationLoadingBar, timeForPicture, timeForDownloader, slajdy, workdirectory, serwer_config):
         logging.debug("UI_MainWindow __init__")
         self.lab_loadingbBar = None #label na loadingbara
         self.lab_slajd = None #label na widget/mape
@@ -80,7 +81,8 @@ class Ui_MainWindow(object):
         self.heightWindow = 810
         self.sizeOfLoadingBar = int(sizeOfLoadingBar)
         self.ustawienieCzasowTimerow(timeForDownloader, timeForPicture)
-        self.sizeOfLoadingBar=sizeOfLoadingBar
+        self.sizeOfLoadingBar=int(sizeOfLoadingBar)
+        self.discretizationLoadingBar=discretizationLoadingBar
         self.MainWindow = None
         self.slajdy = slajdy
         self.numerZdjecia=0
@@ -132,7 +134,7 @@ class Ui_MainWindow(object):
         self.downloadFiles()
 
     def setWidthLoadingBar(self):
-        self.lab_loadingBar.setGeometry(QtCore.QRect(0,0, self.wypelnienie * self.widthWindow/10, self.sizeOfLoadingBar))
+        self.lab_loadingBar.setGeometry(QtCore.QRect(0,0, self.wypelnienie * (self.widthWindow/self.discretizationLoadingBar), self.sizeOfLoadingBar))
 
     def setLabelPicture(self):
         self.lab_slajd.setGeometry(QtCore.QRect(0, self.sizeOfLoadingBar, self.widthWindow, self.heightWindow-self.sizeOfLoadingBar))
@@ -175,7 +177,7 @@ class Ui_MainWindow(object):
         self.setLabelPicture()
 
     def changeLoadingBar(self):
-        if self.wypelnienie < 11:
+        if self.wypelnienie < self.discretizationLoadingBar:
             self.wypelnienie = self.wypelnienie+1
         else:
             self.wypelnienie = 0
@@ -279,7 +281,6 @@ class Ui_MainWindow(object):
                                     data={"sn":"3005","a":"1","w":"0","z":"0"},
                         )
                         print(response.text)
-
                 flagDownloadBroken=False
             except requests.exceptions.RequestException as error:
                 flagDownloadBroken=True
@@ -307,7 +308,6 @@ class Ui_MainWindow(object):
             logging.debug("przed chwila zmieniono dane configa - pobieranie wstrzymane do kolejnej iteracji pobierania")
             self.flag_UpdatePrzedChwilaConfiga=False
         self.aktualnyStanZmiennychConfigowych()
-
 
     def updateZmiennych(self, config_args):
         logging.debug("updateZmiennych")
@@ -389,7 +389,7 @@ class Ui_MainWindow(object):
         logging.debug("setTimerLoadingBar")
         self.timerLoadingBar = QtCore.QTimer()
         self.timerLoadingBar.timeout.connect(self.changeLoadingBar)
-        timeToChange=int(floor(int(self.czasObrazka)/10))
+        timeToChange=int(floor(int(self.czasObrazka)/self.discretizationLoadingBar))
         logging.debug(f"timeToChange:{str(timeToChange)} ms")
         self.timerLoadingBar.setInterval(timeToChange)
         self.timerLoadingBar.start()
@@ -407,9 +407,9 @@ class Ui_MainWindow(object):
 
 class Window(QtWidgets.QMainWindow):
     resized = QtCore.pyqtSignal()
-    def __init__(self, sizeOfLoadingBar, fullScreen, timeForPicture, timeForDownloader, pasek, slajdy, workdirectory, serwer_config):
+    def __init__(self, sizeOfLoadingBar, discretizationLoadingBar, fullScreen, timeForPicture, timeForDownloader, pasek, slajdy, workdirectory, serwer_config):
         super(Window, self).__init__(parent=None)
-        self.ui = Ui_MainWindow(sizeOfLoadingBar, timeForPicture, timeForDownloader, slajdy, workdirectory, serwer_config)
+        self.ui = Ui_MainWindow(sizeOfLoadingBar, discretizationLoadingBar, timeForPicture, timeForDownloader, slajdy, workdirectory, serwer_config)
         self.ui.setupUi(self)
         self.resized.connect(self.resizeEventFunction)
         if fullScreen:
@@ -447,6 +447,7 @@ if __name__ == "__main__":
     fullScreen=args.fullScreenSlideshow
     timeForPicture=int(args.timeForPicture)
     timeForDownloader=int(args.timeForDownloader)
+    discretizationLoadingBar=int(args.discretizationLoadingBar)
     workdirectory=args.workdirectory
     pasek=args.pasekpng
     slajdy=args.zdjeciaSlajd
@@ -458,6 +459,6 @@ if __name__ == "__main__":
     logging.debug(f"obecny folder roboczy:{obecny_folder}")
     #odpalenie aplikacji
     app = QtWidgets.QApplication(sys.argv)
-    w = Window(sizeOfLoadingBar, fullScreen, timeForPicture, timeForDownloader, pasek, slajdy, workdirectory, serwer_config)
+    w = Window(sizeOfLoadingBar, discretizationLoadingBar, fullScreen, timeForPicture, timeForDownloader, pasek, slajdy, workdirectory, serwer_config)
     w.show()
     sys.exit(app.exec_())
