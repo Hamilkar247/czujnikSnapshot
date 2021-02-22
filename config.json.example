@@ -2,20 +2,20 @@
   "__comment__": "ustawienia debug programów",
       "debug_logslideshow" : "true",
   "__comment__": "zmienne używane w check_slideshow_work",
-      "timeToCheckSlideshow": 320,
+      "timeToCheckSlideshow": 400,
       "__comment__": "reboot będzie wykonany po 7 iteracjach braku reakcji",
       "rebootActivate":"true",
   "__comment__": "zmienne używane w slideshow - zmienne czasowe podane w sekundach",
-      "timeForPicture": 5,
-      "timeForDownloader": 120,
-      "fullScreenSlideshow": "false",
-      "sizeOfLoadingBar": 10,
+      "timeForPicture": 20,
+      "timeForDownloader": 240,
+      "fullScreenSlideshow": "true",
+      "sizeOfLoadingBar": 20,
       "workdirectory": "/home/pi/slideshow",
-  "__comment__": "url skąd updatujemy plik config.json",
+  "__comment__": "url skąd updatujemy plik config.json - jeśli ustawisz jako wartość 'false', nie bedą update-wane ",
        "serwer_config": "http://134.122.69.201/config/kiosk/config.json.test",
   "__comment__": "rubryka na zdjęcia - pierwsze nazwa zdjęcia, drugi url skąd updatujemy",
       "pasekpng": ["kwadrat.png", ""],
-      "__comment__": "uwaga - danie w url https może spowodować puste zdjecie",
+  "__comment__": "uwaga - danie w url https może spowodować puste zdjecie",
       "zdjeciaSlajd": [
            {
                "nazwapng": "mapaKozienice.png",
@@ -45,6 +45,16 @@
            {
                "nazwapng": "widgetKolno.png",
                "url"     : "http://134.122.69.201/widgetKolno/",
+               "dataUtworzenia": ""
+           },
+           {
+               "nazwapng": "nouvellaFrance.png",
+               "url"     : "http://134.122.69.201/nouvellaFrance.png",
+               "dataUtworzenia": ""
+           },
+           {
+               "nazwapng": "postNapoleonFrance.png",
+               "url"     : "http://134.122.69.201/postNapoleonFrance.png",
                "dataUtworzenia": ""
            }
       ]

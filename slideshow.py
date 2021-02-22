@@ -254,28 +254,31 @@ class Ui_MainWindow(object):
 
                 logging.debug("downloadConfig")
                 flaga_pobierzConfig=False
-                flaga_pobierzConfig=self.checkLastModifiedTimeConfig(self.serwer_config)
-                if flaga_pobierzConfig:
-                    logging.debug(f"Przed pobraniem config {self.serwer_config['url']} {self.serwer_config['dataUtworzenia']}")
-                    r_serwer_config = requests.get(serwer_config['url'], allow_redirects=True)
-                    nazwa_zapisanego_configa='config.json'
-                    with open(nazwa_zapisanego_configa, 'wb') as file_json:
-                        file_json.write(r_serwer_config.content)
-                    logging.debug(f"pobrano zapisany config o nazwie: {nazwa_zapisanego_configa}")
-                    self.aktualizacjaConfigowychParametrow()
+                if self.serwer_config['url'] == False:
+                    print("ustawiona brak pobierania configa z serwera")
+                else:
+                    flaga_pobierzConfig=self.checkLastModifiedTimeConfig(self.serwer_config)
+                    if flaga_pobierzConfig:
+                        logging.debug(f"Przed pobraniem config {self.serwer_config['url']} {self.serwer_config['dataUtworzenia']}")
+                        r_serwer_config = requests.get(serwer_config['url'], allow_redirects=True)
+                        nazwa_zapisanego_configa='config.json'
+                        with open(nazwa_zapisanego_configa, 'wb') as file_json:
+                            file_json.write(r_serwer_config.content)
+                        logging.debug(f"pobrano zapisany config o nazwie: {nazwa_zapisanego_configa}")
+                        self.aktualizacjaConfigowychParametrow()
 
-                    flaga_czyCosPobrano=True
-                if flaga_czyCosPobrano==True:
-                    ###### WYSŁANIE SATUSU NA SERVER CZUJNIKI MIEJSKIE ZE WSZYSTKO JEST OK ########
-                    session = Session()
-                    # HEAD requests ask for *just* the headers, which is all you need to grab the
-                    # session cookie
-                    print("pobieranie w slideshow działa")
-                    response = session.post(
-                                url='http://czujnikimiejskie.pl/apipost/add/measurement',
-                                data={"sn":"3005","a":"1","w":"0","z":"0"},
-                    )
-                    print(response.text)
+                        flaga_czyCosPobrano=True
+                    if flaga_czyCosPobrano==True:
+                        ###### WYSŁANIE SATUSU NA SERVER CZUJNIKI MIEJSKIE ZE WSZYSTKO JEST OK ########
+                        session = Session()
+                        # HEAD requests ask for *just* the headers, which is all you need to grab the
+                        # session cookie
+                        print("pobieranie w slideshow działa")
+                        response = session.post(
+                                    url='http://czujnikimiejskie.pl/apipost/add/measurement',
+                                    data={"sn":"3005","a":"1","w":"0","z":"0"},
+                        )
+                        print(response.text)
 
                 flagDownloadBroken=False
             except requests.exceptions.RequestException as error:
@@ -316,7 +319,7 @@ class Ui_MainWindow(object):
     def aktualnyStanZmiennychConfigowych(self):
         print("---------stan-zmiennych-configowych---------")
         print(f"sizeOfLoadingBar      : {self.sizeOfLoadingBar}")
-        print(f"pasek                 : {self.pasek}")
+        print(f"pasek                 : {self.pasekpng}")
         print(f"czasObrazka           : {self.czasObrazka}")
         print(f"timeForDownloader     : {self.timeForDownloader}")
         print(f"slajdy          : {self.slajdy}")
