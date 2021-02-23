@@ -1,15 +1,20 @@
 #!/bin/bash
 
-#zczytuje folder roboczy
-timeToSleep="$(jq '.timeToCheckSlideshow' config.json)"
-rebootActivate="$(jq -r '.rebootActivate' config.json)"
-if [[ "$timeToSleep" == "" ]]
- then
-   timeToSleep=5
-   echo "ahjo nie ma zmiennej timeToSleep"
-   exit
-fi
+function readConfig
+{
+  echo "zczytuje zmienne z config.json"
+  #zczytuje folder roboczy
+  timeToSleep="$(jq '.timeToCheckSlideshow' config.json)"
+  rebootActivate="$(jq -r '.rebootActivate' config.json)"
+  if [[ "$timeToSleep" == "" ]]
+   then
+     timeToSleep=240
+     echo "ahjo nie ma zmiennej timeToSleep"
+     exit
+  fi
+}
 
+readConfig
 sleep 5 #czas by slideshow.py miał czas zczytać configa etc
 var_nofound=0
 while true
@@ -53,5 +58,8 @@ do
         var_nofound="0"
       fi
   fi
+
+  #sprawdzam czy zmieniły się dane w config.json
+  readConfig
   sleep "$timeToSleep" # czas w sekundach
 done
