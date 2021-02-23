@@ -95,9 +95,7 @@ class Ui_MainWindow(object):
         self.segmentationTimeLoadingBar=1000 #czas w mikrosekundach jednego segmentu loadingBar
 
         #timery
-        #self.timerPicture = None #timerPicture do zamiany zdjęć
         self.timerDownloader = None
-        #self.timerLoadingBar = None
         self.timerFrame = None
         self.timerResetInnych = None
 
@@ -129,8 +127,6 @@ class Ui_MainWindow(object):
         self.lab_slajd.setObjectName("lab_slajd")
         #timery
         self.setTimerDownloadFiles()
-        #self.setTimerChangePicture()
-        #self.setTimerLoadingBar()
         self.setTimerChangeFrame()
         #inicjalne pobranie
         logging.debug("inicjalne pobranie")
@@ -194,7 +190,7 @@ class Ui_MainWindow(object):
         else:
             self.wypelnienie = 0
             flagaZmianaZdjecia=True
-        logging.debug(f"changeLoadingBar metoda - Wypelnienie={self.wypelnienie}")
+        #logging.debug(f"changeLoadingBar metoda - Wypelnienie={self.wypelnienie}")
         return flagaZmianaZdjecia
 
     def checkLastModifiedTimePicture(self, slajd):
@@ -354,12 +350,8 @@ class Ui_MainWindow(object):
             logging.debug("resetuje timery")
             self.stopTimerDownloadFiles()
             self.stopTimerChangeFrame()
-            #self.stopTimerChangePicture()
-            #self.stopTimerLoadingBar()
             self.setTimerDownloadFiles()
             self.setTimerChangeFrame()
-            #self.setTimerChangePicture()
-            #self.setTimerLoadingBar()
             self.flag_UpdatePrzedChwilaConfiga=True
         else:
             print("Brak pliku konfiguracyjnego - jeśli żadnego nie posiadasz prośba o skopiowanie \n     config.json.example i nazwanie owej kopii config.json")
@@ -387,36 +379,6 @@ class Ui_MainWindow(object):
         logging.debug(f"czasUruchomieniaPobrania: {timeForDownloader} minisekund")
         self.timerDownloader.setInterval(timeForDownloader)
         self.timerDownloader.start()
-
-    #def stopTimerDownloadFiles(self):
-    #    self.timerDownloader.stop()
-    #    print(f"ahoj stopuje timerDownloader")
-
-    #def setTimerChangePicture(self):
-    #    logging.debug("setTimerChangePicture")
-    #    self.timerPicture = QtCore.QTimer()
-    #    self.timerPicture.timeout.connect(self.changePicture)
-    #    timeToChange=int(floor(int(self.czasObrazka)))
-    #    logging.debug(f"czasObrazka:{str(timeToChange)} ms")
-    #    self.timerPicture.setInterval(timeToChange)
-    #    self.timerPicture.start()
-
-    #def stopTimerChangePicture(self):
-    #    self.timerPicture.stop()
-    #    print(f"ahoj stopuje timerPicture")
-
-    #def setTimerLoadingBar(self):
-    #    logging.debug("setTimerLoadingBar")
-    #    self.timerLoadingBar = QtCore.QTimer()
-    #    self.timerLoadingBar.timeout.connect(self.changeLoadingBar)
-    #    timeToChange=int(floor(int(self.czasObrazka)/self.discretizationLoadingBar))
-    #    logging.debug(f"timeToChange:{str(timeToChange)} ms")
-    #    self.timerLoadingBar.setInterval(timeToChange)
-    #    self.timerLoadingBar.start()
-
-    #def stopTimerLoadingBar(self):
-    #    self.timerLoadingBar.stop()
-    #    print(f"ahoj stopuje timerLoadingBar")
 
     def setSizeWindow(self):
         self.widthWindow = self.mainWindow.frameGeometry().width()
