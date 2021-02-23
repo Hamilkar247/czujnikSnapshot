@@ -156,7 +156,7 @@ class Ui_MainWindow(object):
         return brokenImage
 
     def changePicture(self):
-        logging.debug(f"changePicture Function - numerZdjecia={self.numerZdjecia}")
+        #logging.debug(f"changePicture Function - numerZdjecia={self.numerZdjecia}")
         try:
             numer=self.numerZdjecia
             #brokenImage=self.checkPicture(self.slajdy[numer]['nazwapng'])
@@ -187,48 +187,36 @@ class Ui_MainWindow(object):
     def checkLastModifiedTimePicture(self, slajd):
         czasUtworzenia=""
         flag_RozneDaty=False
-        try:
-            with urlopen(slajd['url']) as f:
-                #logging.debug("Uwaga czasy są pokazywane w czasie uniwersalnym (greenwich)")
-                czasUtworzenia=dict(f.getheaders())['Last-Modified']
-                #logging.debug(f"slajd u nas: {slajd['dataUtworzenia']}")
-                #logging.debug(f"slajd tam  : {czasUtworzenia}")
-                #logging.debug(f"czy pobieramy? {flag_RozneDaty}")
-                if czasUtworzenia==slajd['dataUtworzenia']:
-                    #logging.debug("data zdjecia nie zmieniła się")
-                    flag_RozneDaty=False
-                else:
-                    slajd['dataUtworzenia']=czasUtworzenia
-                    flag_RozneDaty=True
-        except requests.exceptions.RequestException as error:
-            print(f"przy sprawdzaniu slajdu z serwera Wystapil bląd zwiazany z requestem {error}")
-            flag_RozneDaty=False
-        except Exception as error:
-            print(f"przy sprawdzaniu slajdu z serwera wystapil nieznany blad {error}")
+        with urlopen(slajd['url']) as f:
+            #logging.debug("Uwaga czasy są pokazywane w czasie uniwersalnym (greenwich)")
+            czasUtworzenia=dict(f.getheaders())['Last-Modified']
+            #logging.debug(f"slajd u nas: {slajd['dataUtworzenia']}")
+            #logging.debug(f"slajd tam  : {czasUtworzenia}")
+            #logging.debug(f"czy pobieramy? {flag_RozneDaty}")
+            if czasUtworzenia==slajd['dataUtworzenia']:
+                #logging.debug("data zdjecia nie zmieniła się")
+                flag_RozneDaty=False
+            else:
+                slajd['dataUtworzenia']=czasUtworzenia
+                flag_RozneDaty=True
         return flag_RozneDaty
 
     def checkLastModifiedTimeConfig(self, serwer_config):
         czasUtworzenia=""
         flag_RozneDaty=False
-        try:
-            with urlopen(serwer_config['url']) as f:
-                #logging.debug("Uwaga czasy są pokazywane w czasie uniwersalnym (greenwich)")
-                czasUtworzenia=dict(f.getheaders())['Last-Modified']
-                #logging.debug(f"config u nas: {serwer_config['dataUtworzenia']}")
-                #logging.debug(f"config tam  : {czasUtworzenia}")
-                #logging.debug(f"czy pobieramy? {flag_RozneDaty}")
-                if czasUtworzenia==serwer_config['dataUtworzenia']:
-                    #logging.debug("data configu nie zmieniła się")
-                    flag_RozneDaty=False
-                else:
-                    logging.debug(f"nowa data configa na serwerze {czasUtworzenia}")
-                    serwer_config['dataUtworzenia']=czasUtworzenia
-                    flag_RozneDaty=True
-        except requests.exceptions.RequestException as error:
-            print(f"przy sprawdzaniu configa z serwera Wystapil bląd zwiazany z requestem {error}")
-            flag_RozneDaty=False
-        except Exception as error:
-            print(f"przy sprawdzaniu configa z serwera wystapil nieznany blad {error}")
+        with urlopen(serwer_config['url']) as f:
+            #logging.debug("Uwaga czasy są pokazywane w czasie uniwersalnym (greenwich)")
+            czasUtworzenia=dict(f.getheaders())['Last-Modified']
+            #logging.debug(f"config u nas: {serwer_config['dataUtworzenia']}")
+            #logging.debug(f"config tam  : {czasUtworzenia}")
+            #logging.debug(f"czy pobieramy? {flag_RozneDaty}")
+            if czasUtworzenia==serwer_config['dataUtworzenia']:
+                #logging.debug("data configu nie zmieniła się")
+                flag_RozneDaty=False
+            else:
+                logging.debug(f"nowa data configa na serwerze {czasUtworzenia}")
+                serwer_config['dataUtworzenia']=czasUtworzenia
+                flag_RozneDaty=True
         return flag_RozneDaty
 
     def downloadFiles(self):
