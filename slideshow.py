@@ -315,6 +315,7 @@ class Ui_MainWindow(object):
         self.sizeOfLoadingBar=config_args.sizeOfLoadingBar
         self.slajdy=config_args.zdjeciaSlajd
         self.pasek=config_args.pasekpng[0]
+        self.discretizationLoadingBar=discretizationLoadingBar
 
     def aktualnyStanZmiennychConfigowych(self):
         print("---------stan-zmiennych-configowych---------")
@@ -322,6 +323,7 @@ class Ui_MainWindow(object):
         print(f"pasek                 : {self.pasekpng}")
         print(f"czasObrazka           : {self.czasObrazka}")
         print(f"timeForDownloader     : {self.timeForDownloader}")
+        print(f"discretizationLoadingBar:{self.discretizationLoadingBar}")
         print(f"slajdy          : {self.slajdy}")
 
     def aktualizacjaConfigowychParametrow(self):
