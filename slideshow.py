@@ -169,8 +169,8 @@ class Ui_MainWindow(object):
             numer=self.numerZdjecia
             #brokenImage=self.checkPicture(self.slajdy[numer]['nazwapng'])
             #if brokenImage == False:
-            pixmap = QtGui.QPixmap(self.slajdy[numer]['nazwapng'])
 
+            pixmap = QtGui.QPixmap(self.slajdy[numer]['nazwapng'])
             self.lab_slajd.setPixmap(pixmap)
             #else:
             #    self.lab_slajd.setPixmap(QtGui.QPixmap(f"{self.slajdy[numer]}.bkp"))
@@ -180,6 +180,8 @@ class Ui_MainWindow(object):
             else:
                 self.numerZdjecia = 0
             self.wypelnienie = 0
+        except IOError as error:
+            print("Wystapil blad przy otwieraniu pliku {self.slajdy[numer]}")
         except Exception as error:
             print(f"wystapil blad przy przemianie zdjecia w changePicture {error}")
             numer=self.numerZdjecia=0
