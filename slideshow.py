@@ -245,9 +245,10 @@ class Ui_MainWindow(object):
                     if flaga_pobierzZdjecie:
                         logging.debug(f"Przed pobraniem: slajd {slajd['nazwapng']} {slajd['dataUtworzenia']}")
                         r_slajd = requests.get(slajd['url'], allow_redirects=True)
-                        with open(slajd['nazwapng'], 'wb') as file_slajd:
+                        with open(f"{slajd['nazwapng']}.download", 'wb') as file_slajd:
                             file_slajd.write(r_slajd.content)
                         #logging.debug(f"Data utworzenia pliku:{self.get_created_taken()}")
+                        os.rename(f"{slajd['nazwapng']}.download", f"{slajd['nazwapng']}")
                         logging.debug(f"pobrano zdjęcia {slajd['nazwapng']} {slajd['dataUtworzenia']}")
                         flaga_czyCosPobrano=True
                 print("zdjecia po sprawdzeniu")
