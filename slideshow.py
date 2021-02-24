@@ -136,7 +136,7 @@ class Ui_MainWindow(object):
         self.lab_loadingBar.setGeometry(QtCore.QRect(0,0, self.wypelnienie * (self.widthWindow/self.discretizationLoadingBar), self.sizeOfLoadingBar))
 
     def setLabelPicture(self):
-        self.lab_slajd.setGeometry(QtCore.QRect(0, self.sizeOfLoadingBar, self.widthWindow, self.heightWindow-self.sizeOfLoadingBar))
+        self.lab_slajd.setGeometry(QtCore.QRect(0, self.sizeOfLoadingBar, self.widthWindow, (self.heightWindow - self.sizeOfLoadingBar) ) )
 
     #uwaga - metoda verify dziala tylko dla png formatu
     def checkPicture(self, picturepng):
@@ -160,6 +160,7 @@ class Ui_MainWindow(object):
         flagaZmianaZdjecia=self.changeLoadingBar()
         if flagaZmianaZdjecia == True:
             self.changePicture()
+        self.setLabelPicture()
         self.setWidthLoadingBar()
 
     def changePicture(self):
@@ -168,7 +169,9 @@ class Ui_MainWindow(object):
             numer=self.numerZdjecia
             #brokenImage=self.checkPicture(self.slajdy[numer]['nazwapng'])
             #if brokenImage == False:
-            self.lab_slajd.setPixmap(QtGui.QPixmap(self.slajdy[numer]['nazwapng']))
+            pixmap = QtGui.QPixmap(self.slajdy[numer]['nazwapng'])
+
+            self.lab_slajd.setPixmap(pixmap)
             #else:
             #    self.lab_slajd.setPixmap(QtGui.QPixmap(f"{self.slajdy[numer]}.bkp"))
             #    logging.debug(f"{self.slajdy[numer]})")
@@ -180,7 +183,6 @@ class Ui_MainWindow(object):
         except Exception as error:
             print(f"wystapil blad przy przemianie zdjecia w changePicture {error}")
             numer=self.numerZdjecia=0
-        self.setLabelPicture()
 
     def changeLoadingBar(self):
         flagaZmianaZdjecia=False
@@ -385,7 +387,8 @@ class Ui_MainWindow(object):
         self.heightWindow = self.mainWindow.frameGeometry().height()
         logging.debug("widthWindow :"+str(self.widthWindow))
         logging.debug("heightWindow :"+str(self.heightWindow))
-        self.lab_slajd.setGeometry(QtCore.QRect(0, self.sizeOfLoadingBar, self.widthWindow, self.heightWindow))
+        self.setLabelPicture()
+        self.setWidthLoadingBar()
 
 class Window(QtWidgets.QMainWindow):
     resized = QtCore.pyqtSignal()
