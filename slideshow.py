@@ -10,7 +10,7 @@ import logging
 import argparse
 import json
 from math import floor
-from PIL import Image
+#from PIL import Image
 from pprint import pprint
 from pprint import pformat
 from requests import Session
