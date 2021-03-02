@@ -4,6 +4,7 @@ function readConfig
 {
   echo "zczytuje zmienne z config.json"
   #zczytuje folder roboczy
+  #jeśli niedziała UPEWNIJ SIE ZE MASZ zainstalowane sudo apt-get install jq
   timeToSleep="$(jq '.timeToCheckSlideshow' config.json)"
   rebootActivate="$(jq -r '.rebootActivate' config.json)"
   if [[ "$timeToSleep" == "" ]]

@@ -2,7 +2,7 @@
 
 function pythonScieszka
 {
-  python -c "import sys; print(sys.executable)"
+  python3 -c "import sys; print(sys.executable)"
 }
 
 echo "HOME: $HOME"
