@@ -43,7 +43,7 @@ def def_params():
     args = parser.parse_args()
     for key, value in list(args.__dict__.items()):
         if value is None or value == False:
-            #print(f"usuniete {key} {value}")
+            #print("usuniete "+ str(key)+ " "+ str(value))
             del args.__dict__[key]
     #print("after command line"))
     #pprint(args.__dict__))
@@ -146,13 +146,13 @@ class Ui_MainWindow(object):
         try:
             img = Image.open(picturepng)
             img.verify()
-            logging.debug(f"Poprawny png {picturepng}")
+            logging.debug("Poprawny png "+str(picturepng))
             brokenImage=False
         except Exception:
             brokenImage=True
-            logging.debug('Błąd przy odczycie zdjęcia {picturepng}')
+            logging.debug('Błąd przy odczycie zdjęcia '+str(picturepng))
         except FileExistsError:
-            logging.debug(f"Nie znaleziono pliku: {picturepng}")
+            logging.debug("Nie znaleziono pliku: " + str(picturepng))
             brokenImage=True
         return brokenImage
 
@@ -166,7 +166,7 @@ class Ui_MainWindow(object):
         self.setWidthLoadingBar()
 
     def changePicture(self):
-        logging.debug(f"changePicture Function - numerZdjecia={self.numerZdjecia}")
+        logging.debug("changePicture Function - numerZdjecia="+str(self.numerZdjecia))
         try:
             numer=self.numerZdjecia
             #brokenImage=self.checkPicture(self.slajdy[numer]['nazwapng'])
@@ -175,17 +175,17 @@ class Ui_MainWindow(object):
             pixmap = QtGui.QPixmap(self.slajdy[numer]['nazwapng'])
             self.lab_slajd.setPixmap(pixmap)
             #else:
-            #    self.lab_slajd.setPixmap(QtGui.QPixmap(f"{self.slajdy[numer]}.bkp"))
-            #    logging.debug(f"{self.slajdy[numer]})")
+            #    self.lab_slajd.setPixmap(QtGui.QPixmap(str(self.slajdy[numer])+".bkp"))
+            #    logging.debug(str(self.slajdy[numer]))
             if (len(self.slajdy)-1>numer):
                 self.numerZdjecia = self.numerZdjecia+1
             else:
                 self.numerZdjecia = 0
             self.wypelnienie = 0
         except IOError as error:
-            print("Wystapil blad przy otwieraniu pliku {self.slajdy[numer]}")
+            print("Wystapil blad przy otwieraniu pliku "+ str(self.slajdy[numer]))
         except Exception as error:
-            print(f"wystapil blad przy przemianie zdjecia w changePicture {error}")
+            print("wystapil blad przy przemianie zdjecia w changePicture " + str(error))
             numer=self.numerZdjecia=0
 
     def changeLoadingBar(self):
@@ -196,7 +196,7 @@ class Ui_MainWindow(object):
         else:
             self.wypelnienie = 0
             flagaZmianaZdjecia=True
-        #logging.debug(f"changeLoadingBar metoda - Wypelnienie={self.wypelnienie}")
+        #logging.debug("changeLoadingBar metoda - Wypelnienie="+str(self.wypelnienie))
         return flagaZmianaZdjecia
 
     def checkLastModifiedTimePicture(self, slajd):
@@ -205,9 +205,9 @@ class Ui_MainWindow(object):
         with urlopen(slajd['url']) as f:
             #logging.debug("Uwaga czasy są pokazywane w czasie uniwersalnym (greenwich)")
             czasUtworzenia=dict(f.getheaders())['Last-Modified']
-            #logging.debug(f"slajd u nas: {slajd['dataUtworzenia']}")
-            #logging.debug(f"slajd tam  : {czasUtworzenia}")
-            #logging.debug(f"czy pobieramy? {flag_RozneDaty}")
+            #logging.debug("slajd u nas: "+str(slajd['dataUtworzenia']))
+            #logging.debug("slajd tam  : "+str(czasUtworzenia))
+            #logging.debug("czy pobieramy? "+str(flag_RozneDaty))
             if czasUtworzenia==slajd['dataUtworzenia']:
                 #logging.debug("data zdjecia nie zmieniła się")
                 flag_RozneDaty=False
@@ -222,22 +222,23 @@ class Ui_MainWindow(object):
         with urlopen(serwer_config['url']) as f:
             #logging.debug("Uwaga czasy są pokazywane w czasie uniwersalnym (greenwich)")
             czasUtworzenia=dict(f.getheaders())['Last-Modified']
-            #logging.debug(f"config u nas: {serwer_config['dataUtworzenia']}")
-            #logging.debug(f"config tam  : {czasUtworzenia}")
-            #logging.debug(f"czy pobieramy? {flag_RozneDaty}")
+            #logging.debug("config u nas: "+str(serwer_config['dataUtworzenia']))
+            #logging.debug("config tam  : "+str(czasUtworzenia))
+            #logging.debug("czy pobieramy? "+str(flag_RozneDaty))
             if czasUtworzenia==serwer_config['dataUtworzenia']:
                 #logging.debug("data configu nie zmieniła się")
                 flag_RozneDaty=False
             else:
-                logging.debug(f"nowa data configa na serwerze {czasUtworzenia}")
+                logging.debug("nowa data configa na serwerze "+ str(czasUtworzenia))
                 serwer_config['dataUtworzenia']=czasUtworzenia
                 flag_RozneDaty=True
         return flag_RozneDaty
 
     def downloadFiles(self):
+        print("downloadFiles method")
         if self.flag_UpdatePrzedChwilaConfiga==False:
             logging.debug("----------------------------------------------")
-            pprint(f" halo ! masz tu ! {self.slajdy}")
+            pprint(self.slajdy)
             logging.debug("downloadFiles")
             flagDownloadBroken=True
             flaga_czyCosPobrano=False
@@ -247,16 +248,16 @@ class Ui_MainWindow(object):
                     flaga_pobierzZdjecie=False
                     flaga_pobierzZdjecie=self.checkLastModifiedTimePicture(slajd)
                     if flaga_pobierzZdjecie:
-                        logging.debug(f"Przed pobraniem: slajd {slajd['nazwapng']} {slajd['dataUtworzenia']}")
+                        logging.debug("Przed pobraniem: slajd "+str(slajd['nazwapng'])+ str(slajd['dataUtworzenia']))
                         r_slajd = requests.get(slajd['url'], allow_redirects=True)
-                        with open(f"{slajd['nazwapng']}.download", 'wb') as file_slajd:
+                        with open(slajd['nazwapng'] + ".download", 'wb') as file_slajd:
                             file_slajd.write(r_slajd.content)
-                        #logging.debug(f"Data utworzenia pliku:{self.get_created_taken()}")
-                        os.rename(f"{slajd['nazwapng']}.download", f"{slajd['nazwapng']}")
-                        logging.debug(f"pobrano zdjęcia {slajd['nazwapng']} {slajd['dataUtworzenia']}")
+                        #logging.debug("Data utworzenia pliku:"+str(self.get_created_taken()))
+                        os.rename(slajd['nazwapng']+".download", slajd['nazwapng'])
+                        logging.debug("pobrano zdjęcia "+ slajd['nazwapng']+" "+slajd['dataUtworzenia'])
                         flaga_czyCosPobrano=True
                 print("zdjecia po sprawdzeniu")
-                pprint(self.slajdy)
+                #pprint(self.slajdy)
 
                 logging.debug("downloadConfig")
                 flaga_pobierzConfig=False
@@ -265,12 +266,12 @@ class Ui_MainWindow(object):
                 else:
                     flaga_pobierzConfig=self.checkLastModifiedTimeConfig(self.serwer_config)
                     if flaga_pobierzConfig:
-                        logging.debug(f"Przed pobraniem config {self.serwer_config['url']} {self.serwer_config['dataUtworzenia']}")
+                        logging.debug("Przed pobraniem config "+ self.serwer_config['url']+ " "+ str(self.serwer_config['dataUtworzenia']))
                         r_serwer_config = requests.get(serwer_config['url'], allow_redirects=True)
                         nazwa_zapisanego_configa='config.json'
                         with open(nazwa_zapisanego_configa, 'wb') as file_json:
                             file_json.write(r_serwer_config.content)
-                        logging.debug(f"pobrano zapisany config o nazwie: {nazwa_zapisanego_configa}")
+                        logging.debug("pobrano zapisany config o nazwie: "+str(nazwa_zapisanego_configa))
                         self.aktualizacjaConfigowychParametrow()
 
                         flaga_czyCosPobrano=True
@@ -288,14 +289,14 @@ class Ui_MainWindow(object):
                 flagDownloadBroken=False
             except requests.exceptions.RequestException as error:
                 flagDownloadBroken=True
-                print(f"Wystąpił problem z połączeniem:{error}")
+                print("Wystąpił problem z połączeniem:"+str(error))
             except Exception as error:
                 flagDownloadBroken=True
-                print(f"Wystąpił problem z połączeniem:{error}")
+                print("Wystąpił problem z połączeniem:"+str(error))
                 print("Wykryto bład : "+str(error))
             if flagDownloadBroken==False:
                 os.chdir('/tmp/')
-                logging.debug(f"folder na plik tymczasowy: {os.getcwd()}")
+                logging.debug("folder na plik tymczasowy: "+str(os.getcwd()))
                 if os.path.isfile('working_slideshow.txt'):
                     logging.debug("working_slideshow.txt plik istnieje")
                 else:
@@ -305,7 +306,7 @@ class Ui_MainWindow(object):
                         logging.debug("Uszkodzony plik lub zła ścieszka")
                     logging.debug("stworzono working_slideshow.txt plik")
                 os.chdir(self.workdirectory)
-                logging.debug(f"Wracamy do folderu roboczego: {os.getcwd()}")
+                logging.debug("Wracamy do folderu roboczego: "+str(os.getcwd()))
             logging.debug("koniec downloadFiles")
 
         else: #self.flag_UpdatePrzedChwilaConfiga==True:
@@ -324,13 +325,13 @@ class Ui_MainWindow(object):
 
     def aktualnyStanZmiennychConfigowych(self):
         print("---------stan-zmiennych-configowych---------")
-        print(f"sizeOfLoadingBar      : {self.sizeOfLoadingBar}")
-        print(f"pasek                 : {self.pasekpng}")
-        print(f"czasObrazka           : {self.czasObrazka}")
-        print(f"timeForDownloader     : {self.timeForDownloader}")
-        print(f"discretizationLoadingBar:{self.discretizationLoadingBar}")
-        print(f"port                  :{self.port}")
-        print(f"slajdy          : {self.slajdy}")
+        print("sizeOfLoadingBar      :"+str(self.sizeOfLoadingBar))
+        print("pasek                 :"+str(self.pasekpng))
+        print("czasObrazka           :"+str(self.czasObrazka))
+        print("timeForDownloader     :"+str(self.timeForDownloader))
+        print("discretizationLoadingBar:"+str(self.discretizationLoadingBar))
+        print("port                  :"+str(self.port))
+        print("slajdy          :"+str(self.slajdy))
 
     def aktualizacjaConfigowychParametrow(self):
         print("----*****************----")
@@ -370,28 +371,28 @@ class Ui_MainWindow(object):
         self.timerFrame = QtCore.QTimer()
         self.timerFrame.timeout.connect(self.changeFrame)
         timeToChangePicture=int(floor(int(self.czasObrazka)))
-        logging.debug(f"czasObrazka:{str(timeToChangePicture)} ms")
+        logging.debug("czasObrazka:"+str(timeToChangePicture) +" ms")
         self.segmentationTimeLoadingBar=int(floor(int(self.czasObrazka)/self.discretizationLoadingBar))
         self.timerFrame.setInterval(self.segmentationTimeLoadingBar)
-        logging.debug(f"timeToChange:{str(self.segmentationTimeLoadingBar)} ms")
+        logging.debug("timeToChange: "+str(self.segmentationTimeLoadingBar)+" ms")
         self.timerFrame.start()
 
     def stopTimerChangeFrame(self):
         self.timerFrame.stop()
-        print(f"ahoj stopuje timerFrame")
+        print("ahoj stopuje timerFrame")
 
     def setTimerDownloadFiles(self):
         logging.debug("setTimerDownloadFiles")
         self.timerDownloader = QtCore.QTimer()
         self.timerDownloader.timeout.connect(self.downloadFiles)
         timeForDownloader=self.timeForDownloader
-        logging.debug(f"czasUruchomieniaPobrania: {timeForDownloader} minisekund")
+        logging.debug("czasUruchomieniaPobrania: "+str(timeForDownloader)+ " minisekund")
         self.timerDownloader.setInterval(timeForDownloader)
         self.timerDownloader.start()
 
     def stopTimerDownloadFiles(self):
         self.timerDownloader.stop()
-        print(f"stopuje timerDownloader")
+        print("stopuje timerDownloader")
 
     def setSizeWindow(self):
         self.widthWindow = self.mainWindow.frameGeometry().width()
@@ -436,10 +437,10 @@ class Window(QtWidgets.QMainWindow):
 
 if __name__ == "__main__":
     obecny_folder=os.getcwd()
-    logging.debug(f"początkowy folder wykonywania:{obecny_folder}")
+    logging.debug("początkowy folder wykonywania:" +str(obecny_folder))
     args=def_params()
     #ustawioneParametry
-    sizeOfLoadingBar=int(args.sizeOfLoadingBar)
+    sizeOfLoadingBar=args.sizeOfLoadingBar
     fullScreen=args.fullScreenSlideshow
     timeForPicture=int(args.timeForPicture)
     timeForDownloader=int(args.timeForDownloader)
@@ -453,7 +454,7 @@ if __name__ == "__main__":
     logging.debug(pformat(args))
     os.chdir(workdirectory)
     obecny_folder=os.getcwd()
-    logging.debug(f"obecny folder roboczy:{obecny_folder}")
+    logging.debug("obecny folder roboczy:" +str(obecny_folder))
     #odpalenie aplikacji
     app = QtWidgets.QApplication(sys.argv)
     w = Window(sizeOfLoadingBar, discretizationLoadingBar, fullScreen, timeForPicture, timeForDownloader, pasek, slajdy, workdirectory, serwer_config, port)
