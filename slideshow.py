@@ -39,6 +39,7 @@ def def_params():
     parser.add_argument("-p", "--pasekpng", help="url do ścieszki z png używanego w LoadingBar-ze - uwaga zalecany format png!")
     parser.add_argument("-sc", "--serwer_config", help="przechowuje url do serwera z plikiem jsonowy który będzie plikiem konfiguracyjnym")
     parser.add_argument("-d", "--discretizationLoadingBar", type=int, help="określa poziom dyskretyzacji")
+    #parser.add_argument("-p", "--port", type=int, help="numer portu na który będą wysyłane informacje o udanym pobraniu"),
     args = parser.parse_args()
     for key, value in list(args.__dict__.items()):
         if value is None or value == False:
