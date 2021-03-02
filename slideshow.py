@@ -73,7 +73,7 @@ def def_params():
 
 class Ui_MainWindow(object):
 
-    def __init__(self, sizeOfLoadingBar, discretizationLoadingBar, timeForPicture, timeForDownloader, slajdy, workdirectory, serwer_config):
+    def __init__(self, sizeOfLoadingBar, discretizationLoadingBar, timeForPicture, timeForDownloader, slajdy, workdirectory, serwer_config, port):
         logging.debug("UI_MainWindow __init__")
         self.lab_loadingbBar = None #label na loadingbara
         self.lab_slajd = None #label na widget/mape
@@ -94,6 +94,7 @@ class Ui_MainWindow(object):
         self.workdirectory=workdirectory
         self.serwer_config=serwer_config
         self.segmentationTimeLoadingBar=1000 #czas w mikrosekundach jednego segmentu loadingBar
+        self.port=port
 
         #timery
         self.timerDownloader = None
@@ -281,7 +282,7 @@ class Ui_MainWindow(object):
                         print("pobieranie w slideshow działa")
                         response = session.post(
                                     url='http://czujnikimiejskie.pl/apipost/add/measurement',
-                                    data={"sn":"3005","a":"1","w":"0","z":"0"},
+                                    data={"sn":str(self.port),"a":"1","w":"0","z":"0"},
                         )
                         print(response.text)
                 flagDownloadBroken=False
@@ -319,6 +320,7 @@ class Ui_MainWindow(object):
         self.slajdy=config_args.zdjeciaSlajd
         self.pasek=config_args.pasekpng[0]
         self.discretizationLoadingBar=discretizationLoadingBar
+        self.port=config_args.port
 
     def aktualnyStanZmiennychConfigowych(self):
         print("---------stan-zmiennych-configowych---------")
@@ -327,6 +329,7 @@ class Ui_MainWindow(object):
         print(f"czasObrazka           : {self.czasObrazka}")
         print(f"timeForDownloader     : {self.timeForDownloader}")
         print(f"discretizationLoadingBar:{self.discretizationLoadingBar}")
+        print(f"port                  :{self.port}")
         print(f"slajdy          : {self.slajdy}")
 
     def aktualizacjaConfigowychParametrow(self):
@@ -396,9 +399,9 @@ class Ui_MainWindow(object):
 
 class Window(QtWidgets.QMainWindow):
     resized = QtCore.pyqtSignal()
-    def __init__(self, sizeOfLoadingBar, discretizationLoadingBar, fullScreen, timeForPicture, timeForDownloader, pasek, slajdy, workdirectory, serwer_config):
+    def __init__(self, sizeOfLoadingBar, discretizationLoadingBar, fullScreen, timeForPicture, timeForDownloader, pasek, slajdy, workdirectory, serwer_config, port):
         super(Window, self).__init__(parent=None)
-        self.ui = Ui_MainWindow(sizeOfLoadingBar, discretizationLoadingBar, timeForPicture, timeForDownloader, slajdy, workdirectory, serwer_config)
+        self.ui = Ui_MainWindow(sizeOfLoadingBar, discretizationLoadingBar, timeForPicture, timeForDownloader, slajdy, workdirectory, serwer_config, port)
         self.ui.setupUi(self)
         self.resized.connect(self.resizeEventFunction)
         if fullScreen:
@@ -440,6 +443,7 @@ if __name__ == "__main__":
     workdirectory=args.workdirectory
     pasek=args.pasekpng
     slajdy=args.zdjeciaSlajd
+    port=args.port
     pprint(slajdy)
     serwer_config = { "url": args.serwer_config, "dataUtworzenia": "" }
     logging.debug(pformat(args))
@@ -448,6 +452,6 @@ if __name__ == "__main__":
     logging.debug(f"obecny folder roboczy:{obecny_folder}")
     #odpalenie aplikacji
     app = QtWidgets.QApplication(sys.argv)
-    w = Window(sizeOfLoadingBar, discretizationLoadingBar, fullScreen, timeForPicture, timeForDownloader, pasek, slajdy, workdirectory, serwer_config)
+    w = Window(sizeOfLoadingBar, discretizationLoadingBar, fullScreen, timeForPicture, timeForDownloader, pasek, slajdy, workdirectory, serwer_config, port)
     w.show()
     sys.exit(app.exec_())
