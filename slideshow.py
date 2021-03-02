@@ -389,6 +389,10 @@ class Ui_MainWindow(object):
         self.timerDownloader.setInterval(timeForDownloader)
         self.timerDownloader.start()
 
+    def stopTimerDownloadFiles(self):
+        self.timerDownloader.stop()
+        print(f"stopuje timerDownloader")
+
     def setSizeWindow(self):
         self.widthWindow = self.mainWindow.frameGeometry().width()
         self.heightWindow = self.mainWindow.frameGeometry().height()

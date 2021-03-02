@@ -6,9 +6,9 @@ function pythonScieszka
 }
 
 echo "HOME: $HOME"
-Slideshow="$HOME""/slideshow"
+Slideshow="$HOME""/Projects/czujnikSnapshot"
 echo "$Slideshow"
-PythonEnv="$(pythonScieszka)"
+PythonEnv="/home/matball/Projects/czujnikSnapshot/venv/bin/python"
 echo "$PythonEnv"
 pwd
 #$@ - pomocny tylko przy debugu - przekazuje wszystkie argumenty podane przy wywolaniu basha - dalej do pythona
