@@ -5,14 +5,14 @@ After=graphical.target
 
 [Service]
 Environment=DISPLAY=:0.0
-Environment=XAUTHORITY=/home/matball/.Xauthority
+Environment=XAUTHORITY=/home/pi/.Xauthority
 Type=simple
-WorkingDirectory=/home/matball/Projects/czujnikSnapshot
-ExecStart=/home/matball/Projects/czujnikSnapshot/runnerSlideshow.sh
+WorkingDirectory=/home/pi/slideshow
+ExecStart=/home/pi/slideshow/runnerSlideshow.sh
 Restart=always
 #RestartSec=120
-User=matball
-Group=matball
+User=pi
+Group=pi
 
 [Install]
 WantedBy=graphical.target
