@@ -66,9 +66,8 @@ def def_params():
         print("Brak pliku konfiguracyjnego - jeśli żadnego nie posiadasz prośba o skopiowanie \n config.json.example i nazwanie owej kopii config.json")
 
     if config_args.debug_logslideshow:
-        logging.basicConfig(level=logging.DEBUG, force=True)
-        logging.debug("Ten komunikat pokazuje sie tylko w trybie debug")
-        logging.debug(pformat(config_args.__dict__))
+        print("Aktywacja trybu debug")
+        logging.root.setLevel(logging.DEBUG)
     return config_args
 
 class Ui_MainWindow(object):
@@ -157,7 +156,7 @@ class Ui_MainWindow(object):
         return brokenImage
 
     def changeFrame(self):
-        logging.debug("metoda changeFrame")
+        #logging.debug("metoda changeFrame")
         flagaZmianaZdjecia=False
         flagaZmianaZdjecia=self.changeLoadingBar()
         if flagaZmianaZdjecia == True:
@@ -203,13 +202,13 @@ class Ui_MainWindow(object):
         czasUtworzenia=""
         flag_RozneDaty=False
         with urlopen(slajd['url']) as f:
-            #logging.debug("Uwaga czasy są pokazywane w czasie uniwersalnym (greenwich)")
+            logging.debug("Uwaga czasy są pokazywane w czasie uniwersalnym (greenwich)")
             czasUtworzenia=dict(f.getheaders())['Last-Modified']
-            #logging.debug("slajd u nas: "+str(slajd['dataUtworzenia']))
-            #logging.debug("slajd tam  : "+str(czasUtworzenia))
-            #logging.debug("czy pobieramy? "+str(flag_RozneDaty))
+            logging.debug("slajd u nas: "+str(slajd['dataUtworzenia']))
+            logging.debug("slajd tam  : "+str(czasUtworzenia))
+            logging.debug("czy pobieramy? "+str(flag_RozneDaty))
             if czasUtworzenia==slajd['dataUtworzenia']:
-                #logging.debug("data zdjecia nie zmieniła się")
+                logging.debug("data zdjecia nie zmieniła się")
                 flag_RozneDaty=False
             else:
                 slajd['dataUtworzenia']=czasUtworzenia
