@@ -7,8 +7,8 @@ After=graphical.target
 Environment=DISPLAY=:0.0
 Environment=XAUTHORITY=/home/matball/.Xauthority
 Type=simple
-WorkingDirectory=/home/matball/Projects/czujnikSnapshot
-ExecStart=/home/matball/Projects/czujnikSnapshot/runnerSlideshow.sh
+WorkingDirectory=/home/matball/Projects/slideshow
+ExecStart=/home/matball/Projects/slideshow/runnerSlideshowLokalnie.sh
 Restart=always
 #RestartSec=120
 User=matball
