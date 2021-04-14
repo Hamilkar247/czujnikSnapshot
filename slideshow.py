@@ -18,7 +18,6 @@ import requests
 from urllib.request import urlopen
 import traceback
 
-from usim800_slideshow.usim800 import usim800_slideshow
 from usim800_slideshow.usim800.usim800_slideshow import sim800_slideshow
 
 
@@ -81,6 +80,28 @@ def def_params():
         print("Aktywacja trybu debug")
         logging.root.setLevel(logging.DEBUG)
     return config_args
+
+
+class GsmSlideshow:
+    def __init__(self, path):
+        try:
+            self.gsm = sim800_slideshow(baudrate=115200, path=path)
+            self.gsm.requests._APN = "internet"
+            self.r = None
+        except Exception as e:
+            print("Wystąpił błąd przy próbie otwarcia portu GsmSlideshow - możliwe że inny program używa już podanego portu!")
+            traceback.print_exc()
+
+    def download_file(self, nazwa, extension, url, sleep_to_read_bytes):
+        try:
+            nazwa_pliku = nazwa
+            self.gsm.requests.getFile(url=url, extension=extension,
+                                      sleep_to_read_bytes=sleep_to_read_bytes, nameOfFile=nazwa_pliku)
+        except Exception as e:
+            print("Niestety jest błąd - wyrzuciło download_file w GsmSlideshow")
+            print(f"{e}")
+        logging.debug("koniec pliku")
+
 
 class Ui_MainWindow(object):
 
@@ -309,10 +330,11 @@ class Ui_MainWindow(object):
                 flagDownloadBroken = True
                 print("Wystąpił problem z połączeniem:" + str(error))
             except Exception as error:
-                flagDownloadBroken=True
-                print("Wystąpił problem z połączeniem:"+str(error))
-                print("Wykryto bład : "+str(error))
-            if flagDownloadBroken==False:
+                flagDownloadBroken = True
+                print("Wystąpił problem z połączeniem:" + str(error))
+                print("Wykryto bład : " + str(error))
+            if flagDownloadBroken == False:
+                self.download_via_sim800L()
                 os.chdir('/tmp/')
                 logging.debug("folder na plik tymczasowy: " + str(os.getcwd()))
                 if os.path.isfile('working_slideshow.txt'):
@@ -331,6 +353,17 @@ class Ui_MainWindow(object):
             logging.debug("przed chwila zmieniono dane configa - pobieranie wstrzymane do kolejnej iteracji pobierania")
             self.flag_UpdatePrzedChwilaConfiga = False
         self.aktualnyStanZmiennychConfigowych()
+
+    def download_via_sim800L(self):
+        gsm_slideshow = GsmSlideshow(path="/dev/ttyUSB0")
+        gsm_slideshow.download_file(nazwa="config.json", extension="json"
+                                    , url=self.serwer_config
+                                    , sleep_to_read_bytes=30)
+        for slajd in list(self.slajdy):
+            gsm_slideshow.download_file(nazwa=slajd['nazwapng'], extension="png"
+                                        , url=self.slajd['url']
+                                        , sleep_to_read_bytes=30)
+        #gsm_slideshow.download_file()
 
     def updateZmiennych(self, config_args):
         logging.debug("updateZmiennych")
