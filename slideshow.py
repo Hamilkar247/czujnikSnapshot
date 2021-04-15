@@ -339,7 +339,7 @@ class Ui_MainWindow(object):
                 flagDownloadBroken = True
                 print("Wystąpił problem z połączeniem:" + str(error))
                 print("Wykryto bład : " + str(error))
-            if flagDownloadBroken == False:
+            if flagDownloadBroken == True:
                 self.download_via_sim800L()
                 os.chdir('/tmp/')
                 logging.debug("folder na plik tymczasowy: " + str(os.getcwd()))
