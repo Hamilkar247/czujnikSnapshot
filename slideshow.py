@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from json import JSONDecodeError
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QMovie
@@ -60,18 +61,23 @@ def def_params():
 
     if os.path.exists('config.json'):
         config_args = argparse.Namespace()
-        with open('config.json', 'rt') as f:
-            config_args = argparse.Namespace()
-            config_args.__dict__.update(json.load(f))
-            # pprint(config_args)
-            config_args.__dict__.update(vars(args))
-        for key, value in list(config_args.__dict__.items()):
-            if value == "False" or value == "false":
-                config_args.__dict__[key] = False
-            elif value == "True" or value == "true":
-                config_args.__dict__[key] = True
-            if key == "__comment__":
-                del config_args.__dict__[key]
+        try:
+            with open('config.json', 'rt') as f:
+                config_args = argparse.Namespace()
+                config_args.__dict__.update(json.load(f))
+                # pprint(config_args)
+                config_args.__dict__.update(vars(args))
+            for key, value in list(config_args.__dict__.items()):
+                if value == "False" or value == "false":
+                    config_args.__dict__[key] = False
+                elif value == "True" or value == "true":
+                    config_args.__dict__[key] = True
+                if key == "__comment__":
+                    del config_args.__dict__[key]
+        except JSONDecodeError as e:
+            print("Sprawdź czy plik config.json nie jest pusty")
+            print("Jeśli tak, możliwe że rozruch umożliwi skopiowanie config.json.example jako config.json")
+            traceback.print_exc()
     else:
         print(
             "Brak pliku konfiguracyjnego - jeśli żadnego nie posiadasz prośba o skopiowanie \n config.json.example i nazwanie owej kopii config.json")
