@@ -1,5 +1,5 @@
 {
-      "version": "1.0"
+      "version": "1.0",
   "__comment__": "ustawienia debug programów",
       "debug_logslideshow" : "true",
       "debug_logusim800": "true",
