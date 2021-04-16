@@ -117,6 +117,12 @@ class Ui_MainWindow(object):
 
     def __init__(self, args):
         logging.debug("UI_MainWindow __init__")
+
+        #parametry GSM
+        self.use_gsm = args.use_gsm #true/false
+        self.path_gsm = args.path_gsm # np. "/dev/ttyUSB0"
+        self.baudrate = args.baudrate
+        #
         self.lab_loadingbBar = None  # label na loadingbara
         self.lab_slajd = None  # label na widget/mape
         self.numerZdjecia = 0  # zmienna wskazuje nam numer obrazka który obecnie jest wyświetlany
@@ -342,7 +348,7 @@ class Ui_MainWindow(object):
                 flagDownloadBroken = True
                 print("Wystąpił problem z połączeniem:" + str(error))
                 print("Wykryto bład : " + str(error))
-            if flagDownloadBroken == True:
+            if flagDownloadBroken == True and self.use_gsm == True:
                 self.download_via_sim800L()
                 os.chdir('/tmp/')
                 logging.debug("folder na plik tymczasowy: " + str(os.getcwd()))
@@ -364,7 +370,7 @@ class Ui_MainWindow(object):
         self.aktualnyStanZmiennychConfigowych()
 
     def download_via_sim800L(self):
-        gsm_slideshow = GsmSlideshow(path="/dev/ttyUSB0")
+        gsm_slideshow = GsmSlideshow(path=self.path_gsm)
         logging.debug(str(self.serwer_config))
         gsm_slideshow.download_file(nazwa="config.json", extension="json"
                                     , url=self.serwer_config['url']
