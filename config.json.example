@@ -1,4 +1,5 @@
 {
+      "version": "1.0"
   "__comment__": "ustawienia debug programów",
       "debug_logslideshow" : "true",
   "__comment__": "zmienne używane w check_slideshow_work",
