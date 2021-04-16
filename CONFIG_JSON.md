@@ -1,4 +1,12 @@
+version - wersja pliku konfiguracyjnego (od tego mają w załozeniu zalezec zawarte atrybuty
+
 debug_logslideshow - flaga debug programu.
+debug_logusim800 - ustawienie wyświetlenia logów dla usim800_slideshow
+
+path_gsm - ścieszka gsm
+use_gsm - czy używać gsm w programie
+baudrate - z jaką szybkością pobierać dane
+
 timeForPicture - odpowiada za czas wyświetlenia każdego z slajdu - czas podajemy w sekundach
 timeForDownloader - odpowiada za czas po jakim następuje próba pobranie slajdów z serwera
 fullScreenSlideshow - jeśli true program wypelnia całą dostepną przestrzeń
