@@ -362,12 +362,14 @@ class Ui_MainWindow(object):
 
     def download_via_sim800L(self):
         gsm_slideshow = GsmSlideshow(path="/dev/ttyUSB0")
+        logging.debug(str(self.serwer_config))
         gsm_slideshow.download_file(nazwa="config.json", extension="json"
-                                    , url=self.serwer_config
+                                    , url=self.serwer_config['url']
                                     , sleep_to_read_bytes=30)
         for slajd in list(self.slajdy):
+            logging.debug(self.slajdy)
             gsm_slideshow.download_file(nazwa=slajd['nazwapng'], extension="png"
-                                        , url=self.slajd['url']
+                                        , url=slajd['url']
                                         , sleep_to_read_bytes=30)
         #gsm_slideshow.download_file()
 
