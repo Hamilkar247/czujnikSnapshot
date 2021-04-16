@@ -6,8 +6,7 @@ function pythonScieszka
 }
 
 echo "HOME: $HOME"
-echo "PROJECTS: $PROJECTS"
-Slideshow="$PROJECTS/slideshow"
+Slideshow="$HOME/Projects/slideshow"
 echo "$Slideshow"
 PythonEnv="$Slideshow/venv/bin/python"
 echo "$PythonEnv"
