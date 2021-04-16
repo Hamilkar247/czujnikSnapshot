@@ -36,6 +36,10 @@ def def_params():
     )
     # UWAGA - nie dopisuj argumentom wartości default - do takich wartości używamy tylko i wyłącznie plik konfiguracyjny
     parser.add_argument("-l", "--debug_logslideshow", action='store_true', help="ustaw flage 'debug' i wyswietlaj logi")
+    parser.add_argument("-lu", "--debug_logusim800", action='store_true', help="wyświetlaj logi z usim800 (pobieranie GSM)")
+    parser.add_argument("-gsm", "--use_gsm", action="store_true", help="czy pobieranie gsm ma być dostępne?( o ile jest podłączony modul sim800L")
+    parser.add_argument("-path", "--path_gsm", help="ścieszka do urządzenia gsm")
+    parser.add_argument("-b", "--baudrate", type=int, help="baudrate do przesyłania danych")
     parser.add_argument("-s", "--sizeOfLoadingBar", help="ustaw rozmiar(grubość) loadingBara")
     parser.add_argument("-f", "--fullScreenSlideshow", action='store_true',
                         help="ustaw maksymalny rozmiar programu przy odpaleniu programu")
