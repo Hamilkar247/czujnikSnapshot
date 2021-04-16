@@ -321,7 +321,7 @@ class Ui_MainWindow(object):
                     if flaga_pobierzConfig:
                         logging.debug("Przed pobraniem config " + self.serwer_config['url'] + " " + str(
                             self.serwer_config['dataUtworzenia']))
-                        r_serwer_config = requests.get(serwer_config['url'], allow_redirects=True)
+                        r_serwer_config = requests.get(self.serwer_config['url'], allow_redirects=True)
                         nazwa_zapisanego_configa = 'config.json'
                         with open(nazwa_zapisanego_configa, 'wb') as file_json:
                             file_json.write(r_serwer_config.content)
@@ -480,7 +480,7 @@ class Window(QtWidgets.QMainWindow):
         self.ui = Ui_MainWindow(args)
         self.ui.setupUi(self)
         self.resized.connect(self.resizeEventFunction)
-        if fullScreen:
+        if args.fullScreenSlideshow:
             self.showFullScreen()
 
     def resizeEvent(self, event):
