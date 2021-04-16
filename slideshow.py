@@ -111,29 +111,28 @@ class GsmSlideshow:
 
 class Ui_MainWindow(object):
 
-    def __init__(self, sizeOfLoadingBar, discretizationLoadingBar, timeForPicture, timeForDownloader, slajdy,
-                 workdirectory, serwer_config, port):
+    def __init__(self, args):
         logging.debug("UI_MainWindow __init__")
         self.lab_loadingbBar = None  # label na loadingbara
         self.lab_slajd = None  # label na widget/mape
         self.numerZdjecia = 0  # zmienna wskazuje nam numer obrazka który obecnie jest wyświetlany
         self.widthWindow = 925
         self.heightWindow = 810
-        self.sizeOfLoadingBar = int(sizeOfLoadingBar)
-        self.ustawienieCzasowTimerow(timeForDownloader, timeForPicture)
-        self.sizeOfLoadingBar = int(sizeOfLoadingBar)
-        self.discretizationLoadingBar = discretizationLoadingBar
+        self.sizeOfLoadingBar = int(args.sizeOfLoadingBar)
+        self.ustawienieCzasowTimerow(args.timeForDownloader,args.timeForPicture)
+        self.sizeOfLoadingBar = int(args.sizeOfLoadingBar)
+        self.discretizationLoadingBar = int(args.discretizationLoadingBar)
         self.MainWindow = None
-        self.slajdy = slajdy
+        self.slajdy = args.zdjeciaSlajd
         self.numerZdjecia = 0
-        self.pasekpng = pasek[0]
+        self.pasekpng = args.pasekpng[0]
         self.wypelnienie = 0
         self.flag_UpdatePrzedChwilaConfiga = False
         self.liczbaPrzerwanychPolaczen = 0
-        self.workdirectory = workdirectory
-        self.serwer_config = serwer_config
+        self.workdirectory = args.workdirectory
+        self.serwer_config = {"url": args.serwer_config, "dataUtworzenia": ""}
         self.segmentationTimeLoadingBar = 1000  # czas w mikrosekundach jednego segmentu loadingBar
-        self.port = port
+        self.port = args.port
 
         # timery
         self.timerDownloader = None
@@ -466,15 +465,12 @@ class Ui_MainWindow(object):
 class Window(QtWidgets.QMainWindow):
     resized = QtCore.pyqtSignal()
 
-    def __init__(self, sizeOfLoadingBar, discretizationLoadingBar, fullScreen,
-                 timeForPicture, timeForDownloader, pasek, slajdy, workdirectory, serwer_config, port):
+    def __init__(self, args):
         super(Window, self).__init__(parent=None)
-        self.ui = Ui_MainWindow(sizeOfLoadingBar, discretizationLoadingBar, timeForPicture, timeForDownloader, slajdy,
-                                workdirectory, serwer_config, port)
+        self.ui = Ui_MainWindow(args)
         self.ui.setupUi(self)
         self.resized.connect(self.resizeEventFunction)
         if fullScreen:
-            # self.showMaximized()
             self.showFullScreen()
 
     def resizeEvent(self, event):
@@ -504,25 +500,13 @@ if __name__ == "__main__":
     obecny_folder = os.getcwd()
     logging.debug("początkowy folder wykonywania:" + str(obecny_folder))
     args = def_params()
-    # ustawioneParametry
-    sizeOfLoadingBar = args.sizeOfLoadingBar
-    fullScreen = args.fullScreenSlideshow
-    timeForPicture = int(args.timeForPicture)
-    timeForDownloader = int(args.timeForDownloader)
-    discretizationLoadingBar = int(args.discretizationLoadingBar)
-    workdirectory = args.workdirectory
-    pasek = args.pasekpng
-    slajdy = args.zdjeciaSlajd
-    port = args.port
-    pprint(slajdy)
-    serwer_config = {"url": args.serwer_config, "dataUtworzenia": ""}
     logging.debug(pformat(args))
-    os.chdir(workdirectory)
+    #ustawienoe folderu roboczego projektu, na podstawie parametru wejściowego
+    os.chdir(args.workdirectory)
     obecny_folder = os.getcwd()
     logging.debug("obecny folder roboczy:" + str(obecny_folder))
     # odpalenie aplikacji
     app = QtWidgets.QApplication(sys.argv)
-    w = Window(sizeOfLoadingBar, discretizationLoadingBar, fullScreen, timeForPicture, timeForDownloader, pasek, slajdy,
-               workdirectory, serwer_config, port)
+    w = Window(args)
     w.show()
     sys.exit(app.exec_())
