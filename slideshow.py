@@ -359,10 +359,12 @@ class Ui_MainWindow(object):
             except requests.exceptions.RequestException as error:
                 flagDownloadBroken = True
                 print("Wystąpił problem z połączeniem:" + str(error))
+                traceback.print_exc()
             except Exception as error:
                 flagDownloadBroken = True
                 print("Wystąpił problem z połączeniem:" + str(error))
                 print("Wykryto bład : " + str(error))
+                traceback.print_exc()
             if flagDownloadBroken == True and self.use_gsm == True:
                 logging.debug("Przed pobraniem config " + self.serwer_config['url'] + " " + str(
                     self.serwer_config['dataUtworzenia']))
