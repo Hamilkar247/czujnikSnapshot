@@ -180,6 +180,7 @@ class Ui_MainWindow(object):
         self.lab_slajd.setPixmap(QtGui.QPixmap(self.slajdy[self.numerZdjecia]['nazwapng']))
         self.lab_slajd.setScaledContents(True)
         self.lab_slajd.setObjectName("lab_slajd")
+
         # timery
         self.setTimerDownloadFiles()
         self.setTimerChangeFrame()
@@ -213,13 +214,17 @@ class Ui_MainWindow(object):
         return brokenImage
 
     def changeFrame(self):
-        # logging.debug("metoda changeFrame")
-        flagaZmianaZdjecia = False
-        flagaZmianaZdjecia = self.changeLoadingBar()
-        if flagaZmianaZdjecia == True:
-            self.changePicture()
-        self.setLabelPicture()
-        self.setWidthLoadingBar()
+        try:
+            #logging.debug("metoda changeFrame")
+            flagaZmianaZdjecia = False
+            flagaZmianaZdjecia = self.changeLoadingBar()
+            if flagaZmianaZdjecia == True:
+                self.changePicture()
+            self.setLabelPicture()
+            self.setWidthLoadingBar()
+        except Exception as e:
+            print("Zlapano błąd przy zmianie obrazka !")
+            traceback.print_exc()
 
     def changePicture(self):
         logging.debug("changePicture Function - numerZdjecia=" + str(self.numerZdjecia))
@@ -376,7 +381,7 @@ class Ui_MainWindow(object):
                 self.flag_UpdatePrzedChwilaConfiga = False
             self.aktualnyStanZmiennychConfigowych()
         if flagDownloadBroken == True and (self.mode_download == "both" or self.mode_download == "gsm"):
-            logging.debug("Przed pobraniem config " + str(self.serwer_config['url']) + str(" ") + str(self.serwer_config['dataUtworzenia']))
+            #logging.debug("Przed pobraniem config " + str(self.serwer_config['url']) + str(" ") + str(self.serwer_config['dataUtworzenia']))
             self.download_via_sim800L()
         logging.debug("koniec downloadFiles")
 
