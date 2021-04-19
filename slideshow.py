@@ -50,6 +50,7 @@ def def_params():
                         help="argument wskazuje folder roboczy - wazny z tego wzgledu że tam powinien się znajdować plik konfiguracyjny")
     parser.add_argument("-pasek", "--pasekpng",
                         help="url do ścieszki z png używanego w LoadingBar-ze - uwaga zalecany format png!")
+    parser.add_argument("-dc", "--download_config", help="czy pobierać plik konfiguracyjny z serwera?")
     parser.add_argument("-sc", "--serwer_config",
                         help="przechowuje url do serwera z plikiem jsonowy który będzie plikiem konfiguracyjnym")
     parser.add_argument("-d", "--discretizationLoadingBar", type=int, help="określa poziom dyskretyzacji")
@@ -141,7 +142,8 @@ class Ui_MainWindow(object):
         self.flag_UpdatePrzedChwilaConfiga = False
         self.liczbaPrzerwanychPolaczen = 0
         self.workdirectory = args.workdirectory
-        self.serwer_config = {"url": args.serwer_config, "dataUtworzenia": ""}
+        self.download_config = args.download_config #True/False
+        self.serwer_config = args.serwer_config
         self.segmentationTimeLoadingBar = 1000  # czas w mikrosekundach jednego segmentu loadingBar
         self.port = args.port
 
@@ -332,7 +334,7 @@ class Ui_MainWindow(object):
 
                     logging.debug("downloadConfig")
                     flaga_pobierzConfig = False
-                    if self.serwer_config['url'] == False:
+                    if self.download_config == False:
                         print("ustawiona brak pobierania configa z serwera")
                     else:
                         flaga_pobierzConfig = self.checkLastModifiedTimeConfig(self.serwer_config)
@@ -347,18 +349,18 @@ class Ui_MainWindow(object):
                             self.aktualizacjaConfigowychParametrow()
 
                             flaga_czyCosPobrano = True
-                        if flaga_czyCosPobrano == True:
-                            ###### WYSŁANIE SATUSU NA SERVER CZUJNIKI MIEJSKIE ZE WSZYSTKO JEST OK ########
-                            session = Session()
-                            # HEAD requests ask for *just* the headers, which is all you need to grab the
-                            # session cookie
-                            print("pobieranie w slideshow działa")
-                            response = session.post(
-                                url='http://czujnikimiejskie.pl/apipost/add/measurement',
-                                data={"sn": str(self.port), "a": "1", "w": "0", "z": "0"},
-                            )
-                            print(response.text)
-                            self.createWorkingSlideshowTxt()
+                    if flaga_czyCosPobrano == True:
+                        ###### WYSŁANIE SATUSU NA SERVER CZUJNIKI MIEJSKIE ZE WSZYSTKO JEST OK ########
+                        session = Session()
+                        # HEAD requests ask for *just* the headers, which is all you need to grab the
+                        # session cookie
+                        print("pobieranie w slideshow działa")
+                        response = session.post(
+                            url='http://czujnikimiejskie.pl/apipost/add/measurement',
+                            data={"sn": str(self.port), "a": "1", "w": "0", "z": "0"},
+                        )
+                        print(response.text)
+                        self.createWorkingSlideshowTxt()
                     flagDownloadBroken = False
                 except requests.exceptions.RequestException as error:
                     flagDownloadBroken = True
@@ -374,19 +376,17 @@ class Ui_MainWindow(object):
                 self.flag_UpdatePrzedChwilaConfiga = False
             self.aktualnyStanZmiennychConfigowych()
         if flagDownloadBroken == True and (self.mode_download == "both" or self.mode_download == "gsm"):
-            logging.debug("Przed pobraniem config " + self.serwer_config['url'] + " " + str(
-                self.serwer_config['dataUtworzenia']))
+            logging.debug("Przed pobraniem config " + str(self.serwer_config['url']) + str(" ") + str(self.serwer_config['dataUtworzenia']))
             self.download_via_sim800L()
         logging.debug("koniec downloadFiles")
-
-
 
     def download_via_sim800L(self):
         gsm_slideshow = GsmSlideshow(path=self.path_gsm)
         logging.debug(str(self.serwer_config))
-        gsm_slideshow.download_file(nazwa="config.json", extension="json"
-                                    , url=self.serwer_config['url']
-                                    , sleep_to_read_bytes=30)
+        if self.download_config == True:
+            gsm_slideshow.download_file(nazwa="config.json", extension="json"
+                                        , url=self.serwer_config['url']
+                                        , sleep_to_read_bytes=30)
         for slajd in list(self.slajdy):
             logging.debug(self.slajdy)
             gsm_slideshow.download_file(nazwa=slajd['nazwapng'], extension="png"
