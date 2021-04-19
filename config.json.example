@@ -1,8 +1,10 @@
 {
-      "version": "1.0",
+      "version": "1.1",
   "__comment__": "ustawienia debug programów",
       "debug_logslideshow" : "true",
       "debug_logusim800": "true",
+  "__comment__": "tryb pobierania - do wyboru jeden z trzech : both, wifi, gsm",
+      "mode_download": "both",
   "__comment__": "zmienne używane w usim_slideshow",
       "path_gsm": "/dev/ttyUSB0",
       "use_gsm": "true",
