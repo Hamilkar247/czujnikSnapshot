@@ -304,78 +304,82 @@ class Ui_MainWindow(object):
 
     def downloadFiles(self):
         print("downloadFiles method")
-        if self.flag_UpdatePrzedChwilaConfiga == False:
-            logging.debug("----------------------------------------------")
-            pprint(self.slajdy)
-            logging.debug("downloadFiles")
-            flagDownloadBroken = True
-            flaga_czyCosPobrano = False
-            try:
-                logging.debug("downloadPictures")
-                for slajd in list(self.slajdy):
-                    flaga_pobierzZdjecie = False
-                    flaga_pobierzZdjecie = self.checkLastModifiedTimePicture(slajd)
-                    if flaga_pobierzZdjecie:
-                        logging.debug("Przed pobraniem: slajd " + str(slajd['nazwapng']) + str(slajd['dataUtworzenia']))
-                        r_slajd = requests.get(slajd['url'], allow_redirects=True)
-                        with open(slajd['nazwapng'] + ".download", 'wb') as file_slajd:
-                            file_slajd.write(r_slajd.content)
-                        # logging.debug("Data utworzenia pliku:"+str(self.get_created_taken()))
-                        os.rename(slajd['nazwapng'] + ".download", slajd['nazwapng'])
-                        logging.debug("pobrano zdjęcia " + slajd['nazwapng'] + " " + slajd['dataUtworzenia'])
-                        flaga_czyCosPobrano = True
-                print("zdjecia po sprawdzeniu")
-                # pprint(self.slajdy)
-
-                logging.debug("downloadConfig")
-                flaga_pobierzConfig = False
-                if self.serwer_config['url'] == False:
-                    print("ustawiona brak pobierania configa z serwera")
-                else:
-                    flaga_pobierzConfig = self.checkLastModifiedTimeConfig(self.serwer_config)
-                    if flaga_pobierzConfig:
-                        logging.debug("Przed pobraniem config " + self.serwer_config['url'] + " " + str(
-                            self.serwer_config['dataUtworzenia']))
-                        r_serwer_config = requests.get(self.serwer_config['url'], allow_redirects=True)
-                        nazwa_zapisanego_configa = 'config.json'
-                        with open(nazwa_zapisanego_configa, 'wb') as file_json:
-                            file_json.write(r_serwer_config.content)
-                        logging.debug("pobrano zapisany config o nazwie: " + str(nazwa_zapisanego_configa))
-                        self.aktualizacjaConfigowychParametrow()
-
-                        flaga_czyCosPobrano = True
-                    if flaga_czyCosPobrano == True:
-                        ###### WYSŁANIE SATUSU NA SERVER CZUJNIKI MIEJSKIE ZE WSZYSTKO JEST OK ########
-                        session = Session()
-                        # HEAD requests ask for *just* the headers, which is all you need to grab the
-                        # session cookie
-                        print("pobieranie w slideshow działa")
-                        response = session.post(
-                            url='http://czujnikimiejskie.pl/apipost/add/measurement',
-                            data={"sn": str(self.port), "a": "1", "w": "0", "z": "0"},
-                        )
-                        print(response.text)
-                        self.createWorkingSlideshowTxt()
-                flagDownloadBroken = False
-            except requests.exceptions.RequestException as error:
+        flagDownloadBroken = True
+        flaga_czyCosPobrano = False
+        if self.mode_download == "both" or self.mode_download == "wifi":
+            if self.flag_UpdatePrzedChwilaConfiga == False:
+                logging.debug("----------------------------------------------")
+                pprint(self.slajdy)
+                logging.debug("downloadFiles")
                 flagDownloadBroken = True
-                print("Wystąpił problem z połączeniem:" + str(error))
-                traceback.print_exc()
-            except Exception as error:
-                flagDownloadBroken = True
-                print("Wystąpił problem z połączeniem:" + str(error))
-                print("Wykryto bład : " + str(error))
-                traceback.print_exc()
-            if flagDownloadBroken == True and self.use_gsm == True:
-                logging.debug("Przed pobraniem config " + self.serwer_config['url'] + " " + str(
-                    self.serwer_config['dataUtworzenia']))
-                self.download_via_sim800L()
-            logging.debug("koniec downloadFiles")
+                flaga_czyCosPobrano = False
+                try:
+                    logging.debug("downloadPictures")
+                    for slajd in list(self.slajdy):
+                        flaga_pobierzZdjecie = False
+                        flaga_pobierzZdjecie = self.checkLastModifiedTimePicture(slajd)
+                        if flaga_pobierzZdjecie:
+                            logging.debug("Przed pobraniem: slajd " + str(slajd['nazwapng']) + str(slajd['dataUtworzenia']))
+                            r_slajd = requests.get(slajd['url'], allow_redirects=True)
+                            with open(slajd['nazwapng'] + ".download", 'wb') as file_slajd:
+                                file_slajd.write(r_slajd.content)
+                            # logging.debug("Data utworzenia pliku:"+str(self.get_created_taken()))
+                            os.rename(slajd['nazwapng'] + ".download", slajd['nazwapng'])
+                            logging.debug("pobrano zdjęcia " + slajd['nazwapng'] + " " + slajd['dataUtworzenia'])
+                            flaga_czyCosPobrano = True
+                    print("zdjecia po sprawdzeniu")
+                    # pprint(self.slajdy)
 
-        else:  # self.flag_UpdatePrzedChwilaConfiga==True:
-            logging.debug("przed chwila zmieniono dane configa - pobieranie wstrzymane do kolejnej iteracji pobierania")
-            self.flag_UpdatePrzedChwilaConfiga = False
-        self.aktualnyStanZmiennychConfigowych()
+                    logging.debug("downloadConfig")
+                    flaga_pobierzConfig = False
+                    if self.serwer_config['url'] == False:
+                        print("ustawiona brak pobierania configa z serwera")
+                    else:
+                        flaga_pobierzConfig = self.checkLastModifiedTimeConfig(self.serwer_config)
+                        if flaga_pobierzConfig:
+                            logging.debug("Przed pobraniem config " + self.serwer_config['url'] + " " + str(
+                                self.serwer_config['dataUtworzenia']))
+                            r_serwer_config = requests.get(self.serwer_config['url'], allow_redirects=True)
+                            nazwa_zapisanego_configa = 'config.json'
+                            with open(nazwa_zapisanego_configa, 'wb') as file_json:
+                                file_json.write(r_serwer_config.content)
+                            logging.debug("pobrano zapisany config o nazwie: " + str(nazwa_zapisanego_configa))
+                            self.aktualizacjaConfigowychParametrow()
+
+                            flaga_czyCosPobrano = True
+                        if flaga_czyCosPobrano == True:
+                            ###### WYSŁANIE SATUSU NA SERVER CZUJNIKI MIEJSKIE ZE WSZYSTKO JEST OK ########
+                            session = Session()
+                            # HEAD requests ask for *just* the headers, which is all you need to grab the
+                            # session cookie
+                            print("pobieranie w slideshow działa")
+                            response = session.post(
+                                url='http://czujnikimiejskie.pl/apipost/add/measurement',
+                                data={"sn": str(self.port), "a": "1", "w": "0", "z": "0"},
+                            )
+                            print(response.text)
+                            self.createWorkingSlideshowTxt()
+                    flagDownloadBroken = False
+                except requests.exceptions.RequestException as error:
+                    flagDownloadBroken = True
+                    print("Wystąpił problem z połączeniem:" + str(error))
+                    traceback.print_exc()
+                except Exception as error:
+                    flagDownloadBroken = True
+                    print("Wystąpił problem z połączeniem:" + str(error))
+                    print("Wykryto bład : " + str(error))
+                    traceback.print_exc()
+            else:  # self.flag_UpdatePrzedChwilaConfiga==True:
+                logging.debug("przed chwila zmieniono dane configa - pobieranie wstrzymane do kolejnej iteracji pobierania")
+                self.flag_UpdatePrzedChwilaConfiga = False
+            self.aktualnyStanZmiennychConfigowych()
+        if flagDownloadBroken == True and (self.mode_download == "both" or self.mode_download == "gsm"):
+            logging.debug("Przed pobraniem config " + self.serwer_config['url'] + " " + str(
+                self.serwer_config['dataUtworzenia']))
+            self.download_via_sim800L()
+        logging.debug("koniec downloadFiles")
+
+
 
     def download_via_sim800L(self):
         gsm_slideshow = GsmSlideshow(path=self.path_gsm)
