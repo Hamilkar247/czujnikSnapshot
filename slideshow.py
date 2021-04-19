@@ -37,7 +37,7 @@ def def_params():
     # UWAGA - nie dopisuj argumentom wartości default - do takich wartości używamy tylko i wyłącznie plik konfiguracyjny
     parser.add_argument("-l", "--debug_logslideshow", action='store_true', help="ustaw flage 'debug' i wyswietlaj logi")
     parser.add_argument("-lu", "--debug_logusim800", action='store_true', help="wyświetlaj logi z usim800 (pobieranie GSM)")
-    parser.add_argument("-gsm", "--use_gsm", action="store_true", help="czy pobieranie gsm ma być dostępne?( o ile jest podłączony modul sim800L")
+    parser.add_argument("-md", "--mode_download", help="tryb pobierania - do wyboru jeden z trzech : both, wifi, gsm" )
     parser.add_argument("-path", "--path_gsm", help="ścieszka do urządzenia gsm")
     parser.add_argument("-b", "--baudrate", type=int, help="baudrate do przesyłania danych")
     parser.add_argument("-s", "--sizeOfLoadingBar", help="ustaw rozmiar(grubość) loadingBara")
@@ -118,8 +118,9 @@ class Ui_MainWindow(object):
     def __init__(self, args):
         logging.debug("UI_MainWindow __init__")
 
+        #tryb pobierania
+        self.mode_download = args.mode_download #wifi, gsm lub both
         #parametry GSM
-        self.use_gsm = args.use_gsm #true/false
         self.path_gsm = args.path_gsm # np. "/dev/ttyUSB0"
         self.baudrate = args.baudrate
         #
