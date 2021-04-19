@@ -393,7 +393,7 @@ class Ui_MainWindow(object):
         self.sizeOfLoadingBar = config_args.sizeOfLoadingBar
         self.slajdy = config_args.zdjeciaSlajd
         self.pasek = config_args.pasekpng[0]
-        self.discretizationLoadingBar = discretizationLoadingBar
+        self.discretizationLoadingBar = config_args.discretizationLoadingBar
         self.port = config_args.port
 
     def aktualnyStanZmiennychConfigowych(self):
