@@ -7,7 +7,6 @@
       "mode_download": "both",
   "__comment__": "zmienne używane w usim_slideshow",
       "path_gsm": "/dev/ttyUSB0",
-      "use_gsm": "true",
       "baudrate": 115200,
   "__comment__": "zmienne używane w check_slideshow_work",
       "timeToCheckSlideshow": 400,
