@@ -287,6 +287,20 @@ class Ui_MainWindow(object):
                 flag_RozneDaty = True
         return flag_RozneDaty
 
+    def createWorkingSlideshowTxt(self):
+        os.chdir('/tmp/')
+        logging.debug("folder na plik tymczasowy: " + str(os.getcwd()))
+        if os.path.isfile('working_slideshow.txt'):
+            logging.debug("working_slideshow.txt plik istnieje")
+        else:
+            try:
+                f = open("working_slideshow.txt", "w+")
+            except FileNotFoundError:
+                logging.debug("Uszkodzony plik lub zła ścieszka")
+            logging.debug("stworzono working_slideshow.txt plik")
+        os.chdir(self.workdirectory)
+        logging.debug("Wracamy do folderu roboczego: " + str(os.getcwd()))
+
     def downloadFiles(self):
         print("downloadFiles method")
         if self.flag_UpdatePrzedChwilaConfiga == False:
@@ -340,6 +354,7 @@ class Ui_MainWindow(object):
                             data={"sn": str(self.port), "a": "1", "w": "0", "z": "0"},
                         )
                         print(response.text)
+                        self.createWorkingSlideshowTxt()
                 flagDownloadBroken = False
             except requests.exceptions.RequestException as error:
                 flagDownloadBroken = True
@@ -349,19 +364,9 @@ class Ui_MainWindow(object):
                 print("Wystąpił problem z połączeniem:" + str(error))
                 print("Wykryto bład : " + str(error))
             if flagDownloadBroken == True and self.use_gsm == True:
+                logging.debug("Przed pobraniem config " + self.serwer_config['url'] + " " + str(
+                    self.serwer_config['dataUtworzenia']))
                 self.download_via_sim800L()
-                os.chdir('/tmp/')
-                logging.debug("folder na plik tymczasowy: " + str(os.getcwd()))
-                if os.path.isfile('working_slideshow.txt'):
-                    logging.debug("working_slideshow.txt plik istnieje")
-                else:
-                    try:
-                        f = open("working_slideshow.txt", "w+")
-                    except FileNotFoundError:
-                        logging.debug("Uszkodzony plik lub zła ścieszka")
-                    logging.debug("stworzono working_slideshow.txt plik")
-                os.chdir(self.workdirectory)
-                logging.debug("Wracamy do folderu roboczego: " + str(os.getcwd()))
             logging.debug("koniec downloadFiles")
 
         else:  # self.flag_UpdatePrzedChwilaConfiga==True:
