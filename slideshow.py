@@ -320,7 +320,6 @@ class Ui_MainWindow(object):
                     # pprint(self.slajdy)
 
                     logging.debug("downloadConfig")
-                    flaga_pobierzConfig = False
                     if self.download_config == False:
                         print("ustawiona brak pobierania configa z serwera")
                     else:
