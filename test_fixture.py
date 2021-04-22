@@ -1,6 +1,28 @@
 import pytest
 
 
+class klasa_czas:
+    def __init__(self):
+        import time
+        self.czas = time
+
+    def godzina(self):
+        return self.czas.strftime("%H:%M:%S")
+
+    def data(self):
+        return self.czas.strftime("%D")
+
+
+@pytest.fixture()
+def czas():
+    return klasa_czas()
+
+
+def test_czas_pierwszy(czas):
+    print(czas.godzina())
+    print(czas.data())
+
+
 @pytest.fixture()
 def moj_pierwszy_fixture(request):
     print("Wykonuje fixture")
