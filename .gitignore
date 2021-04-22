@@ -16,3 +16,4 @@ working_slideshow.txt
 paczka*
 *.service
 !kwadrat.png
+__pycache__/*
