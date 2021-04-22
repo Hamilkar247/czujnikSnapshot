@@ -1,4 +1,4 @@
-
+import logging
 #zalozenia
 #Założenia do kalkulatora:
 #
@@ -9,11 +9,12 @@
 
 class BasicCalculator:
     def __init__(self):
-        self.number = []
+        logging.root.setLevel(logging.DEBUG)
+        self.numbers = []
         self.signs = [] #symbol
         self.result = 0
 
-    def provice_number(self.number):
+    def provice_number(self, number):
         self.numbers.append(number)
         if len(self.signs) == 0:
             self.result = number
@@ -24,20 +25,27 @@ class BasicCalculator:
         self.signs.append(operand)
 
     def __calculate(self):
-        if self.signs[-1] is '+':
+        logging.debug(f"znak {self.signs[-1]}")
+        if self.signs[-1] == '+':
             return self.result + self.numbers[-1]
-        if self.signs[-1] is '-':
+        if self.signs[-1] == '-':
             return self.result - self.numbers[-1]
-        if self.signs[-1] is '*':
+        if self.signs[-1] == '*':
             return self.result * self.numbers[-1]
-        if self.signs[-1] is '/':
+        if self.signs[-1] == '/':
             return self.result / self.numbers[-1]
 
     def show_result(self):
+        logging.debug(f"signs {self.signs}")
+        logging.debug(f"numbers {self.numbers}")
         self.signs.append('=')
+        logging.debug(f"signs {self.signs}")
         sequence = ''
+        logging.debug(f"len(self.numbers): {len(self.numbers)}")
+        logging.debug(f"range(len(self.numbers)): {range(len(self.numbers))}")
         for i in range(len(self.numbers)):
-            sequence = sequence + '{} {} '.format(Self.numbers[i], self.signs[i])
+            logging.debug("ahjo")
+            sequence = f"{sequence} : {self.numbers[i]} {self.signs[i]}"
         sequence += str(self.result)
         print(sequence)
         return self.result, sequence
