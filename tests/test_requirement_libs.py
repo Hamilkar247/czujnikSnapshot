@@ -21,6 +21,7 @@ def md5_string(string):
 
 
 def test_all_libs_is_in_requirement():
+    os.chdir("..")
     logging.root.setLevel(logging.DEBUG)
     hash_md5 = hashlib.md5()
     exist_requirements_md5 = None
