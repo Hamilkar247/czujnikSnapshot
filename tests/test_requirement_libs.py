@@ -4,6 +4,17 @@ import hashlib
 import logging
 import subprocess
 import sys
+import pytest
+from dotenv import load_dotenv
+from pathlib import Path
+
+
+@pytest.fixture()
+def chdir_root_folder_project():
+    load_dotenv()
+    env_path = Path("..")
+    load_dotenv(dotenv_path=env_path)
+    os.chdir(os.getenv("ROOT_FOLDER_PROJECT"))
 
 
 # inspiracja https://stackoverflow.com/questions/3431825/generating-an-md5-checksum-of-a-file
@@ -20,8 +31,8 @@ def md5_string(string):
     return hash_object.digest()
 
 
+@pytest.mark.usefixtures("chdir_root_folder_project")
 def test_all_libs_is_in_requirement():
-    os.chdir("..")
     logging.root.setLevel(logging.DEBUG)
     hash_md5 = hashlib.md5()
     exist_requirements_md5 = None
@@ -33,4 +44,8 @@ def test_all_libs_is_in_requirement():
 
     reqs = subprocess.check_output([sys.executable, '-m', 'pip', 'freeze'])
     pip_free_output = md5_string(reqs)
-    assert pip_free_output == exist_requirements_md5
+    try:
+        assert pip_free_output == exist_requirements_md5
+    except AssertionError as error:
+        print("Niezgodność między requirements.txt a pip freeze - lista bibliotek została zmieniona")
+        assert False
