@@ -17,3 +17,4 @@ paczka*
 *.service
 !kwadrat.png
 __pycache__/*
+*/__pycache__/*
