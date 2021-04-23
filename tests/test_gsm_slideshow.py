@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from pathlib import Path
 import os
 
-from without_wifi.gsm_slideshow import GsmSlideshow
+from without_wifi.withoutwifi_slideshow import WithoutWifiSlideshow
 
 
 @pytest.fixture()
@@ -15,6 +15,13 @@ def chdir_root_folder_project():
     env_path = Path("..")
     load_dotenv(dotenv_path=env_path)
     os.chdir(os.getenv("ROOT_FOLDER_PROJECT"))
+
+
+def path_to_sim800L():
+    load_dotenv()
+    env_path = Path("..")
+    load_dotenv(dotenv_path=env_path)
+    return os.getenv("PATH_TO_SIM800L")
 
 
 def delete_file(name_png):
@@ -34,22 +41,18 @@ def test_gsm_slideshow_blank_without_redirect_link():
     url="http://134.122.69.201/blank.png"
     sleep_to_read_bytes=4
     logging.basicConfig(level=logging.DEBUG, force=True)
-    #na sztywno
-    paths=["/dev/ttyUSB0", "/dev/ttyUSB1"]
     gsm_slideshow = None
-    for gsm_path in paths:
-        try:
-            gsm_slideshow = GsmSlideshow(path=gsm_path)
-        except Exception as e:
-            print("zla scieszka - przechodzimy do kolejnego path-a")
-            continue
-        break
+    try:
+        gsm_slideshow = WithoutWifiSlideshow(path=path_to_sim800L())
+    except Exception as e:
+        print("zla scieszka - przechodzimy do kolejnego path-a")
     if gsm_slideshow is None:
         assert False
 
     if gsm_slideshow.download_file(nazwa=name_file, extension=extension,
                                        url=url, sleep_to_read_bytes=sleep_to_read_bytes):
-        assert delete_file(name_file)
+        assert True
+        #assert delete_file(name_file)
     else:
         assert False
 
@@ -61,19 +64,13 @@ def test_gsm_slideshow_widget_with_redirect_link():
     url = "http://134.122.69.201/widgetKozienice/"
     sleep_to_read_bytes = 30
     logging.basicConfig(level=logging.DEBUG, force=True)
-    # na sztywno
-    paths = ["/dev/ttyUSB0", "/dev/ttyUSB1"]
     gsm_slideshow = None
-    for gsm_path in paths:
-        try:
-            gsm_slideshow = GsmSlideshow(path=gsm_path)
-        except Exception as e:
-            print("zla scieszka - przechodzimy do kolejnego path-a")
-            continue
-        break
+    try:
+        gsm_slideshow = WithoutWifiSlideshow(path=path_to_sim800L())
+    except Exception as e:
+        print("zla scieszka - przechodzimy do kolejnego path-a")
     if gsm_slideshow is None:
-        assert False
-#
+        assert False#
     if gsm_slideshow.download_file(nazwa=name_file, extension=extension,
                                    url=url, sleep_to_read_bytes=sleep_to_read_bytes):
         delete_file(name_file)
@@ -89,17 +86,11 @@ def test_gsm_slideshow_config_with_redirect_link():
     url="https://134.122.69.201/configKozienice/"
     sleep_to_read_bytes=10
     logging.basicConfig(level=logging.DEBUG, force=True)
-    #na sztywno
-    paths=["/dev/ttyUSB0", "/dev/ttyUSB1"]
     gsm_slideshow = None
-    for gsm_path in paths:
-        try:
-            gsm_slideshow = GsmSlideshow(path=gsm_path)
-        except Exception as e:
-            print("zla scieszka - przechodzimy do kolejnego path-a")
-            continue
-        break
-
+    try:
+        gsm_slideshow = WithoutWifiSlideshow(path=path_to_sim800L())
+    except Exception as e:
+        print("zla scieszka - przechodzimy do kolejnego path-a")
     if gsm_slideshow is None:
         assert False
 
