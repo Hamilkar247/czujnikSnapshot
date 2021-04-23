@@ -2,9 +2,7 @@
 from json import JSONDecodeError
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import QMovie
 from PyQt5.Qt import Qt
-import time
 import sys
 import os
 import logging
@@ -19,7 +17,7 @@ import requests
 from urllib.request import urlopen
 import traceback
 
-from usim800_slideshow.usim800.usim800_slideshow import sim800_slideshow
+from gsm_slideshow.gsm_slideshow import GsmSlideshow
 
 
 def def_params():
@@ -91,27 +89,6 @@ def def_params():
         print("Aktywacja trybu debug")
         logging.root.setLevel(logging.DEBUG)
     return config_args
-
-
-class GsmSlideshow:
-    def __init__(self, path):
-        try:
-            self.gsm = sim800_slideshow(baudrate=115200, path=path)
-            self.gsm.requests._APN = "internet"
-            self.r = None
-        except Exception as e:
-            print("Wystąpił błąd przy próbie otwarcia portu GsmSlideshow - możliwe że inny program używa już podanego portu!")
-            traceback.print_exc()
-
-    def download_file(self, nazwa, extension, url, sleep_to_read_bytes):
-        try:
-            nazwa_pliku = nazwa
-            self.gsm.requests.getFile(url=url, extension=extension,
-                                      sleep_to_read_bytes=sleep_to_read_bytes, nameOfFile=nazwa_pliku)
-        except Exception as e:
-            print("Niestety jest błąd - wyrzuciło download_file w GsmSlideshow")
-            print(f"{e}")
-        logging.debug("koniec pliku")
 
 
 class Ui_MainWindow(object):
