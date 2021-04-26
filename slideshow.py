@@ -20,7 +20,7 @@ import traceback
 from without_wifi.withoutwifi import WithoutWifi
 
 
-def def_params():
+def def_params(config_file="config.json"):
     parser = argparse.ArgumentParser(
         description=
         """
@@ -62,10 +62,10 @@ def def_params():
     # print("after command line"))
     # pprint(args.__dict__))
 
-    if os.path.exists('config.json'):
+    if os.path.exists(config_file):
         config_args = argparse.Namespace()
         try:
-            with open('config.json', 'rt') as f:
+            with open(config_file, 'rt') as f:
                 config_args = argparse.Namespace()
                 config_args.__dict__.update(json.load(f))
                 # pprint(config_args)
@@ -78,16 +78,21 @@ def def_params():
                 if key == "__comment__":
                     del config_args.__dict__[key]
         except JSONDecodeError as e:
-            print("Sprawdź czy plik config.json nie jest pusty")
-            print("Jeśli tak, możliwe że rozruch umożliwi skopiowanie config.json.example jako config.json")
             traceback.print_exc()
+            print("Sprawdź czy plik" + config_file + "nie jest pusty, albo czy nie brakuje przecinka")
+            print("Jeśli to problem z złym formatem config.json \n,")
+            print(" możliwe że rozruch umożliwi skopiowanie config.json.example jako config.json")
+            return None
     else:
         print(
             "Brak pliku konfiguracyjnego - jeśli żadnego nie posiadasz prośba o skopiowanie \n config.json.example i nazwanie owej kopii config.json")
-
-    if config_args.debug_logslideshow:
-        print("Aktywacja trybu debug")
-        logging.root.setLevel(logging.DEBUG)
+        return None
+    try:
+        if config_args.debug_logslideshow:
+            print("Aktywacja trybu debug")
+            logging.root.setLevel(logging.DEBUG)
+    except Exception as e:
+        print("Próba sprawdzenie zmiennej odpowiedzialnej za ")
     return config_args
 
 

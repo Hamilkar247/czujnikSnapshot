@@ -66,7 +66,7 @@ def test_gsm_slideshow_widget_with_redirect_link():
     logging.basicConfig(level=logging.DEBUG, force=True)
     gsm_slideshow = None
     try:
-        gsm_slideshow = WithoutWifiSlideshow(path=path_to_sim800L())
+        gsm_slideshow = WithoutWifi(path=path_to_sim800L())
     except Exception as e:
         print("zla scieszka - przechodzimy do kolejnego path-a")
     if gsm_slideshow is None:
