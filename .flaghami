@@ -9,3 +9,10 @@ function cpDefaultConfig
 {
   cp config.json config.json.example
 }
+
+function deleteDownloadPicture
+{
+  mv kwadrat.png kwadrat.temp
+  rm *.png
+  mv kwadrat.temp kwadrat.png
+}
