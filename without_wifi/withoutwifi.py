@@ -4,7 +4,7 @@ import traceback
 from usim800_slideshow.usim800 import sim800_slideshow
 
 
-class WithoutWifiSlideshow:
+class WithoutWifi:
     def __init__(self, path):
         try:
             logging.debug
