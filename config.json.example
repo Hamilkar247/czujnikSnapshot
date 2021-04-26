@@ -25,8 +25,11 @@
   "__comment__": "zwróć uwage że malinki mogą mieć wpięte zwracanie uwagi na certyfikat i wymagać https (kolno), gdy inne wymagają http (piaseczno, kozienice)",
        "download_config": true,
        "serwer_config": [
-               "url"     :"http://134.122.69.201/config/kiosk/Lokalne_Kusy/config.json",
-               "dataUtworzenia": ""],
+             {
+               "url"     : "http://134.122.69.201/config/kiosk/Lokalne_Kusy/config.json",
+               "dataUtworzenia": ""
+             }
+       ],
   "__comment__": "rubryka na zdjęcia - pierwsze nazwa zdjęcia, drugi url skąd updatujemy",
       "pasekpng": ["kwadrat.png", ""],
   "__comment__": "uwaga - danie w url https może spowodować puste zdjecie",
