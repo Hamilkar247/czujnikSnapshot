@@ -17,7 +17,7 @@ import requests
 from urllib.request import urlopen
 import traceback
 
-from gsm_slideshow.gsm_slideshow import GsmSlideshow
+from without_wifi.withoutwifi import WithoutWifi
 
 
 def def_params():
@@ -363,7 +363,7 @@ class Ui_MainWindow(object):
         logging.debug("koniec downloadFiles")
 
     def download_via_sim800L(self):
-        gsm_slideshow = GsmSlideshow(path=self.path_gsm)
+        gsm_slideshow = WithoutWifi(path=self.path_gsm)
         logging.debug(str(self.serwer_config))
         if self.download_config == True:
             gsm_slideshow.download_file(nazwa="config.json", extension="json"
