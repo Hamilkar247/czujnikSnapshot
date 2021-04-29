@@ -104,7 +104,7 @@ class Ui_MainWindow(object):
         #tryb pobierania
         self.mode_download = args.mode_download #wifi, gsm lub both
         #parametry GSM
-        self.path_gsm = args.path_gsm # np. "/dev/ttyUSB0"
+        self.path_sim800l = args.path_sim800l # np. "/dev/ttyUSB0"
         self.baudrate = args.baudrate
         #
         self.lab_loadingbBar = None  # label na loadingbara
@@ -367,7 +367,7 @@ class Ui_MainWindow(object):
         logging.debug("koniec downloadFiles")
 
     def download_via_sim800L(self):
-        gsm_slideshow = WithoutWifi(path=self.path_gsm)
+        gsm_slideshow = WithoutWifi(path=self.path_sim800l)
         logging.debug(str(self.serwer_config))
         if self.download_config == True:
             gsm_slideshow.download_file(nazwa="config.json", extension="json"
