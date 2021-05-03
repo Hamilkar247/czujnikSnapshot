@@ -31,11 +31,12 @@ def chdir_root_folder():
 def post_via_sim800L():
     ftp_slideshow = FtpSlideshow(path="/dev/ttyUSB0")
     ftp_slideshow.post_file(name_file="o_moj_boze.json", server_ip="37.48.70.196"
-                            , path_file="/hamilkar.cba.pl/orety/"
+                            , path_file="/hamilkar.cba.pl/"
                             , nickname="hamilkar", password="Hamilkar0"
                             , text_to_post='{"sn": "3005", "a": "1", "w": "0", "z": "0" }')
 
 
 @pytest.mark.usefixtures("chdir_root_folder")
 def test_post_via_sim800L():
-    print("test")
+    #print("test")
+    post_via_sim800L()

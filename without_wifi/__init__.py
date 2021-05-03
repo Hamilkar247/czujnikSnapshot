@@ -1,1 +1,2 @@
 from without_wifi.withoutwifi import WithoutWifi
+from without_wifi.withoutwifi import FtpSlideshow
