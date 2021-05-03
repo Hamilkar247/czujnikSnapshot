@@ -2,12 +2,13 @@ import logging
 import traceback
 
 from usim800_slideshow.usim800 import sim800_slideshow
+from usim800_slideshow.usim800.usim800_slideshow import ftp_slideshow
 
 
 class WithoutWifi:
     def __init__(self, path):
         try:
-            logging.debug
+            logging.debug("without wifi")
             self.gsm = sim800_slideshow(baudrate=115200, path=path)
             self.gsm.requests._APN = "internet"
             self.r = None
@@ -25,4 +26,32 @@ class WithoutWifi:
             print(f"{e}")
             return False
         logging.debug("koniec pliku")
+        return True
+
+
+class FtpSlideshow:
+
+    def __init__(self, path):
+        try:
+            logging.debug("ftp slideshow")
+            self.ftp = ftp_slideshow(baudrate=115200, path=path)
+            #self.ftp.request_ftp._APN =
+        except Exception as e:
+            print("Wystąpił błąd przy próbie otwarcia portu Ftplideshow - możliwe że inny program używa już podanego portu!")
+            traceback.print_exc()
+
+    def post_file(self, APN="internet", server_ip="37.48.70.196", port=21, mode=0,
+                  name_file="hami.json", path_file="/hamilkar.cba.pl/myhero/",
+                  nickname="hamilkar", password="Hamilkar0",
+                  text_to_post='{"sn": "3005", "a": "1", "w": "0", "z": "0" }'):
+        try:
+            self.ftp.request_ftp.postFile(APN=APN, server_ip=server_ip, port=port,
+                                          mode=mode, put_name_file=name_file, put_path_file=path_file,
+                                          nickname=nickname, password=password,
+                                          text_to_post=text_to_post)
+        except Exception as e:
+            print("Niestety - nie udało się wysłać wiadomości na serwer")
+            print(f"{e}")
+            return False
+        logging.debug("koniec pliku ")
         return True

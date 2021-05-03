@@ -17,7 +17,7 @@ import requests
 from urllib.request import urlopen
 import traceback
 
-from without_wifi.withoutwifi import WithoutWifi
+from without_wifi.withoutwifi import FtpSlideshow
 
 
 def def_params(config_file="config.json"):
@@ -380,6 +380,9 @@ class Ui_MainWindow(object):
                                         , sleep_to_read_bytes=30)
         #gsm_slideshow.download_file()
 
+    def post_info_via_sim800L(self):
+        pass
+
     def updateZmiennych(self, config_args):
         logging.debug("updateZmiennych")
         self.ustawienieCzasowTimerow(config_args.timeForDownloader, config_args.timeForPicture)
@@ -504,6 +507,11 @@ class Window(QtWidgets.QMainWindow):
                 logging.debug("włączono tryb pełnoekranowy")
 
 
+def post_via_sim800L():
+    ftp_slideshow = FtpSlideshow(path="/dev/ttyUSB0")
+    ftp_slideshow.post_file()
+
+
 if __name__ == "__main__":
     obecny_folder = os.getcwd()
     logging.debug("początkowy folder wykonywania:" + str(obecny_folder))
@@ -518,3 +526,4 @@ if __name__ == "__main__":
     w = Window(args)
     w.show()
     sys.exit(app.exec_())
+
