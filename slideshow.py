@@ -17,7 +17,7 @@ import requests
 from urllib.request import urlopen
 import traceback
 
-from without_wifi.withoutwifi import FtpSlideshow
+from without_wifi.withoutwifi import FtpSlideshow, WithoutWifi
 
 
 def def_params(config_file="config.json"):
