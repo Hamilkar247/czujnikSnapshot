@@ -41,12 +41,18 @@ class FtpSlideshow:
             traceback.print_exc()
 
     def post_file(self, APN="internet", server_ip="37.48.70.196", port=21, mode=0,
-                  name_file="hami.json", path_file="/hamilkar.cba.pl/myhero/",
+                  put_name_file="hami.json", get_name_file="hami.json",
+                  put_path_file="/hamilkar.cba.pl/myhero/",
+                  get_path_file="/",
                   nickname="hamilkar", password="Hamilkar0",
                   text_to_post='{"sn": "3005", "a": "1", "w": "0", "z": "0" }'):
         try:
             self.ftp.request_ftp.postFile(APN=APN, server_ip=server_ip, port=port,
-                                          mode=mode, put_name_file=name_file, put_path_file=path_file,
+                                          mode=mode,
+                                          put_name_file=put_name_file,
+                                          get_name_file=get_name_file,
+                                          put_path_file=put_path_file,
+                                          get_path_file=get_path_file,
                                           nickname=nickname, password=password,
                                           text_to_post=text_to_post)
         except Exception as e:
