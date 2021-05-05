@@ -31,7 +31,7 @@ class WithoutWifi:
 
 class FtpSlideshow:
 
-    def __init__(self, path):
+    def __init__(self, path, baudrate):
         try:
             logging.debug("ftp slideshow")
             self.ftp = ftp_slideshow(baudrate=115200, path=path)

@@ -373,15 +373,36 @@ class Ui_MainWindow(object):
             gsm_slideshow.download_file(nazwa="config.json", extension="json"
                                         , url=self.serwer_config['url']
                                         , sleep_to_read_bytes=30)
+        flaga_czyCosPobrano = False
         for slajd in list(self.slajdy):
             logging.debug(self.slajdy)
-            gsm_slideshow.download_file(nazwa=slajd['nazwapng'], extension="png"
+            pobranoSlajd = gsm_slideshow.download_file(nazwa=slajd['nazwapng'], extension="png"
                                         , url=slajd['url']
                                         , sleep_to_read_bytes=30)
+            if pobranoSlajd == True:
+                flaga_czyCosPobrano = True
+
+        if flaga_czyCosPobrano == True:
+            czy_zapostowano=self.post_info_via_sim800L()
+        print("wysłano wiadomość post na server")
         #gsm_slideshow.download_file()
 
     def post_info_via_sim800L(self):
-        pass
+        try:
+            logging.debug("post_info_via_sim800L")
+            tekst_do_przeslania = '{"sn": "3005", "a": "1", "w": "0", "z": "1" }'
+            nazwa_pliku = "post.json"
+            ftp_slideshow = FtpSlideshow(path=self.path_sim800l, baudrate=self.baudrate)
+
+            return ftp_slideshow.post_file(put_name_file=nazwa_pliku, get_name_file=nazwa_pliku,
+                                           server_ip="37.48.70.196",
+                                           put_path_file="/hamilkar.cba.pl/Kozienice/",
+                                           get_path_file="/hamilkar.cba.pl/Kozienice/", nickname="hamilkar", password="Hamilkar0",
+                                           text_to_post=tekst_do_przeslania)
+        except Exception as e:
+            return False
+            print("coś poszło nie tak przy wysyłaniu wiadomości!")
+            traceback.print_exc()
 
     def updateZmiennych(self, config_args):
         logging.debug("updateZmiennych")
