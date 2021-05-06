@@ -34,7 +34,7 @@ def post_via_sim800L():
     try:
         tekst_do_przeslania = "ooorety#"  # '{"sn": "3005", "a": "1", "w": "0", "z": "0" }'
         nazwa_pliku = "testowo.json"
-        ftp_slideshow = FtpSlideshow(path="/dev/ttyUSB0")
+        ftp_slideshow = FtpSlideshow(path="/dev/ttyUSB0", baudrate="115200")
 
         return ftp_slideshow.post_file(put_name_file=nazwa_pliku, get_name_file=nazwa_pliku,
                                        server_ip="37.48.70.196",
