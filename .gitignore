@@ -19,3 +19,4 @@ paczka*
 __pycache__/*
 */__pycache__/*
 *.env
+metadata_from_server.txt

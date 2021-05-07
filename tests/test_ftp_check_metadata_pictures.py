@@ -1,4 +1,5 @@
 import logging
+from pprint import pprint
 
 import pytest
 from without_wifi import FtpSlideshow
@@ -29,25 +30,28 @@ def chdir_root_folder():
         os.chdir(root_folder)
 
 
-def get_picture_via_sim800L(nazwa_zdjecia):
-    logging.debug("get_picture_via_sim800 - ahjo!")
+def get_files_metadata(put_path_file):
+    logging.debug("get_files_data")
     try:
         ftp_slideshow = FtpSlideshow(path="/dev/ttyUSB0", baudrate="115200")
-        return ftp_slideshow.get_file(extension="png", get_name_file=nazwa_zdjecia,
-                                      server_ip="37.48.70.196",
-                                      get_path_file="/hamilkar.cba.pl/Kozienice/",
-                                      nickname="hamilkar",
-                                      password="Hamilkar0")
+        metadata=ftp_slideshow.get_files_metadata(
+                                            put_path_file=put_path_file,
+                                            server_ip="37.48.70.196",
+                                            nickname="hamilkar",
+                                            password="Hamilkar0")
+        print("ahoj !")
+        pprint(str(metadata))
+        f = open("metadata_from_server.txt", "wb")
+        f.write(metadata)
+        f.close()
+        if metadata is None:
+            return False
+        else:
+            return True
     except Exception as e:
         return False
-    return True
 
 
-@pytest.mark.usefixtures("chdir_root_folder")
-def test_ftp_get_picture():
-    assert get_picture_via_sim800L(nazwa_zdjecia='mapaKozienice.png')
-
-
-@pytest.mark.usefixtures("chdir_root_folder")
-def test_ftp_get_picture():
-    assert get_picture_via_sim800L(nazwa_zdjecia='widgetKozienice.png')
+@pytest.mark.usefixtures('chdir_root_folder')
+def test_check_metadata_files():
+    assert get_files_metadata("/hamilkar.cba.pl/Kozienice/")

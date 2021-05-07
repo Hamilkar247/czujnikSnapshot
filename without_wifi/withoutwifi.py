@@ -40,6 +40,30 @@ class FtpSlideshow:
             print("Wystąpił błąd przy próbie otwarcia portu Ftplideshow - możliwe że inny program używa już podanego portu!")
             traceback.print_exc()
 
+
+    def get_files_metadata(self,
+                         APN="internet",
+                         server_ip="37.48.70.196",
+                         port=21,
+                         mode=0,
+                         put_path_file="/hamilkar.cba.pl/Kozienice/",
+                         nickname="hamilkar",
+                         password="Hamilkar0"):
+        logging.debug("get_files_matadata <-- FtpSlideshow")
+        try:
+            metadata=self.ftp.request_ftp.getFilesMetadata(APN=APN,
+                                                           server_ip=server_ip,
+                                                           port=port, mode=mode,
+                                                           put_path_file=put_path_file,
+                                                           nickname=nickname,
+                                                           password=password)
+            return metadata
+        except Exception as e:
+            print("Niestety nie udało pobrać metadanych podanego folderu")
+            print(f"{e}")
+            return False
+
+
     def get_file(self, APN="internet",extension="png", get_name_file="widget.png", server_ip="37.48.70,196", port=21, mode=0,
                  get_path_file="/", nickname="qaz", password="zxc"):
         logging.debug("get_file <-- FtpSlideshow ")
