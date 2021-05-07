@@ -63,7 +63,6 @@ class FtpSlideshow:
             print(f"{e}")
             return False
 
-
     def get_file(self, APN="internet",extension="png", get_name_file="widget.png", server_ip="37.48.70,196", port=21, mode=0,
                  get_path_file="/", nickname="qaz", password="zxc"):
         logging.debug("get_file <-- FtpSlideshow ")

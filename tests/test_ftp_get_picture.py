@@ -40,7 +40,6 @@ def get_picture_via_sim800L(nazwa_zdjecia):
                                       password="Hamilkar0")
     except Exception as e:
         return False
-    return True
 
 
 @pytest.mark.usefixtures("chdir_root_folder")
